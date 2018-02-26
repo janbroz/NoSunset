@@ -13,8 +13,31 @@ UCLASS()
 class NOSUNSET_API ASunsetPlayerController : public APlayerController
 {
 	GENERATED_BODY()
+public:
+	ASunsetPlayerController();
 	
-	
-	
-	
+	virtual void SetupInputComponent() override;
+	virtual void BeginPlay() override;
+
+
+	void VerticalMovement(float Amount);
+	void HorizontalMovement(float Amount);
+	void LeftMousePressed();
+	void RightMousePressed();
+	void LeftMouseReleased();
+	void RightMouseReleased();
+
+public:
+	class ASunsetPawn* ThePlayerPawn;
+
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Controller information")
+		uint32 bLeftMousePressed : 1;
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Controller information")
+		uint32 bRightMousePressed : 1;
+
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player information")
+		class UPlayerHUDWidget* PlayerHUD;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player information")
+		TSubclassOf<UPlayerHUDWidget> PlayerHUDClass;
 };

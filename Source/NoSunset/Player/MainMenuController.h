@@ -13,7 +13,8 @@ UCLASS()
 class NOSUNSET_API AMainMenuController : public APlayerController
 {
 	GENERATED_BODY()
-	
+public:
+	AMainMenuController();
 	
 	
 	

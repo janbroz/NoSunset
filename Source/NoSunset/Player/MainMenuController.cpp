@@ -4,4 +4,7 @@
 
 
 
-
+AMainMenuController::AMainMenuController()
+{
+	bShowMouseCursor = true;
+}

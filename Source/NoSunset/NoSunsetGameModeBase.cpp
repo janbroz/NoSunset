@@ -3,9 +3,11 @@
 #include "NoSunsetGameModeBase.h"
 #include "Player/SunsetPawn.h"
 #include "Player/SunsetPlayerController.h"
+#include "SunsetGameState.h"
 
 ANoSunsetGameModeBase::ANoSunsetGameModeBase()
 {
 	DefaultPawnClass = ASunsetPawn::StaticClass();
 	PlayerControllerClass = ASunsetPlayerController::StaticClass();
+	GameStateClass = ASunsetGameState::StaticClass();
 }
