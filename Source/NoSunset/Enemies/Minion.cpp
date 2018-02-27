@@ -3,7 +3,9 @@
 #include "Minion.h"
 #include "Enemies/MinionController.h"
 #include "Runtime/Engine/Classes/GameFramework/CharacterMovementComponent.h"
-
+#include "GlobalEventHandler.h"
+#include "SunsetGameState.h"
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 
 // Sets default values
 AMinion::AMinion()
@@ -13,6 +15,7 @@ AMinion::AMinion()
 
 	AIControllerClass = AMinionController::StaticClass();
 	GetCharacterMovement()->MaxWalkSpeed = 300.f;
+	EventHandler = CreateDefaultSubobject<UGlobalEventHandler>(TEXT("Event handler"));
 }
 
 // Called when the game starts or when spawned
@@ -21,6 +24,12 @@ void AMinion::BeginPlay()
 	Super::BeginPlay();
 	
 	SpawnDefaultController();
+
+	ASunsetGameState* SunsetGameState = Cast<ASunsetGameState>(UGameplayStatics::GetGameState(GetWorld()));
+	if (SunsetGameState)
+	{
+		EventHandler = SunsetGameState->EventHandler;
+	}
 }
 
 // Called every frame
@@ -37,3 +46,11 @@ void AMinion::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
+void AMinion::KillMinion()
+{
+	// Call either the wave spawner or the game state.
+
+	//Minion_OnKilled.Broadcast(this, nullptr);
+	EventHandler->OnMinionKilled.Broadcast(this);
+	Destroy();
+}

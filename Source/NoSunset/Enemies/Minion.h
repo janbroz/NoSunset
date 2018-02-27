@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "Minion.generated.h"
 
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FMinionIsKilledSignature, class AActor*, KilledMinion, class AActor*, Instigator);
+
 UCLASS()
 class NOSUNSET_API AMinion : public ACharacter
 {
@@ -26,6 +28,12 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	// Destroy the minion and broadcast to the game state / game info.
+	UFUNCTION(BlueprintCallable, Category = "Minion interaction")
+		void KillMinion();
+
+	//FMinionIsKilledSignature Minion_OnKilled;
 	
-	
+	UPROPERTY(EditAnywhere, Category = "Event Manager")
+		class UGlobalEventHandler* EventHandler;
 };

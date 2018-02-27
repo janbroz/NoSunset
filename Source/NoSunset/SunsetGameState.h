@@ -19,6 +19,10 @@ public:
 	// Level Starts. Ask if there is a wave spawner, then say holi!
 	virtual void BeginPlay() override;
 	
+	void InitializeSpawners();
+
+	UFUNCTION()
+		void RespondToMinionKilled(class AActor* MinionKilled);
 
 public:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Wave information")
@@ -31,6 +35,7 @@ public:
 		float TimeBetweenWaves;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Wave information")
 		class AWaveSpawner* LevelWaveSpawner;
-
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Wave information")
+		class UGlobalEventHandler* EventHandler;
 
 };
