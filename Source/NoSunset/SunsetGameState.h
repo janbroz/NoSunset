@@ -23,6 +23,11 @@ public:
 
 	UFUNCTION()
 		void RespondToMinionKilled(class AActor* MinionKilled);
+	UFUNCTION()
+		void HandleWaveCleared();
+
+private:
+	void SpawnNextWave();
 
 public:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Wave information")

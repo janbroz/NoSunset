@@ -8,6 +8,8 @@
 
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMinionDelegate_OnMinionKilled, class AActor*, MinionKilled);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FWaveDelegate_OnFullySpawnedWave);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FWaveDelegate_OnClearedWave);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class NOSUNSET_API UGlobalEventHandler : public UActorComponent
@@ -29,4 +31,8 @@ public:
 		
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Wave events")
 		FMinionDelegate_OnMinionKilled OnMinionKilled;
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Wave events")
+		FWaveDelegate_OnFullySpawnedWave OnFullySpawnedWave;
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Wave events")
+		FWaveDelegate_OnClearedWave OnClearedWave;
 };

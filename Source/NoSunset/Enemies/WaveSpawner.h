@@ -24,8 +24,10 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	void InitializeSpawner();
 	void SpawnCurrentWave();
+	void SetNextWave();
 
-
+	UFUNCTION()
+		void HandleMinionKilled(class AActor* KilledMinion);
 
 public:
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Placement information", Meta = (MakeEditWidget = true))
@@ -36,9 +38,17 @@ public:
 		int32 EnemiesToSpawn;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Level spawning information")
 		int32 EnemiesSpawned;
-	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Level spawning information")
+		int32 EnemiesAlive;
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Wave information")
+		class UGlobalEventHandler* EventHandler;
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Wave information")
+		uint32 bWaveFullySpawned : 1;
+
 private:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "World information", Meta = (AllowPrivateAccess = true))
 		class ASunsetGameState* WorldState;
+	
+
 
 };
