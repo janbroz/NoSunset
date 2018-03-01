@@ -56,6 +56,7 @@ void ASunsetGameState::RespondToMinionKilled(AActor* MinionKilled)
 void ASunsetGameState::HandleWaveCleared()
 {
 	CurrentWave++;
+	// Not so unused now, eh?
 	FTimerHandle UnusedHandle;
 	// Do level stuff for the event of a wave finished
 	if (LevelWaveSpawner)
