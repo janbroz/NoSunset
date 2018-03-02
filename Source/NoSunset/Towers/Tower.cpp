@@ -1,6 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Tower.h"
+#include "Runtime/Engine/Classes/Components/StaticMeshComponent.h"
+#include "Runtime/Engine/Classes/Components/SphereComponent.h"
+#include "Enemies/Minion.h"
 
 
 // Sets default values
@@ -9,6 +12,26 @@ ATower::ATower()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	SceneComp = CreateDefaultSubobject<USceneComponent>(TEXT("Scene comp"));
+	RootComponent = SceneComp;
+
+	RangeSphere = CreateDefaultSubobject<USphereComponent>(TEXT("Range sphere"));
+	RangeSphere->SetSphereRadius(AttackRange);
+	RangeSphere->SetupAttachment(RootComponent);
+	RangeSphere->OnComponentBeginOverlap.AddDynamic(this, &ATower::OnEnemyBeginOverlap);
+	RangeSphere->OnComponentEndOverlap.AddDynamic(this, &ATower::OnEnemyEndOverlap);
+
+	TowerBase = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Tower Base"));
+	TowerBase->SetupAttachment(RootComponent);
+	
+	TowerHead = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Tower Head"));
+	TowerHead->SetupAttachment(TowerBase);
+
+	TowerCanon = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Tower Canon"));
+	TowerCanon->SetupAttachment(TowerHead);
+
+	ProjectileSpawnLocation = CreateDefaultSubobject<USceneComponent>(TEXT("Projectile spawn location"));
+	ProjectileSpawnLocation->SetupAttachment(TowerCanon);
 }
 
 // Called when the game starts or when spawned
@@ -16,6 +39,7 @@ void ATower::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	RangeSphere->SetSphereRadius(AttackRange);
 }
 
 // Called every frame
@@ -25,3 +49,39 @@ void ATower::Tick(float DeltaTime)
 
 }
 
+void ATower::OnEnemyBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	auto MinionEnemy = Cast<AMinion>(OtherActor);
+	if (Target == nullptr && MinionEnemy)
+	{
+		Target = MinionEnemy;
+	}
+}
+
+void ATower::OnEnemyEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Enemy exits the tower range"));
+
+	auto MinionEnemy = Cast<AMinion>(OtherActor);
+	if (Target == MinionEnemy)
+	{
+		GetANewTarget();
+	}
+}
+
+void ATower::GetANewTarget()
+{
+	TArray<AActor*> OverlapingMinions;
+	RangeSphere->GetOverlappingActors(OverlapingMinions, AMinion::StaticClass());
+	int32 Elem = OverlapingMinions.Num();
+
+	if (Elem > 0)
+	{
+		int32 RandTarget = FMath::RandHelper(Elem - 1);
+		Target = Cast<AMinion>(OverlapingMinions[RandTarget]);
+	}
+	else
+	{
+		Target = nullptr;
+	}
+}
