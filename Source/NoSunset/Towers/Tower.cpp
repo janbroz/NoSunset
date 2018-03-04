@@ -4,7 +4,8 @@
 #include "Runtime/Engine/Classes/Components/StaticMeshComponent.h"
 #include "Runtime/Engine/Classes/Components/SphereComponent.h"
 #include "Enemies/Minion.h"
-
+#include "Runtime/Engine/Public/DrawDebugHelpers.h"
+#include "Runtime/Engine/Public/TimerManager.h"
 
 // Sets default values
 ATower::ATower()
@@ -32,6 +33,8 @@ ATower::ATower()
 
 	ProjectileSpawnLocation = CreateDefaultSubobject<USceneComponent>(TEXT("Projectile spawn location"));
 	ProjectileSpawnLocation->SetupAttachment(TowerCanon);
+
+	bCanAttack = true;
 }
 
 // Called when the game starts or when spawned
@@ -46,7 +49,8 @@ void ATower::BeginPlay()
 void ATower::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
+	AimTurret();
 }
 
 void ATower::OnEnemyBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -84,4 +88,39 @@ void ATower::GetANewTarget()
 	{
 		Target = nullptr;
 	}
+}
+
+void ATower::AimTurret()
+{
+	if (Target)
+	{
+		// Rotate towards
+		FRotator NewRot = (Target->GetActorLocation() - TowerHead->GetComponentLocation()).Rotation();
+		TowerHead->SetWorldRotation(NewRot);
+
+		DrawDebugLine(GetWorld(), ProjectileSpawnLocation->GetComponentLocation() , Target->GetActorLocation(), FColor::Red, false, 0.03f, 8, 2.f);
+
+		if (bCanAttack)
+		{
+			Attack();
+		}
+	}
+	
+}
+
+void ATower::Attack()
+{
+	bCanAttack = false;
+	GetWorldTimerManager().SetTimer(AttackHandler, this, &ATower::Reload, AttackSpeed, false);
+	if (Target)
+	{
+		Target->TakeDamage(AttackDamage, FDamageEvent::FDamageEvent(), nullptr, this);
+	}
+	
+}
+
+void ATower::Reload()
+{
+	// Run the reload animation and stuff related.
+	bCanAttack = true;
 }

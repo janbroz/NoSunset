@@ -16,6 +16,9 @@ AMinion::AMinion()
 	AIControllerClass = AMinionController::StaticClass();
 	GetCharacterMovement()->MaxWalkSpeed = 300.f;
 	EventHandler = CreateDefaultSubobject<UGlobalEventHandler>(TEXT("Event handler"));
+
+	Health = 100.f;
+	MaxHealth = Health;
 }
 
 // Called when the game starts or when spawned
@@ -53,4 +56,17 @@ void AMinion::KillMinion()
 	//Minion_OnKilled.Broadcast(this, nullptr);
 	EventHandler->OnMinionKilled.Broadcast(this);
 	Destroy();
+}
+
+float AMinion::TakeDamage(float DamageAmount, struct FDamageEvent const & DamageEvent, class AController * EventInstigator, AActor * DamageCauser)
+{
+	float DamageCaused = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	Health -= DamageAmount;
+
+	Health = FMath::Clamp(Health, 0.f, MaxHealth);
+	if (Health <= 0.f)
+	{
+		KillMinion();
+	}
+	return DamageCaused;
 }

@@ -28,12 +28,21 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	// Take on me! (Damage)
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const & DamageEvent, class AController * EventInstigator, AActor * DamageCauser);
+
 	// Destroy the minion and broadcast to the game state / game info.
 	UFUNCTION(BlueprintCallable, Category = "Minion interaction")
 		void KillMinion();
 
-	//FMinionIsKilledSignature Minion_OnKilled;
 	
+public:
 	UPROPERTY(EditAnywhere, Category = "Event Manager")
 		class UGlobalEventHandler* EventHandler;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = MinionInformation)
+		float Health;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = MinionInformation)
+		float MaxHealth;
+
 };

@@ -8,6 +8,8 @@ ASunsetPlayerState::ASunsetPlayerState()
 	PlayerName = TEXT("Default Player");
 	Gold = 100;
 	SpecialResource = 0;
+	CurrentLives = 30;
+	MaxLives = CurrentLives;
 }
 
 
@@ -17,4 +19,12 @@ void ASunsetPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty> &O
 
 	DOREPLIFETIME(ASunsetPlayerState, Gold);
 	DOREPLIFETIME(ASunsetPlayerState, SpecialResource);
+	DOREPLIFETIME(ASunsetPlayerState, MaxLives);
+	DOREPLIFETIME(ASunsetPlayerState, CurrentLives);
+}
+
+void ASunsetPlayerState::DamagePlayer(int32 Damage)
+{
+	CurrentLives -= Damage;
+	CurrentLives = FMath::Clamp(CurrentLives, 0, MaxLives);
 }

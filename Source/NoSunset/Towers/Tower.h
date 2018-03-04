@@ -33,14 +33,20 @@ public:
 	UFUNCTION()
 		void OnEnemyEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
-	void AimTurret();
-	
+	UFUNCTION()
+		void AimTurret();
+	UFUNCTION()
+		void Attack();
+
+	void Reload();
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TowerInformation)
 		float AttackSpeed;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TowerInformation)
 		float AttackRange;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TowerInformation)
+		float AttackDamage;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TowerInformation)
 		float Cost;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TowerInformation)
@@ -61,5 +67,9 @@ public:
 		USceneComponent* SceneComp;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = TowerInformation)
 		class AMinion* Target;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = TowerInformation)
+		uint32 bCanAttack : 1;
 
+	FTimerHandle AttackHandler;
+	
 };
