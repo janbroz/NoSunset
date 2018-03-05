@@ -5,6 +5,11 @@
 #include "Runtime/AIModule/Classes/BehaviorTree/BehaviorTreeComponent.h"
 #include "Runtime/AIModule/Classes/BehaviorTree/BlackboardComponent.h"
 #include "Runtime/AIModule/Classes/BehaviorTree/BehaviorTree.h"
+#include "Runtime/Engine/Classes/Engine/World.h"
+#include "SunsetGameState.h"
+#include "Enemies/WaveSpawner.h"
+#include "Enemies/MinionGoal.h"
+
 
 AMinionController::AMinionController()
 {
@@ -29,6 +34,13 @@ void AMinionController::Possess(APawn* InPawn)
 		Blackboard->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
 		BehaviorTreeComponent->StartTree(*BehaviorTree, EBTExecutionMode::Looped);
 
-		Blackboard->SetValueAsVector(TEXT("Destiny"), FVector::ZeroVector);
+		FVector SpawnerLocation = FVector::ZeroVector;
+		ASunsetGameState* GameState = Cast<ASunsetGameState>(GetWorld()->GetGameState());
+		if (GameState && GameState->LevelGoalZone)
+		{
+			//SpawnerLocation = GameState->LevelWaveSpawner->GetActorLocation();
+			SpawnerLocation = GameState->LevelGoalZone->GetActorLocation();
+		}
+		Blackboard->SetValueAsVector(TEXT("Destiny"), SpawnerLocation);
 	}
 }

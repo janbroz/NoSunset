@@ -27,6 +27,11 @@ public:
 	void LeftMouseReleased();
 	void RightMouseReleased();
 
+	UFUNCTION(BlueprintCallable)
+		void ToggleBuilding();
+	UFUNCTION(BlueprintCallable)
+		void ToggleMainMenu();
+
 public:
 	class ASunsetPawn* ThePlayerPawn;
 
@@ -34,6 +39,8 @@ public:
 		uint32 bLeftMousePressed : 1;
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Controller information")
 		uint32 bRightMousePressed : 1;
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Controller information")
+		uint32 bBuilding : 1;
 
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player information")

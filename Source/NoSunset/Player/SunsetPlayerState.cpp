@@ -2,6 +2,7 @@
 
 #include "SunsetPlayerState.h"
 #include "Net/UnrealNetwork.h"
+#include "Runtime/Engine/Classes/Engine/World.h"
 
 ASunsetPlayerState::ASunsetPlayerState()
 {
@@ -27,4 +28,14 @@ void ASunsetPlayerState::DamagePlayer(int32 Damage)
 {
 	CurrentLives -= Damage;
 	CurrentLives = FMath::Clamp(CurrentLives, 0, MaxLives);
+
+	if (CurrentLives <= 0)
+	{
+		auto Controller = Cast<APlayerController>(GetOwner());
+		if (Controller)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Its a valid actor"));
+			//Controller->SetPause(true);
+		}
+	}
 }

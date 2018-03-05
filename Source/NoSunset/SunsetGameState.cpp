@@ -2,6 +2,7 @@
 
 #include "SunsetGameState.h"
 #include "Enemies/WaveSpawner.h"
+#include "Enemies/MinionGoal.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "GlobalEventHandler.h"
 #include "Runtime/Engine/Public/TimerManager.h"
@@ -26,8 +27,9 @@ void ASunsetGameState::BeginPlay()
 void ASunsetGameState::InitializeSpawners()
 {
 	TArray<AActor*> Spawners;
+	TArray<AActor*> Goals;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AWaveSpawner::StaticClass(), Spawners);
-
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMinionGoal::StaticClass(), Goals);
 	if (Spawners.Num() > 0)
 	{
 		for (auto WaveSpawner : Spawners)
@@ -36,6 +38,18 @@ void ASunsetGameState::InitializeSpawners()
 			if (WSpawner)
 			{
 				LevelWaveSpawner = WSpawner;
+				break;
+			}
+		}
+	}
+	if (Goals.Num() > 0)
+	{
+		for (auto LevelGoal : Goals)
+		{
+			AMinionGoal* LGoal = Cast<AMinionGoal>(LevelGoal);
+			if (LGoal)
+			{
+				LevelGoalZone = LGoal;
 				break;
 			}
 		}

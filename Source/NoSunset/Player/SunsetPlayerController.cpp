@@ -28,6 +28,8 @@ void ASunsetPlayerController::SetupInputComponent()
 	InputComponent->BindAction("RMB", EInputEvent::IE_Pressed, this, &ASunsetPlayerController::RightMousePressed);
 	InputComponent->BindAction("LMB", EInputEvent::IE_Released, this, &ASunsetPlayerController::LeftMouseReleased);
 	InputComponent->BindAction("RMB", EInputEvent::IE_Released, this, &ASunsetPlayerController::RightMouseReleased);
+	InputComponent->BindAction("ToggleBuilding", EInputEvent::IE_Pressed, this, &ASunsetPlayerController::ToggleBuilding);
+	InputComponent->BindAction("ToggleMainMenu", EInputEvent::IE_Pressed, this, &ASunsetPlayerController::ToggleMainMenu);
 }
 
 void ASunsetPlayerController::BeginPlay()
@@ -89,4 +91,14 @@ void ASunsetPlayerController::LeftMouseReleased()
 void ASunsetPlayerController::RightMouseReleased()
 {
 	bRightMousePressed = false;
+}
+
+void ASunsetPlayerController::ToggleBuilding()
+{
+	bBuilding = !bBuilding;
+}
+
+void ASunsetPlayerController::ToggleMainMenu()
+{
+
 }

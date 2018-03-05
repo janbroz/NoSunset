@@ -42,5 +42,7 @@ public:
 		class AWaveSpawner* LevelWaveSpawner;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Wave information")
 		class UGlobalEventHandler* EventHandler;
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Wave information")
+		class AMinionGoal* LevelGoalZone;
 
 };
