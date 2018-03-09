@@ -6,6 +6,8 @@
 #include "Enemies/Minion.h"
 #include "Runtime/Engine/Public/DrawDebugHelpers.h"
 #include "Runtime/Engine/Public/TimerManager.h"
+#include "Towers/Projectile.h"
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 
 // Sets default values
 ATower::ATower()
@@ -43,6 +45,11 @@ void ATower::BeginPlay()
 	Super::BeginPlay();
 	
 	RangeSphere->SetSphereRadius(AttackRange);
+
+	if (ProjectileClass)
+	{
+		bUsesProjectiles = true;
+	}
 }
 
 // Called every frame
@@ -115,8 +122,17 @@ void ATower::Attack()
 	if (Target)
 	{
 		Target->TakeDamage(AttackDamage, FDamageEvent::FDamageEvent(), nullptr, this);
+
+
+		if (bUsesProjectiles)
+		{
+			AProjectile* Projectile = GetWorld()->SpawnActorDeferred<AProjectile>(ProjectileClass, ProjectileSpawnLocation->GetComponentTransform());
+			if (Projectile)
+			{
+				UGameplayStatics::FinishSpawningActor(Projectile, TowerHead->GetComponentTransform());
+			}
+		}
 	}
-	
 }
 
 void ATower::Reload()

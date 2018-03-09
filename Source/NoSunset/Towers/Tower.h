@@ -69,7 +69,10 @@ public:
 		class AMinion* Target;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = TowerInformation)
 		uint32 bCanAttack : 1;
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = TowerInformation)
+		uint32 bUsesProjectiles : 1;
+	UPROPERTY(EditAnywhere, Category = TowerInformation)
+		TSubclassOf<class AProjectile> ProjectileClass;
 	FTimerHandle AttackHandler;
 	
 };

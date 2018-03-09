@@ -16,7 +16,8 @@ enum class EElementType : uint8
 	Water		UMETA(DisplayName = "Water"),
 	Earth		UMETA(DisplayName = "Earth"),
 	Thunder		UMETA(DisplayName = "Thunder"),
-	Holy		UMETA(DisplayName = "Holy")
+	Holy		UMETA(DisplayName = "Holy"),
+	Physical	UMETA(DisplayName = "Physical")
 };
 
 

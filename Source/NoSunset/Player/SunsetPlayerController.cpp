@@ -4,6 +4,7 @@
 #include "Player/SunsetPawn.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "Widgets/PlayerHUD/PlayerHUDWidget.h"
+#include "Runtime/Engine/Public/DrawDebugHelpers.h"
 
 ASunsetPlayerController::ASunsetPlayerController()
 {
@@ -46,6 +47,14 @@ void ASunsetPlayerController::BeginPlay()
 			PlayerHUD->AddToViewport();
 		}
 	}
+}
+
+void ASunsetPlayerController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	CheckBuilding();
+
 }
 
 void ASunsetPlayerController::VerticalMovement(float Amount)
@@ -101,4 +110,32 @@ void ASunsetPlayerController::ToggleBuilding()
 void ASunsetPlayerController::ToggleMainMenu()
 {
 
+}
+
+void ASunsetPlayerController::CheckBuilding()
+{
+	if (bBuilding)
+	{
+		FHitResult Hit;
+		GetHitResultUnderCursor(ECollisionChannel::ECC_PhysicsBody, true, Hit);
+
+		FName BuildTag = FName(TEXT("BuildingZone"));
+
+		if (Hit.bBlockingHit && Hit.Actor->ActorHasTag(BuildTag))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("The actor is: %s"), *Hit.Actor->GetName());
+
+			DrawDebugBox(GetWorld(), SnapCoordinates(Hit.Location), FVector(50.f, 50.f, 50.f), FColor::Red, false, 0.03f, 2, 2.f);
+
+
+		}
+	}
+}
+
+FVector ASunsetPlayerController::SnapCoordinates(FVector InitialCoords)
+{
+	float X, Y;
+	X = (int)(InitialCoords.X / 25) * 25;
+	Y = (int)(InitialCoords.Y / 25) * 25;
+	return FVector(X, Y, InitialCoords.Z);
 }

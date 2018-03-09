@@ -18,7 +18,7 @@ public:
 	
 	virtual void SetupInputComponent() override;
 	virtual void BeginPlay() override;
-
+	virtual void Tick(float DeltaTime) override;
 
 	void VerticalMovement(float Amount);
 	void HorizontalMovement(float Amount);
@@ -31,6 +31,10 @@ public:
 		void ToggleBuilding();
 	UFUNCTION(BlueprintCallable)
 		void ToggleMainMenu();
+	UFUNCTION(BlueprintCallable)
+		void CheckBuilding();
+
+	FVector SnapCoordinates(FVector InitialCoords);
 
 public:
 	class ASunsetPawn* ThePlayerPawn;
