@@ -20,6 +20,14 @@ enum class EElementType : uint8
 	Physical	UMETA(DisplayName = "Physical")
 };
 
+UENUM(BlueprintType)
+enum class EArmorType : uint8
+{
+	Light		UMETA(DisplayName = "Light"),
+	Medium		UMETA(DisplayName = "Medium"),
+	Heavy		UMETA(DisplayName = "Heavy"),
+	Chaos		UMETA(DisplayName = "Chaos")
+};
 
 inline uint8 GetTypeHash(const EElementType A) { return (uint8)A; }
 

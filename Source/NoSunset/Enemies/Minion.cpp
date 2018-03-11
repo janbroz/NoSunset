@@ -6,6 +6,7 @@
 #include "GlobalEventHandler.h"
 #include "SunsetGameState.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+#include "SunsetDamageType.h"
 
 // Sets default values
 AMinion::AMinion()
@@ -60,9 +61,22 @@ void AMinion::KillMinion()
 
 float AMinion::TakeDamage(float DamageAmount, struct FDamageEvent const & DamageEvent, class AController * EventInstigator, AActor * DamageCauser)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Nigga, someone hit me"));
 	float DamageCaused = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	Health -= DamageAmount;
 
+	USunsetDamageType* DamageType = Cast<USunsetDamageType>(DamageEvent.DamageTypeClass->GetDefaultObject());
+	if (DamageType)
+	{
+		if (DamageType->DamageType == EElementType::Fire)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("and its hot!"));
+		}
+		if (DamageType->DamageType == EElementType::Physical)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("and its hard!"));
+		}
+	}
 	Health = FMath::Clamp(Health, 0.f, MaxHealth);
 	if (Health <= 0.f)
 	{

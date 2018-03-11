@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "DataStructures.h"
 #include "Minion.generated.h"
 
 //DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FMinionIsKilledSignature, class AActor*, KilledMinion, class AActor*, Instigator);
@@ -44,5 +45,10 @@ public:
 		float Health;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = MinionInformation)
 		float MaxHealth;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = MinionInformation)
+		EArmorType AmorType;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = MinionInformation)
+		float Armor;
+
 
 };

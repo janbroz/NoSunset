@@ -8,6 +8,7 @@
 #include "Runtime/Engine/Public/TimerManager.h"
 #include "Towers/Projectile.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+#include "SunsetDamageType.h"
 
 // Sets default values
 ATower::ATower()
@@ -71,7 +72,7 @@ void ATower::OnEnemyBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* Ot
 
 void ATower::OnEnemyEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Enemy exits the tower range"));
+	//UE_LOG(LogTemp, Warning, TEXT("Enemy exits the tower range"));
 
 	auto MinionEnemy = Cast<AMinion>(OtherActor);
 	if (Target == MinionEnemy)
@@ -116,19 +117,19 @@ void ATower::AimTurret()
 }
 
 void ATower::Attack()
-{
-	bCanAttack = false;
-	GetWorldTimerManager().SetTimer(AttackHandler, this, &ATower::Reload, AttackSpeed, false);
+{	
 	if (Target)
 	{
-		Target->TakeDamage(AttackDamage, FDamageEvent::FDamageEvent(), nullptr, this);
-
+		bCanAttack = false;
+		GetWorldTimerManager().SetTimer(AttackHandler, this, &ATower::Reload, AttackSpeed, false);
+		//Target->TakeDamage(AttackDamage, FDamageEvent::FDamageEvent(), nullptr, this);
 
 		if (bUsesProjectiles)
 		{
 			AProjectile* Projectile = GetWorld()->SpawnActorDeferred<AProjectile>(ProjectileClass, ProjectileSpawnLocation->GetComponentTransform());
 			if (Projectile)
 			{
+				Projectile->SetupProjectileDamage(AttackType, AttackDamage, DamageType);
 				UGameplayStatics::FinishSpawningActor(Projectile, TowerHead->GetComponentTransform());
 			}
 		}

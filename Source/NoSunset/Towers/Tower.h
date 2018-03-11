@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "DataStructures.h"
 #include "Tower.generated.h"
 
 UCLASS()
@@ -41,12 +42,16 @@ public:
 	void Reload();
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TowerInformation)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackInformation)
 		float AttackSpeed;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TowerInformation)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackInformation)
 		float AttackRange;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TowerInformation)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackInformation)
 		float AttackDamage;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackInformation)
+		EElementType AttackType;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackInformation)
+		TSubclassOf<class USunsetDamageType> DamageType;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TowerInformation)
 		float Cost;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TowerInformation)

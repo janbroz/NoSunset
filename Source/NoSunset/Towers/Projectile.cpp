@@ -4,6 +4,9 @@
 #include "Runtime/Engine/Classes/Components/SphereComponent.h"
 #include "Runtime/Engine/Classes/Components/StaticMeshComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Runtime/Engine/Public/TimerManager.h"
+#include "Enemies/Minion.h"
+#include "SunsetDamageType.h"
 
 // Sets default values
 AProjectile::AProjectile()
@@ -30,7 +33,7 @@ AProjectile::AProjectile()
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	SetTimeToLive();
 }
 
 // Called every frame
@@ -42,10 +45,48 @@ void AProjectile::Tick(float DeltaTime)
 
 void AProjectile::OnProjectileBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	UE_LOG(LogTemp, Warning, TEXT("El actor es: %s"), *OtherActor->GetName());
+	//UE_LOG(LogTemp, Warning, TEXT("El actor es: %s"), *OtherActor->GetName());
+
+	auto MinionOverlapped = Cast<AMinion>(OtherActor);
+	if (MinionOverlapped && DamageClass)
+	{
+		//UE_LOG(LogTemp, Warning, TEXT("Valid stuff"));
+		MinionOverlapped->TakeDamage(Damage, FDamageEvent(DamageClass), nullptr, this);
+
+		DestroyProjectile();
+		//if (Target && Target == MinionOverlapped)
+		//{
+		//	// At this point we should apply the damage to the minion and do something if the attack is 
+		//	// supposed to do AOE or apply a DoT.
+		//	//Target->TakeDamage(Damage, FDamageEvent(DamageClass), nullptr, this);
+
+		//}
+		//else
+		//{
+		//	// Should we do something? Cause we just hit a minion that is not our target.
+		//}
+	}
 }
 
 void AProjectile::OnProjectileEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 
+}
+
+void AProjectile::SetTimeToLive()
+{
+	GetWorldTimerManager().SetTimer(TTLHandler, this, &AProjectile::DestroyProjectile, 3.f, false);
+}
+
+void AProjectile::DestroyProjectile()
+{
+	// Do stuff like explode or dissapear.
+	Destroy();
+}
+
+void AProjectile::SetupProjectileDamage(EElementType DamageType, float Damage, TSubclassOf<USunsetDamageType> DamageClass)
+{
+	this->Damage = Damage;
+	this->DamageType = DamageType;
+	this->DamageClass = DamageClass;
 }
