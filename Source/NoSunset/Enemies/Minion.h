@@ -22,6 +22,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+private:
+	void UpdateDamageReduction();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -41,14 +44,15 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Event Manager")
 		class UGlobalEventHandler* EventHandler;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = MinionInformation)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MinionInformation)
 		float Health;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = MinionInformation)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MinionInformation)
 		float MaxHealth;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = MinionInformation)
-		EArmorType AmorType;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = MinionInformation)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MinionInformation)
+		EArmorType ArmorType;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MinionInformation)
 		float Armor;
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = MinionInformation)
+		float DamageReduction;
 
 };

@@ -5,7 +5,7 @@
 #include "Player/SunsetPlayerController.h"
 #include "Player/SunsetPlayerState.h"
 #include "SunsetGameState.h"
-
+#include "SunsetGameInstance.h"
 
 ANoSunsetGameModeBase::ANoSunsetGameModeBase()
 {
@@ -13,4 +13,5 @@ ANoSunsetGameModeBase::ANoSunsetGameModeBase()
 	PlayerControllerClass = ASunsetPlayerController::StaticClass();
 	GameStateClass = ASunsetGameState::StaticClass();
 	PlayerStateClass = ASunsetPlayerState::StaticClass();
+	
 }

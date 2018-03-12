@@ -50,9 +50,12 @@ void AProjectile::OnProjectileBeginOverlap(UPrimitiveComponent* OverlappedComp, 
 	auto MinionOverlapped = Cast<AMinion>(OtherActor);
 	if (MinionOverlapped && DamageClass)
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("Valid stuff"));
-		MinionOverlapped->TakeDamage(Damage, FDamageEvent(DamageClass), nullptr, this);
+		UE_LOG(LogTemp, Warning, TEXT("Valid stuff"));
+		FSunsetDamageEvent MyDamageEvent = FSunsetDamageEvent();
+		MyDamageEvent.TypeOfAttack = DamageType;
 
+		MinionOverlapped->TakeDamage(Damage, MyDamageEvent, nullptr, this);
+		
 		DestroyProjectile();
 		//if (Target && Target == MinionOverlapped)
 		//{
