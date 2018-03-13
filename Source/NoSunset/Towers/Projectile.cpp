@@ -50,7 +50,7 @@ void AProjectile::OnProjectileBeginOverlap(UPrimitiveComponent* OverlappedComp, 
 	auto MinionOverlapped = Cast<AMinion>(OtherActor);
 	if (MinionOverlapped && DamageClass)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Valid stuff"));
+		//UE_LOG(LogTemp, Warning, TEXT("Valid stuff"));
 		FSunsetDamageEvent MyDamageEvent = FSunsetDamageEvent();
 		MyDamageEvent.TypeOfAttack = DamageType;
 
@@ -92,4 +92,12 @@ void AProjectile::SetupProjectileDamage(EElementType DamageType, float Damage, T
 	this->Damage = Damage;
 	this->DamageType = DamageType;
 	this->DamageClass = DamageClass;
+}
+
+void AProjectile::SetupProjectileAsHoming(USceneComponent* Target)
+{
+	ProjectileMovement->bIsHomingProjectile = true;
+	ProjectileMovement->HomingTargetComponent = Target;
+	ProjectileMovement->HomingAccelerationMagnitude = 20000.f;
+	ProjectileMovement->MaxSpeed = 1600.f;
 }

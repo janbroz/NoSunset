@@ -12,7 +12,11 @@ USunsetGameInstance::USunsetGameInstance()
 	{
 		TowersTable = TowerLookupTable_BP.Object;
 	}
-
+	static ConstructorHelpers::FObjectFinder<UDataTable> BuildingsLookupTable_BP(TEXT("DataTable'/Game/GameplayData/Buildings.Buildings'"));
+	if (BuildingsLookupTable_BP.Object)
+	{
+		BuildingsTable = BuildingsLookupTable_BP.Object;
+	}
 }
 
 void USunsetGameInstance::Init()
@@ -25,7 +29,7 @@ void USunsetGameInstance::Init()
 
 float USunsetGameInstance::GetArmorContribution(EElementType AttackType, EArmorType ArmorType)
 {
-	UE_LOG(LogTemp, Warning, TEXT("It calculated something"));
+	//UE_LOG(LogTemp, Warning, TEXT("It calculated something"));
 	float Multiplier = 1.f;
 	FString AttackName = GetAttackName(ArmorType);
 	FName ColName = FName(*AttackName);
@@ -68,4 +72,19 @@ FString USunsetGameInstance::GetAttackName(EArmorType ArmorType)
 	const UEnum* EnumPtr = FindObject<UEnum>(ANY_PACKAGE, TEXT("EArmorType"), true);
 	if (!EnumPtr) return FString("Invalid");
 	return EnumPtr->GetNameStringByValue((uint8)ArmorType);
+}
+
+TSoftClassPtr<ATower> USunsetGameInstance::GetTowerSoftPtr(int32 Index, EHeroClass HeroClass)
+{
+	FString IndexString = FString::FromInt(Index);
+	FName RowName = FName(*IndexString);
+	FHeroTowers* RowLookup = BuildingsTable->FindRow<FHeroTowers>(RowName, "", true);
+	if (RowLookup)
+	{
+		return RowLookup->Magician;
+	}
+	else
+	{
+		return nullptr;
+	}
 }

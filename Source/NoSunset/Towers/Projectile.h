@@ -35,7 +35,8 @@ public:
 		void DestroyProjectile();
 	UFUNCTION()
 		void SetupProjectileDamage(EElementType DamageType, float Damage, TSubclassOf<class USunsetDamageType> DamageClass);
-
+	UFUNCTION()
+		void SetupProjectileAsHoming(USceneComponent* Target);
 
 public:
 

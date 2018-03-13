@@ -121,13 +121,16 @@ void ASunsetPlayerController::CheckBuilding()
 
 		FName BuildTag = FName(TEXT("BuildingZone"));
 
+		if (!Hit.bBlockingHit) return;
+
 		if (Hit.bBlockingHit && Hit.Actor->ActorHasTag(BuildTag))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("The actor is: %s"), *Hit.Actor->GetName());
-
+			//UE_LOG(LogTemp, Warning, TEXT("The actor is: %s"), *Hit.Actor->GetName());
+			DrawDebugBox(GetWorld(), SnapCoordinates(Hit.Location), FVector(50.f, 50.f, 50.f), FColor::Green, false, 0.03f, 2, 2.f);
+		}
+		else
+		{
 			DrawDebugBox(GetWorld(), SnapCoordinates(Hit.Location), FVector(50.f, 50.f, 50.f), FColor::Red, false, 0.03f, 2, 2.f);
-
-
 		}
 	}
 }

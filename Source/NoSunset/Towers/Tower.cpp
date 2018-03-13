@@ -130,6 +130,7 @@ void ATower::Attack()
 			if (Projectile)
 			{
 				Projectile->SetupProjectileDamage(AttackType, AttackDamage, DamageType);
+				Projectile->SetupProjectileAsHoming(Target->GetRootComponent());
 				UGameplayStatics::FinishSpawningActor(Projectile, TowerHead->GetComponentTransform());
 			}
 		}

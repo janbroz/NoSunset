@@ -28,6 +28,8 @@ public:
 
 	UFUNCTION()
 		void HandleMinionKilled(class AActor* KilledMinion);
+	UFUNCTION(BlueprintCallable)
+		TSubclassOf<class AMinion> GetCurrentWaveClass(int32 CurrentWave);
 
 public:
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Placement information", Meta = (MakeEditWidget = true))

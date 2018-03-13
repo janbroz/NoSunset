@@ -24,8 +24,13 @@ public:
 	float GetArmorContribution(EElementType AttackType, EArmorType ArmorType);
 	FString GetAttackName(EArmorType ArmorType);
 
+	UFUNCTION(BlueprintCallable, Category=TowersInformation)
+		TSoftClassPtr<class ATower> GetTowerSoftPtr(int32 Index, EHeroClass HeroClass);
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Minion information")
 		UDataTable* TowersTable;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Minion information")
+		UDataTable* BuildingsTable;
 
 };

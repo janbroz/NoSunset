@@ -98,3 +98,16 @@ void AWaveSpawner::SetNextWave()
 	EnemiesSpawned = 0;
 	EnemiesAlive = 0;
 }
+
+TSubclassOf<class AMinion> AWaveSpawner::GetCurrentWaveClass(int32 CurrentWave)
+{
+	if (MinionClasses.IsValidIndex(CurrentWave))
+	{
+		return MinionClasses[CurrentWave];
+	}
+	else
+	{
+		return nullptr;
+	}
+
+}

@@ -95,5 +95,5 @@ float AMinion::TakeDamage(float DamageAmount, struct FDamageEvent const & Damage
 
 void AMinion::UpdateDamageReduction()
 {
-	DamageReduction = 1 - (0.05f * Armor / (1 + 0.05f * FMath::Abs(Armor)  ));
+	DamageReduction = 1 - (0.05f * Armor / (1 + 0.05f * FMath::Abs(Armor)));
 }

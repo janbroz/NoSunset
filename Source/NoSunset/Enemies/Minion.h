@@ -43,7 +43,8 @@ public:
 public:
 	UPROPERTY(EditAnywhere, Category = "Event Manager")
 		class UGlobalEventHandler* EventHandler;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MinionInformation)
+		FName UnitName;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MinionInformation)
 		float Health;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MinionInformation)
