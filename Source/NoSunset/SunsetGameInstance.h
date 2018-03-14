@@ -26,6 +26,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category=TowersInformation)
 		TSoftClassPtr<class ATower> GetTowerSoftPtr(int32 Index, EHeroClass HeroClass);
+	UFUNCTION(BlueprintCallable, Category = TowersInformation)
+		FString GetTowerReference(int32 Index, EHeroClass HeroClass);
+	UFUNCTION(BlueprintCallable, Category = TowersInformation)
+		UClass* GetTowerClass(int32 Index, EHeroClass HeroClass);
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Minion information")

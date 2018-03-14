@@ -111,6 +111,8 @@ public:
 		TSoftClassPtr<class ATower> Techmaster;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = BuildingTowers)
 		TSoftClassPtr<class ATower> Fighter;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = BuildingTowers)
+		FString BlueprintClass;
 };
 
 class NOSUNSET_API DataStructures

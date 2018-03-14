@@ -3,7 +3,8 @@
 #include "SunsetGameInstance.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "DataStructures.h"
-
+#include "Towers/Tower.h"
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 
 USunsetGameInstance::USunsetGameInstance()
 {
@@ -82,6 +83,56 @@ TSoftClassPtr<ATower> USunsetGameInstance::GetTowerSoftPtr(int32 Index, EHeroCla
 	if (RowLookup)
 	{
 		return RowLookup->Magician;
+	}
+	else
+	{
+		return nullptr;
+	}
+}
+
+FString USunsetGameInstance::GetTowerReference(int32 Index, EHeroClass HeroClass)
+{
+	FString IndexString = FString::FromInt(Index);
+	FName RowName = FName(*IndexString);
+	FHeroTowers* RowLookup = BuildingsTable->FindRow<FHeroTowers>(RowName, "", true);
+	if (RowLookup)
+	{
+		UClass* TowerClass = FindObject<UClass>(ANY_PACKAGE, TEXT("/Game/Blueprints/Towers/TheTower.TheTower_C"));
+		ATower* TmpTower = LoadObject<ATower>(NULL, TEXT("/Game/Blueprints/Towers/TheTower.TheTower_C"), NULL, LOAD_None, NULL);
+		if (TowerClass)
+		{
+			
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Not a valid asset"));
+		}
+		return RowLookup->BlueprintClass;
+	}
+	else
+	{
+		return "Invalid";
+	}
+}
+
+UClass* USunsetGameInstance::GetTowerClass(int32 Index, EHeroClass HeroClass)
+{
+	FString IndexString = FString::FromInt(Index);
+	FName RowName = FName(*IndexString);
+	FHeroTowers* RowLookup = BuildingsTable->FindRow<FHeroTowers>(RowName, "", true);
+	if (RowLookup)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Stuff is: %s"), *RowLookup->BlueprintClass);
+		FString Sts = "/Game/Blueprints/Towers/TheTower.TheTower_C";
+		UClass* TowerClass = LoadObject<UClass>(NULL, *Sts, NULL, LOAD_None, NULL);
+		if (TowerClass)
+		{
+			return TowerClass;
+		}
+		else
+		{
+			return nullptr;
+		}
 	}
 	else
 	{

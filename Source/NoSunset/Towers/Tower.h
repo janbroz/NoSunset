@@ -43,6 +43,12 @@ public:
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackInformation)
+		FName TowerName;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackInformation)
+		FString Description;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackInformation)
+		UTexture2D* Icon;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackInformation)
 		float AttackSpeed;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackInformation)
 		float AttackRange;
