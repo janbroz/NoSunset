@@ -54,7 +54,8 @@ void AProjectile::OnProjectileBeginOverlap(UPrimitiveComponent* OverlappedComp, 
 		FSunsetDamageEvent MyDamageEvent = FSunsetDamageEvent();
 		MyDamageEvent.TypeOfAttack = DamageType;
 
-		MinionOverlapped->TakeDamage(Damage, MyDamageEvent, nullptr, this);
+		AController* Instigator = Cast<AController>(GetOwner());
+		MinionOverlapped->TakeDamage(Damage, MyDamageEvent, Instigator, SpawnedBy);
 		
 		DestroyProjectile();
 		//if (Target && Target == MinionOverlapped)

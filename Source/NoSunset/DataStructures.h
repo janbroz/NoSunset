@@ -40,9 +40,19 @@ enum class EHeroClass : uint8
 	Fighter		UMETA(DisplayName = "Fighter")
 };
 
+UENUM(BlueprintType)
+enum class ETowerMode : uint8
+{
+	Placing		UMETA(DisplayName = "Placing"),
+	Building	UMETA(DisplayName = "Building"),
+	Working		UMETA(DisplayName = "Working"),
+	Upgrading	UMETA(DisplayName = "Upgrading")
+};
+
 inline uint8 GetTypeHash(const EElementType A) { return (uint8)A; }
 inline uint8 GetTypeHash(const EArmorType A) { return (uint8)A; }
 inline uint8 GetTypeHash(const EHeroClass A) { return (uint8)A; }
+inline uint8 GetTypeHash(const ETowerMode A) { return (uint8)A; }
 
 USTRUCT()
 struct NOSUNSET_API FSunsetDamageEvent : public FDamageEvent
@@ -100,19 +110,17 @@ struct FHeroTowers : public FTableRowBase
 	GENERATED_USTRUCT_BODY()
 public:
 	FHeroTowers()
-		: Magician(nullptr)
-		, Techmaster(nullptr)
-		, Fighter(nullptr)
+		: Magician("")
+		, Techmaster("")
+		, Fighter("")
 	{}
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = BuildingTowers)
-		TSoftClassPtr<class ATower> Magician;
+		FString Magician;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = BuildingTowers)
-		TSoftClassPtr<class ATower> Techmaster;
+		FString Techmaster;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = BuildingTowers)
-		TSoftClassPtr<class ATower> Fighter;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = BuildingTowers)
-		FString BlueprintClass;
+		FString Fighter;
 };
 
 class NOSUNSET_API DataStructures

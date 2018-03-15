@@ -19,7 +19,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void DamagePlayer(int32 Damage);
-
+	UFUNCTION(BlueprintCallable)
+		void ModifyGold(int32 Amount);
 
 public:
 	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = PlayerInformation)

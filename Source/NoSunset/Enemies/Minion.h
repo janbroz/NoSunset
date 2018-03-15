@@ -37,7 +37,7 @@ public:
 
 	// Destroy the minion and broadcast to the game state / game info.
 	UFUNCTION(BlueprintCallable, Category = "Minion interaction")
-		void KillMinion();
+		void KillMinion(class AController* EventInstigator, AActor * DamageCauser);
 
 	
 public:
@@ -49,6 +49,8 @@ public:
 		float Health;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MinionInformation)
 		float MaxHealth;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MinionInformation)
+		int32 Bounty;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MinionInformation)
 		EArmorType ArmorType;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MinionInformation)

@@ -24,15 +24,19 @@ ATower::ATower()
 	RangeSphere->SetupAttachment(RootComponent);
 	RangeSphere->OnComponentBeginOverlap.AddDynamic(this, &ATower::OnEnemyBeginOverlap);
 	RangeSphere->OnComponentEndOverlap.AddDynamic(this, &ATower::OnEnemyEndOverlap);
+	RangeSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	TowerBase = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Tower Base"));
 	TowerBase->SetupAttachment(RootComponent);
+	TowerBase->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	
 	TowerHead = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Tower Head"));
 	TowerHead->SetupAttachment(TowerBase);
+	TowerHead->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	TowerCanon = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Tower Canon"));
 	TowerCanon->SetupAttachment(TowerHead);
+	TowerCanon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	ProjectileSpawnLocation = CreateDefaultSubobject<USceneComponent>(TEXT("Projectile spawn location"));
 	ProjectileSpawnLocation->SetupAttachment(TowerCanon);
@@ -129,6 +133,8 @@ void ATower::Attack()
 			AProjectile* Projectile = GetWorld()->SpawnActorDeferred<AProjectile>(ProjectileClass, ProjectileSpawnLocation->GetComponentTransform());
 			if (Projectile)
 			{
+				Projectile->SetOwner(GetOwner());
+				Projectile->SpawnedBy = this;
 				Projectile->SetupProjectileDamage(AttackType, AttackDamage, DamageType);
 				Projectile->SetupProjectileAsHoming(Target->GetRootComponent());
 				UGameplayStatics::FinishSpawningActor(Projectile, TowerHead->GetComponentTransform());
@@ -141,4 +147,33 @@ void ATower::Reload()
 {
 	// Run the reload animation and stuff related.
 	bCanAttack = true;
+}
+
+void ATower::SetTowerMode(ETowerMode Mode)
+{
+	switch (Mode)
+	{
+	case ETowerMode::Placing:
+		break;
+	case ETowerMode::Building:
+		BeginTowerBuilding();
+		break;
+	case ETowerMode::Working:
+		RangeSphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		break;
+	case ETowerMode::Upgrading:
+		break;
+	default:
+		break;
+	}
+}
+
+void ATower::BeginTowerBuilding()
+{
+	GetWorldTimerManager().SetTimer(BuildTimerHandle, this, &ATower::EndTowerBuilding, BuildingTime);
+}
+
+void ATower::EndTowerBuilding()
+{
+	SetTowerMode(ETowerMode::Working);
 }

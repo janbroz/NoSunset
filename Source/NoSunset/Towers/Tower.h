@@ -39,6 +39,12 @@ public:
 	UFUNCTION()
 		void Attack();
 
+
+	UFUNCTION()
+		void SetTowerMode(ETowerMode Mode);
+
+	void BeginTowerBuilding();
+	void EndTowerBuilding();
 	void Reload();
 
 public:
@@ -84,6 +90,8 @@ public:
 		uint32 bUsesProjectiles : 1;
 	UPROPERTY(EditAnywhere, Category = TowerInformation)
 		TSubclassOf<class AProjectile> ProjectileClass;
+	UPROPERTY(VisibleAnywhere, Category = TowerInformation)
+		FTimerHandle BuildTimerHandle;
 	FTimerHandle AttackHandler;
 	
 };

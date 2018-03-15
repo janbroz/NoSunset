@@ -22,7 +22,7 @@ public:
 	void InitializeSpawners();
 
 	UFUNCTION()
-		void RespondToMinionKilled(class AActor* MinionKilled);
+		void RespondToMinionKilled(class AActor* MinionKilled, class AController* EventInstigator, AActor* DamageCauser);
 	UFUNCTION()
 		void HandleWaveCleared();
 

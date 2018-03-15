@@ -6,6 +6,9 @@
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "GlobalEventHandler.h"
 #include "Runtime/Engine/Public/TimerManager.h"
+#include "Player/SunsetPlayerState.h"
+#include "Player/SunsetPlayerController.h"
+#include "Enemies/Minion.h"
 
 ASunsetGameState::ASunsetGameState()
 {
@@ -62,9 +65,22 @@ void ASunsetGameState::InitializeSpawners()
 	}
 }
 
-void ASunsetGameState::RespondToMinionKilled(AActor* MinionKilled)
+void ASunsetGameState::RespondToMinionKilled(AActor* MinionKilled, class AController* EventInstigator, AActor* DamageCauser)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Shit, someone got killed"));
+	ASunsetPlayerController* SPC = Cast<ASunsetPlayerController>(EventInstigator);
+	if (!SPC) return;
+	for(auto PlayerState : PlayerArray)
+	{
+		ASunsetPlayerState* SPState = Cast<ASunsetPlayerState>(PlayerState);
+		if (SPState && SPState == SPC->PlayerState)
+		{
+			AMinion* Minion = Cast<AMinion>(MinionKilled);
+			if (!Minion) return;
+			SPState->ModifyGold(Minion->Bounty);
+			break;
+		}
+	}
 }
 
 void ASunsetGameState::HandleWaveCleared()

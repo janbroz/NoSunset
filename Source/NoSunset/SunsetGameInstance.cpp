@@ -82,7 +82,7 @@ TSoftClassPtr<ATower> USunsetGameInstance::GetTowerSoftPtr(int32 Index, EHeroCla
 	FHeroTowers* RowLookup = BuildingsTable->FindRow<FHeroTowers>(RowName, "", true);
 	if (RowLookup)
 	{
-		return RowLookup->Magician;
+		return nullptr;
 	}
 	else
 	{
@@ -107,7 +107,7 @@ FString USunsetGameInstance::GetTowerReference(int32 Index, EHeroClass HeroClass
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Not a valid asset"));
 		}
-		return RowLookup->BlueprintClass;
+		return RowLookup->Magician;
 	}
 	else
 	{
@@ -122,7 +122,7 @@ UClass* USunsetGameInstance::GetTowerClass(int32 Index, EHeroClass HeroClass)
 	FHeroTowers* RowLookup = BuildingsTable->FindRow<FHeroTowers>(RowName, "", true);
 	if (RowLookup)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Stuff is: %s"), *RowLookup->BlueprintClass);
+		UE_LOG(LogTemp, Warning, TEXT("Stuff is: %s"), *RowLookup->Magician);
 		FString Sts = "/Game/Blueprints/Towers/TheTower.TheTower_C";
 		UClass* TowerClass = LoadObject<UClass>(NULL, *Sts, NULL, LOAD_None, NULL);
 		if (TowerClass)

@@ -7,7 +7,7 @@
 #include "GlobalEventHandler.generated.h"
 
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMinionDelegate_OnMinionKilled, class AActor*, MinionKilled);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FMinionDelegate_OnMinionKilled, class AActor*, MinionKilled, class AController*, EventInstigator, class AActor*, DamageCauser);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FWaveDelegate_OnFullySpawnedWave);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FWaveDelegate_OnClearedWave);
 

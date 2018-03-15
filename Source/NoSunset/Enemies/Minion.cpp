@@ -53,12 +53,12 @@ void AMinion::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
-void AMinion::KillMinion()
+void AMinion::KillMinion(class AController* EventInstigator, AActor * DamageCauser)
 {
 	// Call either the wave spawner or the game state.
 
 	//Minion_OnKilled.Broadcast(this, nullptr);
-	EventHandler->OnMinionKilled.Broadcast(this);
+	EventHandler->OnMinionKilled.Broadcast(this, EventInstigator, DamageCauser);
 	Destroy();
 }
 
@@ -88,7 +88,9 @@ float AMinion::TakeDamage(float DamageAmount, struct FDamageEvent const & Damage
 	Health = FMath::Clamp(Health, 0.f, MaxHealth);
 	if (Health <= 0.f)
 	{
-		KillMinion();
+		UE_LOG(LogTemp, Warning, TEXT("Got killed by: %s who shoot an %s"), *EventInstigator->GetName(), *DamageCauser->GetName());
+
+		KillMinion(EventInstigator, DamageCauser);
 	}
 	return DamageCaused;
 }

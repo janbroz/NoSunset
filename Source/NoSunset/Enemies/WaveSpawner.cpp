@@ -82,7 +82,7 @@ void AWaveSpawner::SpawnCurrentWave()
 	}
 }
 
-void AWaveSpawner::HandleMinionKilled(AActor* MinionKilled)
+void AWaveSpawner::HandleMinionKilled(AActor* MinionKilled, class AController* EventInstigator, AActor* DamageCauser)
 {
 	EnemiesAlive = FMath::Clamp(EnemiesAlive-1, 0, EnemiesToSpawn);
 

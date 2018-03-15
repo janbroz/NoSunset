@@ -39,3 +39,9 @@ void ASunsetPlayerState::DamagePlayer(int32 Damage)
 		}
 	}
 }
+
+void ASunsetPlayerState::ModifyGold(int32 Amount)
+{
+	Gold += Amount;
+
+}

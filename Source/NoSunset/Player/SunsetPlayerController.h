@@ -33,9 +33,14 @@ public:
 		void ToggleMainMenu();
 	UFUNCTION(BlueprintCallable)
 		void CheckBuilding();
-
-	FVector SnapCoordinates(FVector InitialCoords);
-
+	UFUNCTION(BlueprintCallable)
+		bool SpawnTowerFromClass(UClass* ClassToSpawn);
+	UFUNCTION(BlueprintCallable)
+		FVector SnapCoordinates(FVector InitialCoords);
+	UFUNCTION(BlueprintCallable)
+		bool DoesPlayerHasTheMoney(TSubclassOf<class ATower> ClassToBuild);
+	UFUNCTION(BlueprintCallable)
+		void ReimburseTowerCost(class ATower* Tower);
 public:
 	class ASunsetPawn* ThePlayerPawn;
 
@@ -45,8 +50,10 @@ public:
 		uint32 bRightMousePressed : 1;
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Controller information")
 		uint32 bBuilding : 1;
-
-
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Controller information")
+		uint32 bValidSurfaceForBuilding : 1;
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Controller information")
+		class ATower* SpawningTower;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player information")
 		class UPlayerHUDWidget* PlayerHUD;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player information")

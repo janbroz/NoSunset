@@ -27,7 +27,7 @@ public:
 	void SetNextWave();
 
 	UFUNCTION()
-		void HandleMinionKilled(class AActor* KilledMinion);
+		void HandleMinionKilled(class AActor* KilledMinion, class AController* EventInstigator, AActor* DamageCauser);
 	UFUNCTION(BlueprintCallable)
 		TSubclassOf<class AMinion> GetCurrentWaveClass(int32 CurrentWave);
 

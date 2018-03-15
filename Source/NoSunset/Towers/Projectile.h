@@ -58,7 +58,8 @@ public:
 		class UStaticMeshComponent* ProjectileMesh;
 	UPROPERTY(VisibleAnywhere, Category = "Projectile information")
 		class UProjectileMovementComponent* ProjectileMovement;
-
+	UPROPERTY(VisibleAnywhere, Category = "Projectile information")
+		AActor* SpawnedBy;
 	FTimerHandle TTLHandler;
 
 
