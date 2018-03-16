@@ -31,5 +31,7 @@ public:
 		int32 CurrentLives;
 	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = PlayerInformation)
 		int32 MaxLives;
+	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = PlayerInformation)
+		EHeroClass HeroClass;
 	
 };

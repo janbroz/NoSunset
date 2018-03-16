@@ -28,6 +28,15 @@ public:
 	void RightMouseReleased();
 
 	UFUNCTION(BlueprintCallable)
+		void FirstPressed();
+	UFUNCTION(BlueprintCallable)
+		void SecondPressed();
+	UFUNCTION(BlueprintCallable)
+		void ThirdPressed();
+	UFUNCTION(BlueprintCallable)
+		void ForthPressed();
+
+	UFUNCTION(BlueprintCallable)
 		void ToggleBuilding();
 	UFUNCTION(BlueprintCallable)
 		void ToggleMainMenu();

@@ -14,7 +14,10 @@ class NOSUNSET_API UPlayerHUDWidget : public UUserWidget
 {
 	GENERATED_BODY()
 	
-	
+public:
+
+	UFUNCTION(BlueprintImplementableEvent, Category = UITalking)
+		void ToggleBuildOptions(bool bBuilding);
 	
 	
 };

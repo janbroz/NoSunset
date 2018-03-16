@@ -7,6 +7,7 @@
 #include "Runtime/Engine/Public/DrawDebugHelpers.h"
 #include "Towers/Tower.h"
 #include "Player/SunsetPlayerState.h"
+#include "SunsetGameInstance.h"
 
 ASunsetPlayerController::ASunsetPlayerController()
 {
@@ -118,12 +119,40 @@ void ASunsetPlayerController::ToggleBuilding()
 	{
 		ReimburseTowerCost(SpawningTower);
 	}
+	if (PlayerHUD)
+	{
+		PlayerHUD->ToggleBuildOptions(bBuilding);
+	}
 }
 
 void ASunsetPlayerController::ToggleMainMenu()
 {
 
 }
+
+void ASunsetPlayerController::FirstPressed()
+{
+	if (bBuilding)
+	{
+		USunsetGameInstance* GameInstance = Cast<USunsetGameInstance>(GetWorld()->GetGameInstance());
+		if (!GameInstance)return;
+
+		auto TowerClass = GameInstance->GetTowerClass(1, )
+
+
+	}
+
+
+}
+
+void ASunsetPlayerController::SecondPressed()
+{}
+
+void ASunsetPlayerController::ThirdPressed()
+{}
+
+void ASunsetPlayerController::ForthPressed()
+{}
 
 void ASunsetPlayerController::CheckBuilding()
 {

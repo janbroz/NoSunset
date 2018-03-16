@@ -89,17 +89,36 @@ void ATower::GetANewTarget()
 {
 	TArray<AActor*> OverlapingMinions;
 	RangeSphere->GetOverlappingActors(OverlapingMinions, AMinion::StaticClass());
-	int32 Elem = OverlapingMinions.Num();
-
+	
+	/*int32 Elem = OverlapingMinions.Num();
 	if (Elem > 0)
 	{
 		int32 RandTarget = FMath::RandHelper(Elem - 1);
 		Target = Cast<AMinion>(OverlapingMinions[RandTarget]);
+	}*/
+
+	// This way we search for the closest enemy.
+	// Use the comented code if you want to grab a random enemy
+	AActor* ClosestMinion = nullptr;
+	for (auto TmpMinion : OverlapingMinions)
+	{
+		if (ClosestMinion)
+		{
+			float DistToFirst = FVector::Dist(ClosestMinion->GetActorLocation(), GetActorLocation());
+			float DistToSecond = FVector::Dist(TmpMinion->GetActorLocation(), GetActorLocation());
+			ClosestMinion = DistToFirst <= DistToSecond ? ClosestMinion : TmpMinion;
+		}
+		else
+		{
+			ClosestMinion = TmpMinion;
+		}
 	}
-	else
+	Target = Cast<AMinion>(ClosestMinion);
+	
+	/*else
 	{
 		Target = nullptr;
-	}
+	}*/
 }
 
 void ATower::AimTurret()
