@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerState.h"
+#include "DataStructures.h"
 #include "SunsetPlayerState.generated.h"
 
 /**
@@ -16,6 +17,7 @@ class NOSUNSET_API ASunsetPlayerState : public APlayerState
 public:
 	ASunsetPlayerState();
 	
+	virtual void BeginPlay() override;
 
 	UFUNCTION(BlueprintCallable)
 		void DamagePlayer(int32 Damage);
@@ -23,6 +25,8 @@ public:
 		void ModifyGold(int32 Amount);
 
 public:
+	UPROPERTY()
+		class ASunsetPlayerController* PlayerController;
 	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = PlayerInformation)
 		int32 Gold;
 	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = PlayerInformation)

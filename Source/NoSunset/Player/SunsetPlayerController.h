@@ -27,6 +27,8 @@ public:
 	void LeftMouseReleased();
 	void RightMouseReleased();
 
+	void UpdateHUDResources();
+
 	UFUNCTION(BlueprintCallable)
 		void FirstPressed();
 	UFUNCTION(BlueprintCallable)

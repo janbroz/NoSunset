@@ -3,6 +3,7 @@
 #include "SunsetPlayerState.h"
 #include "Net/UnrealNetwork.h"
 #include "Runtime/Engine/Classes/Engine/World.h"
+#include "Player/SunsetPlayerController.h"
 
 ASunsetPlayerState::ASunsetPlayerState()
 {
@@ -22,6 +23,13 @@ void ASunsetPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty> &O
 	DOREPLIFETIME(ASunsetPlayerState, SpecialResource);
 	DOREPLIFETIME(ASunsetPlayerState, MaxLives);
 	DOREPLIFETIME(ASunsetPlayerState, CurrentLives);
+}
+
+void ASunsetPlayerState::BeginPlay()
+{
+	Super::BeginPlay();
+
+	PlayerController = Cast<ASunsetPlayerController>(GetOwner());
 }
 
 void ASunsetPlayerState::DamagePlayer(int32 Damage)
@@ -44,4 +52,8 @@ void ASunsetPlayerState::ModifyGold(int32 Amount)
 {
 	Gold += Amount; 
 
+	if (PlayerController)
+	{
+		PlayerController->UpdateHUDResources();
+	}
 }

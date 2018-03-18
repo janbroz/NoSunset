@@ -124,7 +124,7 @@ UClass* USunsetGameInstance::GetTowerClass(int32 Index, EHeroClass HeroClass)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Stuff is: %s"), *RowLookup->Magician);
 		FString Sts = "/Game/Blueprints/Towers/TheTower.TheTower_C";
-		UClass* TowerClass = LoadObject<UClass>(NULL, *Sts, NULL, LOAD_None, NULL);
+		UClass* TowerClass = LoadObject<UClass>(NULL, *RowLookup->Magician, NULL, LOAD_None, NULL);
 		if (TowerClass)
 		{
 			return TowerClass;
@@ -138,4 +138,11 @@ UClass* USunsetGameInstance::GetTowerClass(int32 Index, EHeroClass HeroClass)
 	{
 		return nullptr;
 	}
+}
+
+int32 USunsetGameInstance::GetTowerNumber()
+{
+	TArray<FHeroTowers*> ArrayOfTowers;
+	BuildingsTable->GetAllRows("", ArrayOfTowers);
+	return ArrayOfTowers.Num();
 }

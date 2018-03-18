@@ -30,6 +30,8 @@ public:
 		FString GetTowerReference(int32 Index, EHeroClass HeroClass);
 	UFUNCTION(BlueprintCallable, Category = TowersInformation)
 		UClass* GetTowerClass(int32 Index, EHeroClass HeroClass);
+	UFUNCTION(BlueprintCallable, Category = TowersInformation)
+		int32 GetTowerNumber();
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Minion information")

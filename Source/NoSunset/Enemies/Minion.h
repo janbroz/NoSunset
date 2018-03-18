@@ -55,6 +55,8 @@ public:
 		EArmorType ArmorType;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MinionInformation)
 		float Armor;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MinionInformation)
+		uint32 bIsBoss : 1;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = MinionInformation)
 		float DamageReduction;
 

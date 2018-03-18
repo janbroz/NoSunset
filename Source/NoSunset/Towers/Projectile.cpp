@@ -48,7 +48,7 @@ void AProjectile::OnProjectileBeginOverlap(UPrimitiveComponent* OverlappedComp, 
 	//UE_LOG(LogTemp, Warning, TEXT("El actor es: %s"), *OtherActor->GetName());
 
 	auto MinionOverlapped = Cast<AMinion>(OtherActor);
-	if (MinionOverlapped && DamageClass)
+	if (MinionOverlapped)
 	{
 		//UE_LOG(LogTemp, Warning, TEXT("Valid stuff"));
 		FSunsetDamageEvent MyDamageEvent = FSunsetDamageEvent();

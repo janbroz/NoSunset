@@ -63,6 +63,11 @@ void AWaveSpawner::SpawnCurrentWave()
 				EnemiesSpawned++;
 				EnemiesAlive++;
 
+				if (CurrentMinion->bIsBoss)
+				{
+					EnemiesToSpawn = 1;
+				}
+
 				if (EnemiesSpawned == EnemiesToSpawn)
 				{
 					bWaveFullySpawned = true;
@@ -85,6 +90,11 @@ void AWaveSpawner::SpawnCurrentWave()
 void AWaveSpawner::HandleMinionKilled(AActor* MinionKilled, class AController* EventInstigator, AActor* DamageCauser)
 {
 	EnemiesAlive = FMath::Clamp(EnemiesAlive-1, 0, EnemiesToSpawn);
+	auto Minion = Cast<AMinion>(MinionKilled);
+	if (Minion && Minion->bIsBoss)
+	{
+		EnemiesToSpawn = 10;
+	}
 
 	if (EnemiesAlive == 0 && bWaveFullySpawned)
 	{

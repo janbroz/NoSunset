@@ -9,6 +9,7 @@
 #include "Towers/Projectile.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "SunsetDamageType.h"
+#include "Engine/World.h"
 
 // Sets default values
 ATower::ATower()
@@ -24,19 +25,15 @@ ATower::ATower()
 	RangeSphere->SetupAttachment(RootComponent);
 	RangeSphere->OnComponentBeginOverlap.AddDynamic(this, &ATower::OnEnemyBeginOverlap);
 	RangeSphere->OnComponentEndOverlap.AddDynamic(this, &ATower::OnEnemyEndOverlap);
-	RangeSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	TowerBase = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Tower Base"));
 	TowerBase->SetupAttachment(RootComponent);
-	TowerBase->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	
 	TowerHead = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Tower Head"));
 	TowerHead->SetupAttachment(TowerBase);
-	TowerHead->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	TowerCanon = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Tower Canon"));
 	TowerCanon->SetupAttachment(TowerHead);
-	TowerCanon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	ProjectileSpawnLocation = CreateDefaultSubobject<USceneComponent>(TEXT("Projectile spawn location"));
 	ProjectileSpawnLocation->SetupAttachment(TowerCanon);
@@ -129,7 +126,7 @@ void ATower::AimTurret()
 		FRotator NewRot = (Target->GetActorLocation() - TowerHead->GetComponentLocation()).Rotation();
 		TowerHead->SetWorldRotation(NewRot);
 
-		DrawDebugLine(GetWorld(), ProjectileSpawnLocation->GetComponentLocation() , Target->GetActorLocation(), FColor::Red, false, 0.03f, 8, 2.f);
+		//DrawDebugLine(GetWorld(), ProjectileSpawnLocation->GetComponentLocation() , Target->GetActorLocation(), FColor::Red, false, 0.03f, 8, 2.f);
 
 		if (bCanAttack)
 		{
@@ -149,7 +146,7 @@ void ATower::Attack()
 
 		if (bUsesProjectiles)
 		{
-			AProjectile* Projectile = GetWorld()->SpawnActorDeferred<AProjectile>(ProjectileClass, ProjectileSpawnLocation->GetComponentTransform());
+			AProjectile* Projectile = GetWorld()->SpawnActorDeferred<AProjectile>(ProjectileClass, ProjectileSpawnLocation->GetComponentTransform());		
 			if (Projectile)
 			{
 				Projectile->SetOwner(GetOwner());
@@ -173,6 +170,10 @@ void ATower::SetTowerMode(ETowerMode Mode)
 	switch (Mode)
 	{
 	case ETowerMode::Placing:
+		RangeSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		TowerBase->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		TowerHead->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		TowerCanon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		break;
 	case ETowerMode::Building:
 		BeginTowerBuilding();

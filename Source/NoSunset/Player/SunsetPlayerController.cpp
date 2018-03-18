@@ -8,6 +8,7 @@
 #include "Towers/Tower.h"
 #include "Player/SunsetPlayerState.h"
 #include "SunsetGameInstance.h"
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 
 ASunsetPlayerController::ASunsetPlayerController()
 {
@@ -48,6 +49,7 @@ void ASunsetPlayerController::BeginPlay()
 		if (PlayerHUD)
 		{
 			PlayerHUD->AddToViewport();
+			PlayerHUD->UpdatePlayerResources();
 		}
 	}
 }
@@ -65,7 +67,10 @@ void ASunsetPlayerController::VerticalMovement(float Amount)
 	if (ThePlayerPawn && Amount != 0.f)
 	{
 		FVector NewLocation = ThePlayerPawn->GetActorLocation();
-		NewLocation += GetActorForwardVector() * 15.f * Amount;
+
+		FRotator Rotation = GetControlRotation();
+		const FVector Direction = FRotationMatrix(Rotation).GetScaledAxis(EAxis::X);
+		NewLocation += Direction * 15.f * Amount;
 		ThePlayerPawn->SetActorLocation(NewLocation);
 
 		//UE_LOG(LogTemp, Warning, TEXT("Vertical"));
@@ -78,7 +83,9 @@ void ASunsetPlayerController::HorizontalMovement(float Amount)
 	{
 		//UE_LOG(LogTemp, Warning, TEXT("Horizontal"));
 		FVector NewLocation = ThePlayerPawn->GetActorLocation();
-		NewLocation += GetActorRightVector() * 15.f * Amount;
+		FRotator Rotation = GetControlRotation();
+		const FVector Direction = FRotationMatrix(Rotation).GetScaledAxis(EAxis::Y);
+		NewLocation += Direction * 15.f * Amount;
 		ThePlayerPawn->SetActorLocation(NewLocation);
 	}
 }
@@ -99,7 +106,7 @@ void ASunsetPlayerController::LeftMouseReleased()
 {
 	bLeftMousePressed = false;
 
-	if (bBuilding && SpawningTower)
+	if (bBuilding && SpawningTower && bValidSurfaceForBuilding)
 	{
 		SpawningTower->SetTowerMode(ETowerMode::Building);
 		SpawningTower = nullptr;
@@ -137,7 +144,7 @@ void ASunsetPlayerController::FirstPressed()
 		USunsetGameInstance* GameInstance = Cast<USunsetGameInstance>(GetWorld()->GetGameInstance());
 		if (!GameInstance)return;
 
-		auto TowerClass = GameInstance->GetTowerClass(1, )
+		//auto TowerClass = GameInstance->GetTowerClass(1, )
 
 
 	}
@@ -213,16 +220,21 @@ bool ASunsetPlayerController::SpawnTowerFromClass(UClass* ClassToSpawn)
 	if (Hit.bBlockingHit)
 	{
 		FVector MouseAt = Hit.Location;
-		SpawningTower = GetWorld()->SpawnActor<ATower>(TowerClass, MouseAt, FRotator::ZeroRotator, FASP);
+		FTransform MouseTransform(FRotator::ZeroRotator, MouseAt, FVector(1.f, 1.f, 1.f));
+
+		SpawningTower = GetWorld()->SpawnActorDeferred<ATower>(TowerClass,  MouseTransform);
 	}
 	else
 	{
-		SpawningTower = GetWorld()->SpawnActor<ATower>(TowerClass, FVector::ZeroVector, FRotator::ZeroRotator, FASP);
+		FTransform MouseTransform(FRotator::ZeroRotator, FVector::ZeroVector, FVector(1.f, 1.f, 1.f));
+		SpawningTower = GetWorld()->SpawnActorDeferred<ATower>(TowerClass, MouseTransform);
 	}
 	if (SpawningTower)
 	{
 		SpawningTower->SetOwner(this);
-		UE_LOG(LogTemp, Warning, TEXT("My owner is: %s"), *SpawningTower->GetOwner()->GetName());
+		SpawningTower->SetTowerMode(ETowerMode::Placing);
+		UGameplayStatics::FinishSpawningActor(SpawningTower, SpawningTower->GetTransform());
+
 		ASunsetPlayerState* SPlayerState = Cast<ASunsetPlayerState>(PlayerState);
 		if (SPlayerState)
 		{
@@ -258,4 +270,10 @@ void ASunsetPlayerController::ReimburseTowerCost(ATower* Tower)
 	SPlayerState->ModifyGold(Tower->Cost);
 	SpawningTower->Destroy();
 	SpawningTower = nullptr;
+}
+
+void ASunsetPlayerController::UpdateHUDResources()
+{
+	PlayerHUD->UpdatePlayerResources();
+
 }

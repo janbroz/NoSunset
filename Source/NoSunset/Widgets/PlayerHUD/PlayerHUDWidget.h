@@ -18,6 +18,8 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, Category = UITalking)
 		void ToggleBuildOptions(bool bBuilding);
-	
-	
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = UITalking)
+		void InitializeBuildableTowers();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = UITalking)
+		void UpdatePlayerResources();
 };
