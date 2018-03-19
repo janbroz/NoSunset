@@ -44,5 +44,7 @@ public:
 		class UGlobalEventHandler* EventHandler;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Wave information")
 		class AMinionGoal* LevelGoalZone;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Minion information")
+		class UProjectilePoolComponent* ProjectilePoolManager;
 
 };

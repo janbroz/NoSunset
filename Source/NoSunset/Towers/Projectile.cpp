@@ -85,7 +85,8 @@ void AProjectile::SetTimeToLive()
 void AProjectile::DestroyProjectile()
 {
 	// Do stuff like explode or dissapear.
-	Destroy();
+	SetProjectileEnabled(false);
+	//Destroy();
 }
 
 void AProjectile::SetupProjectileDamage(EElementType DamageType, float Damage, TSubclassOf<USunsetDamageType> DamageClass)
@@ -101,4 +102,18 @@ void AProjectile::SetupProjectileAsHoming(USceneComponent* Target)
 	ProjectileMovement->HomingTargetComponent = Target;
 	ProjectileMovement->HomingAccelerationMagnitude = 20000.f;
 	ProjectileMovement->MaxSpeed = 1600.f;
+}
+
+void AProjectile::SetProjectileEnabled(bool bIsEnabled)
+{
+	if (bIsEnabled)
+	{
+
+	}
+	else
+	{
+		SetActorHiddenInGame(true);
+		SetActorTickEnabled(false);
+		ProjectileMovement->SetActive(false);
+	}
 }

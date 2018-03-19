@@ -34,6 +34,8 @@ public:
 	UFUNCTION()
 		void DestroyProjectile();
 	UFUNCTION()
+		void SetProjectileEnabled(bool bIsEnabled);
+	UFUNCTION()
 		void SetupProjectileDamage(EElementType DamageType, float Damage, TSubclassOf<class USunsetDamageType> DamageClass);
 	UFUNCTION()
 		void SetupProjectileAsHoming(USceneComponent* Target);

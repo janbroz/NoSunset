@@ -9,9 +9,12 @@
 #include "Player/SunsetPlayerState.h"
 #include "Player/SunsetPlayerController.h"
 #include "Enemies/Minion.h"
+#include "Towers/ProjectilePoolComponent.h"
 
 ASunsetGameState::ASunsetGameState()
 {
+	ProjectilePoolManager = CreateDefaultSubobject<UProjectilePoolComponent>(TEXT("ProjectilePool"));
+
 	PrimaryActorTick.bStartWithTickEnabled = true;
 	PrimaryActorTick.bCanEverTick = true;
 	EventHandler = CreateDefaultSubobject<UGlobalEventHandler>(TEXT("Event handler"));

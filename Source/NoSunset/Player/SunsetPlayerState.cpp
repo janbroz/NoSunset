@@ -7,7 +7,7 @@
 
 ASunsetPlayerState::ASunsetPlayerState()
 {
-	PlayerName = TEXT("Default Player");
+	//SetPlayerName(TEXT("Default Player"));
 	Gold = 100;
 	SpecialResource = 0;
 	CurrentLives = 30;
