@@ -7,6 +7,9 @@
 #include "Runtime/Engine/Public/TimerManager.h"
 #include "Enemies/Minion.h"
 #include "SunsetDamageType.h"
+#include "Engine/World.h"
+#include "SunsetGameState.h"
+
 
 // Sets default values
 AProjectile::AProjectile()
@@ -27,13 +30,15 @@ AProjectile::AProjectile()
 	ProjectileMesh->SetupAttachment(RootComponent);
 	ProjectileMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
+	// This one is the default number of projectiles to spawn in the object pool.
+	Rarity = 15;
 }
 
 // Called when the game starts or when spawned
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	SetTimeToLive();
+	//SetTimeToLive();
 }
 
 // Called every frame
@@ -79,7 +84,7 @@ void AProjectile::OnProjectileEndOverlap(UPrimitiveComponent* OverlappedComp, AA
 
 void AProjectile::SetTimeToLive()
 {
-	GetWorldTimerManager().SetTimer(TTLHandler, this, &AProjectile::DestroyProjectile, 3.f, false);
+	GetWorldTimerManager().SetTimer(TTLHandler, this, &AProjectile::DestroyProjectile, 2.f, false);
 }
 
 void AProjectile::DestroyProjectile()
@@ -106,14 +111,23 @@ void AProjectile::SetupProjectileAsHoming(USceneComponent* Target)
 
 void AProjectile::SetProjectileEnabled(bool bIsEnabled)
 {
+	//UE_LOG(LogTemp, Warning, TEXT("Projectile should be disabled"));
 	if (bIsEnabled)
 	{
-
+		SetActorHiddenInGame(false);
+		ProjectileMovement->SetActive(true);
+		ProjectileCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		ProjectileCollision->SetActive(true);
+		SetTimeToLive();
 	}
 	else
 	{
-		SetActorHiddenInGame(true);
-		SetActorTickEnabled(false);
+		ASunsetGameState* GameState = Cast<ASunsetGameState>(GetWorld()->GetGameState());
+		GameState->AddProjectileToPool(this);
+
+		ProjectileCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		ProjectileMovement->SetActive(false);
+		ProjectileCollision->SetActive(false);
+		SetActorHiddenInGame(true);
 	}
 }

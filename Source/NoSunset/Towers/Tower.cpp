@@ -10,6 +10,8 @@
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "SunsetDamageType.h"
 #include "Engine/World.h"
+#include "SunsetGameState.h"
+#include "Towers/ProjectilePoolComponent.h"
 
 // Sets default values
 ATower::ATower()
@@ -52,6 +54,8 @@ void ATower::BeginPlay()
 	{
 		bUsesProjectiles = true;
 	}
+
+	GameState = Cast<ASunsetGameState>(GetWorld()->GetGameState());
 }
 
 // Called every frame
@@ -146,7 +150,29 @@ void ATower::Attack()
 
 		if (bUsesProjectiles)
 		{
-			AProjectile* Projectile = GetWorld()->SpawnActorDeferred<AProjectile>(ProjectileClass, ProjectileSpawnLocation->GetComponentTransform());		
+			if (GameState && ProjectileClass && GameState->ProjectilePoolManager)
+			{
+				//UE_LOG(LogTemp, Warning, TEXT("Tower tried to get one projectile from the pool"));
+				AProjectile* Projectile = GameState->ProjectilePoolManager->GetUsableProjectile(ProjectileClass);
+				if (Projectile)
+				{
+					Projectile->SetActorTransform(ProjectileSpawnLocation->GetComponentTransform());
+					Projectile->SetOwner(GetOwner());
+					Projectile->SpawnedBy = this;
+					Projectile->SetupProjectileDamage(AttackType, AttackDamage, DamageType);
+					Projectile->SetupProjectileAsHoming(Target->GetRootComponent());
+					Projectile->SetProjectileEnabled(true);
+				}
+				else
+				{
+					//UE_LOG(LogTemp, Warning, TEXT("Shit, out of ammo"));
+				}
+
+
+			}
+
+
+			/*AProjectile* Projectile = GetWorld()->SpawnActorDeferred<AProjectile>(ProjectileClass, ProjectileSpawnLocation->GetComponentTransform());		
 			if (Projectile)
 			{
 				Projectile->SetOwner(GetOwner());
@@ -154,7 +180,7 @@ void ATower::Attack()
 				Projectile->SetupProjectileDamage(AttackType, AttackDamage, DamageType);
 				Projectile->SetupProjectileAsHoming(Target->GetRootComponent());
 				UGameplayStatics::FinishSpawningActor(Projectile, TowerHead->GetComponentTransform());
-			}
+			}*/
 		}
 	}
 }

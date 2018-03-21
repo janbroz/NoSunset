@@ -41,7 +41,8 @@ public:
 		void SetupProjectileAsHoming(USceneComponent* Target);
 
 public:
-
+	UPROPERTY(EditAnywhere, Category = "Damage information")
+		int32 Rarity;
 	UPROPERTY(VisibleAnywhere, Category = "Damage information")
 		EElementType DamageType;
 	UPROPERTY(VisibleAnywhere, Category = "Damage information")

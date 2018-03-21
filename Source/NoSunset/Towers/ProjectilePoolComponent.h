@@ -25,12 +25,17 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-
+	TArray<FString> GetAllProjectileNames();
 	void SpawnProjectileClasses();
 	
+	UFUNCTION()
+		class AProjectile* GetUsableProjectile(TSubclassOf<class AProjectile> ProjectileClass);
+	UFUNCTION()
+		bool AddProjectileToPool(AProjectile* ProjectileToAdd);
+
 public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "ProjectilePoolInformation")
-		TArray<FClassPoolArray> ProjectilesPool;
+		TArray<FClassPoolArray> PoolOfProjectiles;
 	
 };

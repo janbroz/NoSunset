@@ -90,15 +90,21 @@ void ASunsetPlayerController::HorizontalMovement(float Amount)
 	}
 }
 
+void ASunsetPlayerController::EscapePressed()
+{
+	bShowingOptionsMenu = !bShowingOptionsMenu;
+
+}
+
 void ASunsetPlayerController::LeftMousePressed()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Left mouse did something"));
+	//UE_LOG(LogTemp, Warning, TEXT("Left mouse did something"));
 	bLeftMousePressed = true;
 }
 
 void ASunsetPlayerController::RightMousePressed()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Right mouse did something"));
+	//UE_LOG(LogTemp, Warning, TEXT("Right mouse did something"));
 	bRightMousePressed = true;
 }
 

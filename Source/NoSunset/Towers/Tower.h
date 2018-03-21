@@ -23,6 +23,9 @@ protected:
 private:
 	void GetANewTarget();
 
+private:
+	class ASunsetGameState* GameState;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

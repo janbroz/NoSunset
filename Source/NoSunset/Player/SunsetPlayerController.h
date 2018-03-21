@@ -26,7 +26,7 @@ public:
 	void RightMousePressed();
 	void LeftMouseReleased();
 	void RightMouseReleased();
-
+	void EscapePressed();
 	void UpdateHUDResources();
 
 	UFUNCTION(BlueprintCallable)
@@ -63,6 +63,8 @@ public:
 		uint32 bBuilding : 1;
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Controller information")
 		uint32 bValidSurfaceForBuilding : 1;
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Controller information")
+		uint32 bShowingOptionsMenu : 1;
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Controller information")
 		class ATower* SpawningTower;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player information")

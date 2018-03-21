@@ -25,6 +25,12 @@ public:
 		void RespondToMinionKilled(class AActor* MinionKilled, class AController* EventInstigator, AActor* DamageCauser);
 	UFUNCTION()
 		void HandleWaveCleared();
+	UFUNCTION()
+		class AProjectile* GetUsableProjectile(TSubclassOf<class AProjectile> ProjectileClass);
+	UFUNCTION()
+		bool AddProjectileToPool(AProjectile* ProjectileToAdd);
+
+
 
 private:
 	void SpawnNextWave();

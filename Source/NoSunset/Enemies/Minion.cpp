@@ -8,6 +8,7 @@
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "SunsetDamageType.h"
 #include "SunsetGameInstance.h"
+#include "Engine/World.h"
 
 // Sets default values
 AMinion::AMinion()
@@ -88,7 +89,7 @@ float AMinion::TakeDamage(float DamageAmount, struct FDamageEvent const & Damage
 	Health = FMath::Clamp(Health, 0.f, MaxHealth);
 	if (Health <= 0.f)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Got killed by: %s who shoot an %s"), *EventInstigator->GetName(), *DamageCauser->GetName());
+		//UE_LOG(LogTemp, Warning, TEXT("Got killed by: %s who shoot an %s"), *EventInstigator->GetName(), *DamageCauser->GetName());
 
 		KillMinion(EventInstigator, DamageCauser);
 	}
