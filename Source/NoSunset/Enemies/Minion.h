@@ -39,10 +39,18 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Minion interaction")
 		void KillMinion(class AController* EventInstigator, AActor * DamageCauser);
 
-	
+	UFUNCTION()
+		void UpdateHealthBarLocation();
+	UFUNCTION()
+		void ModifyHealth(float Amount);
+	UFUNCTION()
+		void SetupUIHealth();
+
 public:
 	UPROPERTY(EditAnywhere, Category = "Event Manager")
 		class UGlobalEventHandler* EventHandler;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = MinionInformation)
+		class UWidgetComponent* HealthBarComponent;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MinionInformation)
 		FName UnitName;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MinionInformation)
@@ -57,6 +65,8 @@ public:
 		float Armor;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MinionInformation)
 		uint32 bIsBoss : 1;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = MinionInformation)
+		uint32 bShowingHealthBar : 1;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = MinionInformation)
 		float DamageReduction;
 

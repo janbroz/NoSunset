@@ -27,7 +27,11 @@ public:
 
 	TArray<FString> GetAllProjectileNames();
 	void SpawnProjectileClasses();
+
+private:
+	void SpawnProjectile(TSubclassOf<class AProjectile> ProjectileClass, int32 Amount);
 	
+public:
 	UFUNCTION()
 		class AProjectile* GetUsableProjectile(TSubclassOf<class AProjectile> ProjectileClass);
 	UFUNCTION()

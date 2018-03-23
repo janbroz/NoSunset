@@ -64,6 +64,11 @@ void ATower::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	
 	AimTurret();
+
+	if (bShowingRangeIndicator)
+	{
+		DrawRangeIndicator();
+	}
 }
 
 void ATower::OnEnemyBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -77,8 +82,6 @@ void ATower::OnEnemyBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* Ot
 
 void ATower::OnEnemyEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	//UE_LOG(LogTemp, Warning, TEXT("Enemy exits the tower range"));
-
 	auto MinionEnemy = Cast<AMinion>(OtherActor);
 	if (Target == MinionEnemy)
 	{
@@ -115,11 +118,6 @@ void ATower::GetANewTarget()
 		}
 	}
 	Target = Cast<AMinion>(ClosestMinion);
-	
-	/*else
-	{
-		Target = nullptr;
-	}*/
 }
 
 void ATower::AimTurret()
@@ -137,22 +135,16 @@ void ATower::AimTurret()
 			Attack();
 		}
 	}
-	
 }
 
 void ATower::Attack()
 {	
 	if (Target)
-	{
-		bCanAttack = false;
-		GetWorldTimerManager().SetTimer(AttackHandler, this, &ATower::Reload, AttackSpeed, false);
-		//Target->TakeDamage(AttackDamage, FDamageEvent::FDamageEvent(), nullptr, this);
-
+	{		
 		if (bUsesProjectiles)
 		{
 			if (GameState && ProjectileClass && GameState->ProjectilePoolManager)
 			{
-				//UE_LOG(LogTemp, Warning, TEXT("Tower tried to get one projectile from the pool"));
 				AProjectile* Projectile = GameState->ProjectilePoolManager->GetUsableProjectile(ProjectileClass);
 				if (Projectile)
 				{
@@ -162,25 +154,19 @@ void ATower::Attack()
 					Projectile->SetupProjectileDamage(AttackType, AttackDamage, DamageType);
 					Projectile->SetupProjectileAsHoming(Target->GetRootComponent());
 					Projectile->SetProjectileEnabled(true);
+
+					bCanAttack = false;
+					GetWorldTimerManager().SetTimer(AttackHandler, this, &ATower::Reload, AttackSpeed, false);
 				}
 				else
 				{
-					//UE_LOG(LogTemp, Warning, TEXT("Shit, out of ammo"));
+					// This means the pool is out of projectiles. Should spawn a 20% - 30% more and do another call to the get projectile.
 				}
-
-
 			}
-
-
-			/*AProjectile* Projectile = GetWorld()->SpawnActorDeferred<AProjectile>(ProjectileClass, ProjectileSpawnLocation->GetComponentTransform());		
-			if (Projectile)
-			{
-				Projectile->SetOwner(GetOwner());
-				Projectile->SpawnedBy = this;
-				Projectile->SetupProjectileDamage(AttackType, AttackDamage, DamageType);
-				Projectile->SetupProjectileAsHoming(Target->GetRootComponent());
-				UGameplayStatics::FinishSpawningActor(Projectile, TowerHead->GetComponentTransform());
-			}*/
+		}
+		else
+		{
+			// This means the tower does an insta attack and should use other type of effect or asset.
 		}
 	}
 }
@@ -200,9 +186,11 @@ void ATower::SetTowerMode(ETowerMode Mode)
 		TowerBase->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		TowerHead->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		TowerCanon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		ToggleRangeIndicator(true);
 		break;
 	case ETowerMode::Building:
 		BeginTowerBuilding();
+		ToggleRangeIndicator(false);
 		break;
 	case ETowerMode::Working:
 		RangeSphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
@@ -222,4 +210,17 @@ void ATower::BeginTowerBuilding()
 void ATower::EndTowerBuilding()
 {
 	SetTowerMode(ETowerMode::Working);
+}
+
+void ATower::ToggleRangeIndicator(bool bShowRange)
+{
+	bShowingRangeIndicator = bShowRange;
+}
+
+void ATower::DrawRangeIndicator()
+{
+	//DrawDebugLine(GetWorld(),ProjectileSpawnLocation->GetComponentLocation() , Target->GetActorLocation(), FColor::Red, false, 0.03f, 8, 2.f);
+	DrawDebugSphere(GetWorld(), GetActorLocation(), AttackRange, 32, FColor::Red, false, 0.033f, 8, 2.f);
+	//UE_LOG(LogTemp, Warning, TEXT("Drawing a line, shalala"));
+
 }

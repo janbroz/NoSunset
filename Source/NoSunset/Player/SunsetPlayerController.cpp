@@ -4,6 +4,7 @@
 #include "Player/SunsetPawn.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "Widgets/PlayerHUD/PlayerHUDWidget.h"
+#include "Widgets/PlayerHUD/OptionsWidget.h"
 #include "Runtime/Engine/Public/DrawDebugHelpers.h"
 #include "Towers/Tower.h"
 #include "Player/SunsetPlayerState.h"
@@ -19,6 +20,12 @@ ASunsetPlayerController::ASunsetPlayerController()
 	{
 		PlayerHUDClass = PlayerHUD_BP.Object;
 	}
+
+	static ConstructorHelpers::FObjectFinder<UClass> Options_BP(TEXT("/Game/UI/HUD/OptionsMenu_BP.OptionsMenu_BP_C"));
+	if (Options_BP.Object)
+	{
+		OptionsWidgetClass = Options_BP.Object;
+	}
 }
 
 
@@ -33,8 +40,11 @@ void ASunsetPlayerController::SetupInputComponent()
 	InputComponent->BindAction("RMB", EInputEvent::IE_Pressed, this, &ASunsetPlayerController::RightMousePressed);
 	InputComponent->BindAction("LMB", EInputEvent::IE_Released, this, &ASunsetPlayerController::LeftMouseReleased);
 	InputComponent->BindAction("RMB", EInputEvent::IE_Released, this, &ASunsetPlayerController::RightMouseReleased);
-	InputComponent->BindAction("ToggleBuilding", EInputEvent::IE_Pressed, this, &ASunsetPlayerController::ToggleBuilding);
+	//InputComponent->BindAction("ToggleBuilding", EInputEvent::IE_Pressed, this, &ASunsetPlayerController::ToggleBuilding);
 	InputComponent->BindAction("ToggleMainMenu", EInputEvent::IE_Pressed, this, &ASunsetPlayerController::ToggleMainMenu);
+	InputComponent->BindAction("Escape", EInputEvent::IE_Pressed, this, &ASunsetPlayerController::EscapePressed).bExecuteWhenPaused = true;
+	InputComponent->BindAction("MultiBuild", EInputEvent::IE_Pressed, this, &ASunsetPlayerController::ShiftBuildPressed);
+	InputComponent->BindAction("MultiBuild", EInputEvent::IE_Released, this, &ASunsetPlayerController::ShiftBuildReleased);
 }
 
 void ASunsetPlayerController::BeginPlay()
@@ -58,8 +68,10 @@ void ASunsetPlayerController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	CheckBuilding();
-
+	if (!IsPaused())
+	{
+		CheckBuilding();
+	}
 }
 
 void ASunsetPlayerController::VerticalMovement(float Amount)
@@ -94,6 +106,26 @@ void ASunsetPlayerController::EscapePressed()
 {
 	bShowingOptionsMenu = !bShowingOptionsMenu;
 
+	if (bShowingOptionsMenu)
+	{
+		SetPause(bShowingOptionsMenu);
+		if (OptionsWidgetClass)
+		{
+			OptionsWidget = CreateWidget<UOptionsWidget>(this, OptionsWidgetClass);
+			if (OptionsWidget)
+			{
+				OptionsWidget->AddToViewport();
+			}
+		}
+	}
+	else
+	{
+		if (OptionsWidget)
+		{
+			OptionsWidget->RemoveFromParent();
+		}
+		SetPause(bShowingOptionsMenu);
+	}
 }
 
 void ASunsetPlayerController::LeftMousePressed()
@@ -115,13 +147,28 @@ void ASunsetPlayerController::LeftMouseReleased()
 	if (bBuilding && SpawningTower && bValidSurfaceForBuilding)
 	{
 		SpawningTower->SetTowerMode(ETowerMode::Building);
+		
+		if (bShiftBuilding)
+		{
+			auto TClass = SpawningTower->GetClass();
+			SpawningTower = nullptr;
+			SpawnTowerFromClass(TClass);
+			return;
+		}
 		SpawningTower = nullptr;
+		ToggleBuilding();
 	}
 }
 
 void ASunsetPlayerController::RightMouseReleased()
 {
 	bRightMousePressed = false;
+
+	if (bBuilding && SpawningTower)
+	{
+		//ReimburseTowerCost(SpawningTower);
+		ToggleBuilding();
+	}
 }
 
 void ASunsetPlayerController::ToggleBuilding()
@@ -151,11 +198,7 @@ void ASunsetPlayerController::FirstPressed()
 		if (!GameInstance)return;
 
 		//auto TowerClass = GameInstance->GetTowerClass(1, )
-
-
 	}
-
-
 }
 
 void ASunsetPlayerController::SecondPressed()
@@ -166,6 +209,18 @@ void ASunsetPlayerController::ThirdPressed()
 
 void ASunsetPlayerController::ForthPressed()
 {}
+
+void ASunsetPlayerController::ShiftBuildPressed()
+{
+	bShiftBuilding = true;
+}
+
+void ASunsetPlayerController::ShiftBuildReleased()
+{
+	bShiftBuilding = false;
+}
+
+
 
 void ASunsetPlayerController::CheckBuilding()
 {
@@ -208,7 +263,11 @@ FVector ASunsetPlayerController::SnapCoordinates(FVector InitialCoords)
 
 bool ASunsetPlayerController::SpawnTowerFromClass(UClass* ClassToSpawn)
 {
-	if (!bBuilding) return false;
+	//if (!bBuilding) return false;
+	if (!bBuilding)
+	{
+		ToggleBuilding();
+	}
 	if (SpawningTower)
 	{
 		ReimburseTowerCost(SpawningTower);
@@ -218,7 +277,11 @@ bool ASunsetPlayerController::SpawnTowerFromClass(UClass* ClassToSpawn)
 	auto DefaultTower = TowerClass.GetDefaultObject();
 
 	bool bHasTheMoney = DoesPlayerHasTheMoney(TowerClass);
-	if (!bHasTheMoney || !DefaultTower) return false;
+	if (!bHasTheMoney || !DefaultTower) 
+	{
+		ToggleBuilding();
+		return false;
+	}
 
 	FActorSpawnParameters FASP;
 	FHitResult Hit;
@@ -283,3 +346,4 @@ void ASunsetPlayerController::UpdateHUDResources()
 	PlayerHUD->UpdatePlayerResources();
 
 }
+

@@ -38,13 +38,8 @@ void UProjectilePoolComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 }
 
 void UProjectilePoolComponent::SpawnProjectileClasses()
-{
-	//FString Sts = "/Game/Blueprints/Towers/Projectiles/Arrow_Projectile.Arrow_Projectile_C";
-	//UClass* BPClass = LoadObject<UClass>(NULL, *Sts, NULL, LOAD_None, NULL);	
-	//TSubclassOf<AProjectile> ProjectileClass = BPClass;
-	
+{	
 	TArray<FString> ProjectileClassesStrings = GetAllProjectileNames();
-	TArray<UClass*> ProjectileClasses;
 
 	for (auto ClassRoute : ProjectileClassesStrings)
 	{
@@ -52,29 +47,27 @@ void UProjectilePoolComponent::SpawnProjectileClasses()
 		auto DefaultProjectile = ProjectileClass.GetDefaultObject();
 		if (DefaultProjectile)
 		{
-			TArray<AProjectile*> TmpProjectileArray;
-			FClassPoolArray PoolStructure;
-			PoolStructure.ProjectileClass = ProjectileClass;
-			//UE_LOG(LogTemp, Warning, TEXT("Went just right"));
-
-			int32 Rarity = DefaultProjectile->Rarity;
-
-			for (auto i = 0; i < Rarity; ++i)
-			{
-				AProjectile* PoolProjectile = GetWorld()->SpawnActorDeferred<AProjectile>(ProjectileClass, FTransform());
-				if (PoolProjectile)
-				{
-					//UE_LOG(LogTemp, Warning, TEXT("The class is valid"));
-					//PoolProjectile->SetProjectileEnabled(false);
-					UGameplayStatics::FinishSpawningActor(PoolProjectile, PoolProjectile->GetTransform());
-					PoolStructure.InstantiatedProjectiles.Add(PoolProjectile);
-					PoolProjectile->SetFolderPath("/PoolingProjectiles/Arrows");
-					PoolProjectile->SetProjectileEnabled(false);
-				}
-			}
-			PoolOfProjectiles.Add(PoolStructure);
+			SpawnProjectile(ProjectileClass, DefaultProjectile->Rarity);
 		}
 	}
+}
+
+void UProjectilePoolComponent::SpawnProjectile(TSubclassOf<AProjectile> Class, int32 Amount)
+{
+	FClassPoolArray PoolStructure;
+	PoolStructure.ProjectileClass = Class;
+	for (auto i = 0; i < Amount; ++i)
+	{
+		AProjectile* PooledProjectile = GetWorld()->SpawnActorDeferred<AProjectile>(Class, FTransform());
+		if (PooledProjectile)
+		{
+			UGameplayStatics::FinishSpawningActor(PooledProjectile, PooledProjectile->GetTransform());
+			PoolStructure.InstantiatedProjectiles.Add(PooledProjectile);
+			PooledProjectile->SetFolderPath("/PoolingObjects/Projectiles");
+			PooledProjectile->SetProjectileEnabled(false);
+		}
+	}
+	PoolOfProjectiles.Add(PoolStructure);
 }
 
 AProjectile* UProjectilePoolComponent::GetUsableProjectile(TSubclassOf<AProjectile> ProjectileClass)
@@ -86,7 +79,6 @@ AProjectile* UProjectilePoolComponent::GetUsableProjectile(TSubclassOf<AProjecti
 	{
 		if (RightStruct.ProjectileClass == ProjectileClass)
 		{
-			//UE_LOG(LogTemp, Warning, TEXT("Usable projectiles class here"));
 			if (RightStruct.InstantiatedProjectiles.Num() > 0)
 			{
 				ChosenProjectile = RightStruct.InstantiatedProjectiles[0];
@@ -135,3 +127,4 @@ TArray<FString> UProjectilePoolComponent::GetAllProjectileNames()
 
 	return Names;
 }
+
