@@ -34,7 +34,7 @@ void AWaveSpawner::InitializeSpawner()
 	WorldState = Cast<ASunsetGameState>(GetWorld()->GetGameState());
 	if (WorldState)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("This is the best of both worlds %d"), WorldState->CurrentWave);
+		//UE_LOG(LogTemp, Warning, TEXT("This is the best of both worlds %d"), WorldState->CurrentWave);
 		EventHandler = WorldState->EventHandler;
 		if (EventHandler)
 		{
@@ -104,7 +104,7 @@ void AWaveSpawner::HandleMinionKilled(AActor* MinionKilled, class AController* E
 
 void AWaveSpawner::SetNextWave()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Set the next wave stuff man"));
+	//UE_LOG(LogTemp, Warning, TEXT("Set the next wave stuff man"));
 	EnemiesSpawned = 0;
 	EnemiesAlive = 0;
 }

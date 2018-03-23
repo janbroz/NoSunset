@@ -23,6 +23,9 @@ protected:
 private:
 	void GetANewTarget();
 
+private:
+	class ASunsetGameState* GameState;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -46,6 +49,8 @@ public:
 	void BeginTowerBuilding();
 	void EndTowerBuilding();
 	void Reload();
+	void DrawRangeIndicator();
+	void ToggleRangeIndicator(bool bShowRange);
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackInformation)
@@ -90,6 +95,8 @@ public:
 		uint32 bCanAttack : 1;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = TowerInformation)
 		uint32 bUsesProjectiles : 1;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = TowerInformation)
+		uint32 bShowingRangeIndicator : 1;
 	UPROPERTY(EditAnywhere, Category = TowerInformation)
 		TSubclassOf<class AProjectile> ProjectileClass;
 	UPROPERTY(VisibleAnywhere, Category = TowerInformation)

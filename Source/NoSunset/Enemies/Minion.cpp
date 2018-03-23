@@ -8,6 +8,9 @@
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "SunsetDamageType.h"
 #include "SunsetGameInstance.h"
+#include "Engine/World.h"
+#include "Components/WidgetComponent.h"
+#include "Widgets/Enemies/EnemyHealthBarWidget.h"
 
 // Sets default values
 AMinion::AMinion()
@@ -19,9 +22,13 @@ AMinion::AMinion()
 	GetCharacterMovement()->MaxWalkSpeed = 300.f;
 	EventHandler = CreateDefaultSubobject<UGlobalEventHandler>(TEXT("Event handler"));
 
+	HealthBarComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("Health bar widget"));
+	HealthBarComponent->SetupAttachment(RootComponent);
 	Health = 100.f;
 	MaxHealth = Health;
-	
+
+	// Should be toggled by the player.
+	bShowingHealthBar = true;
 }
 
 // Called when the game starts or when spawned
@@ -37,6 +44,7 @@ void AMinion::BeginPlay()
 		EventHandler = SunsetGameState->EventHandler;
 	}
 	UpdateDamageReduction();
+	SetupUIHealth();
 }
 
 // Called every frame
@@ -44,6 +52,7 @@ void AMinion::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	UpdateHealthBarLocation();
 }
 
 // Called to bind functionality to input
@@ -82,13 +91,14 @@ float AMinion::TakeDamage(float DamageAmount, struct FDamageEvent const & Damage
 		{
 			Multiplier = SunsetGameInstance->GetArmorContribution(MyDamage->TypeOfAttack, ArmorType);
 		}
-		Health -= DamageAmount * Multiplier * DamageReduction;
+		float TotalDamage = DamageAmount * Multiplier * DamageReduction;
+		ModifyHealth(-TotalDamage);
 	}
 
-	Health = FMath::Clamp(Health, 0.f, MaxHealth);
+	//Health = FMath::Clamp(Health, 0.f, MaxHealth);
 	if (Health <= 0.f)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Got killed by: %s who shoot an %s"), *EventInstigator->GetName(), *DamageCauser->GetName());
+		//UE_LOG(LogTemp, Warning, TEXT("Got killed by: %s who shoot an %s"), *EventInstigator->GetName(), *DamageCauser->GetName());
 
 		KillMinion(EventInstigator, DamageCauser);
 	}
@@ -98,4 +108,46 @@ float AMinion::TakeDamage(float DamageAmount, struct FDamageEvent const & Damage
 void AMinion::UpdateDamageReduction()
 {
 	DamageReduction = 1 - (0.05f * Armor / (1 + 0.05f * FMath::Abs(Armor)));
+}
+
+void AMinion::UpdateHealthBarLocation()
+{
+	HealthBarComponent->SetWorldRotation(FRotator(90.f,0.f, 0.f));
+
+	//if (bShowingHealthBar)
+	//{
+	//	APlayerController* PC = GetWorld()->GetFirstPlayerController();
+	//	if (PC)
+	//	{
+	//		FVector PlayerCameraLocation = PC->PlayerCameraManager->GetCameraLocation();
+	//		FVector WidgetLocation = HealthBarComponent->GetComponentLocation();
+
+	//		FRotator LookAt = (PlayerCameraLocation - WidgetLocation).Rotation();
+	//		HealthBarComponent->SetWorldRotation(LookAt);
+	//	}
+	//}
+}
+
+void AMinion::ModifyHealth(float Amount)
+{
+	float UpdatedHealth = Health + Amount;
+	Health = FMath::Clamp(UpdatedHealth, 0.f, MaxHealth);
+
+	if (bShowingHealthBar)
+	{
+		UEnemyHealthBarWidget* HealthWidget = Cast<UEnemyHealthBarWidget>(HealthBarComponent->GetUserWidgetObject());
+		if (HealthWidget)
+		{
+			HealthWidget->UpdateHealth(Health);
+		}
+	}
+}
+
+void AMinion::SetupUIHealth()
+{
+	UEnemyHealthBarWidget* HealthWidget = Cast<UEnemyHealthBarWidget>(HealthBarComponent->GetUserWidgetObject());
+	if (HealthWidget)
+	{
+		HealthWidget->SetupHealth(Health, MaxHealth);
+	}
 }

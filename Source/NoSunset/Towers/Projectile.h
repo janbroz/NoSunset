@@ -34,12 +34,15 @@ public:
 	UFUNCTION()
 		void DestroyProjectile();
 	UFUNCTION()
+		void SetProjectileEnabled(bool bIsEnabled);
+	UFUNCTION()
 		void SetupProjectileDamage(EElementType DamageType, float Damage, TSubclassOf<class USunsetDamageType> DamageClass);
 	UFUNCTION()
 		void SetupProjectileAsHoming(USceneComponent* Target);
 
 public:
-
+	UPROPERTY(EditAnywhere, Category = "Damage information")
+		int32 Rarity;
 	UPROPERTY(VisibleAnywhere, Category = "Damage information")
 		EElementType DamageType;
 	UPROPERTY(VisibleAnywhere, Category = "Damage information")

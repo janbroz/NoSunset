@@ -123,6 +123,21 @@ public:
 		FString Fighter;
 };
 
+
+USTRUCT(Blueprintable)
+struct FClassPoolArray
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	FClassPoolArray(){}
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ProjectileInformation)
+		TSubclassOf<class AProjectile> ProjectileClass;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ProjectileInformation)
+		TArray<class AProjectile*> InstantiatedProjectiles;
+};
+
 class NOSUNSET_API DataStructures
 {
 public:

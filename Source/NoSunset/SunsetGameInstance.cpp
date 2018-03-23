@@ -122,8 +122,8 @@ UClass* USunsetGameInstance::GetTowerClass(int32 Index, EHeroClass HeroClass)
 	FHeroTowers* RowLookup = BuildingsTable->FindRow<FHeroTowers>(RowName, "", true);
 	if (RowLookup)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Stuff is: %s"), *RowLookup->Magician);
-		FString Sts = "/Game/Blueprints/Towers/TheTower.TheTower_C";
+		//UE_LOG(LogTemp, Warning, TEXT("Stuff is: %s"), *RowLookup->Magician);
+		//FString Sts = "/Game/Blueprints/Towers/TheTower.TheTower_C";
 		UClass* TowerClass = LoadObject<UClass>(NULL, *RowLookup->Magician, NULL, LOAD_None, NULL);
 		if (TowerClass)
 		{

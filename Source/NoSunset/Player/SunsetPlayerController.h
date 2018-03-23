@@ -26,7 +26,11 @@ public:
 	void RightMousePressed();
 	void LeftMouseReleased();
 	void RightMouseReleased();
+	void ShiftBuildPressed();
+	void ShiftBuildReleased();
 
+	UFUNCTION(BlueprintCallable)
+		void EscapePressed();
 	void UpdateHUDResources();
 
 	UFUNCTION(BlueprintCallable)
@@ -64,9 +68,20 @@ public:
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Controller information")
 		uint32 bValidSurfaceForBuilding : 1;
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Controller information")
+		uint32 bShowingOptionsMenu : 1;
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Controller information")
+		uint32 bShiftBuilding : 1;
+
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Controller information")
 		class ATower* SpawningTower;
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Controller information")
+		AActor* SelectedActor;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player information")
 		class UPlayerHUDWidget* PlayerHUD;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player information")
 		TSubclassOf<UPlayerHUDWidget> PlayerHUDClass;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player information")
+		class UOptionsWidget* OptionsWidget;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player information")
+		TSubclassOf<UOptionsWidget> OptionsWidgetClass;
 };

@@ -9,9 +9,12 @@
 #include "Player/SunsetPlayerState.h"
 #include "Player/SunsetPlayerController.h"
 #include "Enemies/Minion.h"
+#include "Towers/ProjectilePoolComponent.h"
 
 ASunsetGameState::ASunsetGameState()
 {
+	ProjectilePoolManager = CreateDefaultSubobject<UProjectilePoolComponent>(TEXT("ProjectilePool"));
+
 	PrimaryActorTick.bStartWithTickEnabled = true;
 	PrimaryActorTick.bCanEverTick = true;
 	EventHandler = CreateDefaultSubobject<UGlobalEventHandler>(TEXT("Event handler"));
@@ -67,7 +70,7 @@ void ASunsetGameState::InitializeSpawners()
 
 void ASunsetGameState::RespondToMinionKilled(AActor* MinionKilled, class AController* EventInstigator, AActor* DamageCauser)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Shit, someone got killed"));
+	//UE_LOG(LogTemp, Warning, TEXT("Shit, someone got killed"));
 	ASunsetPlayerController* SPC = Cast<ASunsetPlayerController>(EventInstigator);
 	if (!SPC) return;
 	for(auto PlayerState : PlayerArray)
@@ -102,4 +105,15 @@ void ASunsetGameState::SpawnNextWave()
 	{
 		LevelWaveSpawner->SpawnCurrentWave();
 	}
+}
+
+
+AProjectile* ASunsetGameState::GetUsableProjectile(TSubclassOf<class AProjectile> ProjectileClass)
+{
+	return ProjectilePoolManager->GetUsableProjectile(ProjectileClass);
+}
+
+bool ASunsetGameState::AddProjectileToPool(AProjectile* ProjectileToAdd)
+{
+	return ProjectilePoolManager->AddProjectileToPool(ProjectileToAdd);
 }
