@@ -89,6 +89,8 @@ public:
 		class USphereComponent* RangeSphere;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = TowerInformation)
 		USceneComponent* SceneComp;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = TowerInformation)
+		UDecalComponent* RangeDecalComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = TowerInformation)
 		class AMinion* Target;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = TowerInformation)

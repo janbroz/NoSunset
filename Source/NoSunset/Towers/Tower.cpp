@@ -12,6 +12,7 @@
 #include "Engine/World.h"
 #include "SunsetGameState.h"
 #include "Towers/ProjectilePoolComponent.h"
+#include "Components/DecalComponent.h"
 
 // Sets default values
 ATower::ATower()
@@ -40,6 +41,12 @@ ATower::ATower()
 	ProjectileSpawnLocation = CreateDefaultSubobject<USceneComponent>(TEXT("Projectile spawn location"));
 	ProjectileSpawnLocation->SetupAttachment(TowerCanon);
 
+	RangeDecalComponent = CreateDefaultSubobject<UDecalComponent>(TEXT("Range Decal"));
+	RangeDecalComponent->SetupAttachment(RootComponent);
+	RangeDecalComponent->DecalSize = FVector(200.f, AttackRange, AttackRange);
+	RangeDecalComponent->SetWorldRotation(FRotator(90.f, 0.f, 0.f));
+	
+
 	bCanAttack = true;
 }
 
@@ -56,6 +63,7 @@ void ATower::BeginPlay()
 	}
 
 	GameState = Cast<ASunsetGameState>(GetWorld()->GetGameState());
+	RangeDecalComponent->DecalSize = FVector(200.f, AttackRange, AttackRange);
 }
 
 // Called every frame
