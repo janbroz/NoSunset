@@ -162,7 +162,7 @@ void ASunsetPlayerController::LeftMouseReleased()
 	if (!bBuilding)
 	{
 		FHitResult Hit;
-		GetHitResultUnderCursor(ECollisionChannel::ECC_Camera, true, Hit);
+		GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel2, true, Hit);
 		UE_LOG(LogTemp, Warning, TEXT("Nigga, we got it"));
 		if (Hit.bBlockingHit)
 		{
