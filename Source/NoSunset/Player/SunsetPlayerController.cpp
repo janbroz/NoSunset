@@ -158,6 +158,18 @@ void ASunsetPlayerController::LeftMouseReleased()
 		SpawningTower = nullptr;
 		ToggleBuilding();
 	}
+
+	if (!bBuilding)
+	{
+		FHitResult Hit;
+		GetHitResultUnderCursor(ECollisionChannel::ECC_Camera, true, Hit);
+		UE_LOG(LogTemp, Warning, TEXT("Nigga, we got it"));
+		if (Hit.bBlockingHit)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Nigga, it hit something: %s"), *Hit.Actor->GetName());
+			SelectedActor = Cast<ATower>(Hit.GetActor());
+		}
+	}
 }
 
 void ASunsetPlayerController::RightMouseReleased()
@@ -169,6 +181,7 @@ void ASunsetPlayerController::RightMouseReleased()
 		//ReimburseTowerCost(SpawningTower);
 		ToggleBuilding();
 	}
+	SelectedActor = nullptr;
 }
 
 void ASunsetPlayerController::ToggleBuilding()

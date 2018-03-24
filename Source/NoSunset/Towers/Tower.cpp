@@ -12,6 +12,10 @@
 #include "Engine/World.h"
 #include "SunsetGameState.h"
 #include "Towers/ProjectilePoolComponent.h"
+#include "Components/DecalComponent.h"
+#include "Components/BoxComponent.h"
+#include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
+#include "Runtime/Engine/Classes/Materials/MaterialInstanceDynamic.h"
 
 // Sets default values
 ATower::ATower()
@@ -21,6 +25,12 @@ ATower::ATower()
 
 	SceneComp = CreateDefaultSubobject<USceneComponent>(TEXT("Scene comp"));
 	RootComponent = SceneComp;
+
+	PlacementBox = CreateDefaultSubobject<UBoxComponent>(TEXT("PlacementBox"));
+	PlacementBox->SetupAttachment(RootComponent);
+	PlacementBox->SetBoxExtent(FVector(49.f, 49.f, 49.f));
+	PlacementBox->OnComponentBeginOverlap.AddDynamic(this, &ATower::OnBoxBeginOverlap);
+	PlacementBox->OnComponentEndOverlap.AddDynamic(this, &ATower::OnBoxEndOverlap);
 
 	RangeSphere = CreateDefaultSubobject<USphereComponent>(TEXT("Range sphere"));
 	RangeSphere->SetSphereRadius(AttackRange);
@@ -40,7 +50,18 @@ ATower::ATower()
 	ProjectileSpawnLocation = CreateDefaultSubobject<USceneComponent>(TEXT("Projectile spawn location"));
 	ProjectileSpawnLocation->SetupAttachment(TowerCanon);
 
+	RangeDecalComponent = CreateDefaultSubobject<UDecalComponent>(TEXT("Range Decal"));
+	RangeDecalComponent->SetupAttachment(RootComponent);
+	RangeDecalComponent->DecalSize = FVector(200.f, AttackRange, AttackRange);
+	RangeDecalComponent->SetWorldRotation(FRotator(90.f, 0.f, 0.f));
+
 	bCanAttack = true;
+
+	static ConstructorHelpers::FObjectFinder<UMaterial> DecalMaterial_BP(TEXT("/Game/Materials/Range_Mat.Range_Mat"));
+	if (DecalMaterial_BP.Object)
+	{
+		RangeDecalComponent->SetMaterial(0, DecalMaterial_BP.Object);
+	}
 }
 
 // Called when the game starts or when spawned
@@ -56,6 +77,7 @@ void ATower::BeginPlay()
 	}
 
 	GameState = Cast<ASunsetGameState>(GetWorld()->GetGameState());
+	RangeDecalComponent->DecalSize = FVector(200.f, AttackRange, AttackRange);
 }
 
 // Called every frame
@@ -64,11 +86,6 @@ void ATower::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	
 	AimTurret();
-
-	if (bShowingRangeIndicator)
-	{
-		DrawRangeIndicator();
-	}
 }
 
 void ATower::OnEnemyBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -88,6 +105,25 @@ void ATower::OnEnemyEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* Othe
 		GetANewTarget();
 	}
 }
+
+void ATower::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	UBoxComponent* Boxxy = Cast<UBoxComponent>(OtherComp);
+	if (Boxxy)
+	{
+		bIsOverlappingWhileBuilding = true;
+	}
+}
+
+void ATower::OnBoxEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	UBoxComponent* Boxxy = Cast<UBoxComponent>(OtherComp);
+	if (Boxxy)
+	{
+		bIsOverlappingWhileBuilding = false;
+	}
+}
+
 
 void ATower::GetANewTarget()
 {
@@ -215,6 +251,9 @@ void ATower::EndTowerBuilding()
 void ATower::ToggleRangeIndicator(bool bShowRange)
 {
 	bShowingRangeIndicator = bShowRange;
+	
+	RangeDecalComponent->SetActive(bShowingRangeIndicator);
+	RangeDecalComponent->SetHiddenInGame(!bShowingRangeIndicator);
 }
 
 void ATower::DrawRangeIndicator()
