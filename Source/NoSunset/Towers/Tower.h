@@ -36,6 +36,10 @@ public:
 	// Enemy exits the tower range
 	UFUNCTION()
 		void OnEnemyEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	UFUNCTION()
+		void OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	UFUNCTION()
+		void OnBoxEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	UFUNCTION()
 		void AimTurret();
@@ -77,6 +81,8 @@ public:
 		float SellMultiplier;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TowerInformation)
 		float BuildingTime;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Tower information")
+		class UBoxComponent* PlacementBox;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = TowerInformation)
 		UStaticMeshComponent* TowerBase;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = TowerInformation)
@@ -89,7 +95,7 @@ public:
 		class USphereComponent* RangeSphere;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = TowerInformation)
 		USceneComponent* SceneComp;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = TowerInformation)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = TowerInformation)
 		UDecalComponent* RangeDecalComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = TowerInformation)
 		class AMinion* Target;
@@ -99,6 +105,8 @@ public:
 		uint32 bUsesProjectiles : 1;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = TowerInformation)
 		uint32 bShowingRangeIndicator : 1;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = TowerInformation)
+		uint32 bIsOverlappingWhileBuilding : 1;
 	UPROPERTY(EditAnywhere, Category = TowerInformation)
 		TSubclassOf<class AProjectile> ProjectileClass;
 	UPROPERTY(VisibleAnywhere, Category = TowerInformation)

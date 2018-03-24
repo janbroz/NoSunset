@@ -75,7 +75,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Controller information")
 		class ATower* SpawningTower;
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Controller information")
-		AActor* SelectedActor;
+		class ATower* SelectedActor;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player information")
 		class UPlayerHUDWidget* PlayerHUD;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player information")
