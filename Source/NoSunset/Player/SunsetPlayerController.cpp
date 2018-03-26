@@ -144,6 +144,7 @@ void ASunsetPlayerController::LeftMouseReleased()
 {
 	bLeftMousePressed = false;
 
+
 	if (bBuilding && SpawningTower && bValidSurfaceForBuilding)
 	{
 		SpawningTower->SetTowerMode(ETowerMode::Building);
@@ -157,17 +158,27 @@ void ASunsetPlayerController::LeftMouseReleased()
 		}
 		SpawningTower = nullptr;
 		ToggleBuilding();
+		ClearSelectedTowers();
+		return;
 	}
 
 	if (!bBuilding)
 	{
+		ClearSelectedTowers();
 		FHitResult Hit;
-		GetHitResultUnderCursor(ECollisionChannel::ECC_Camera, true, Hit);
-		UE_LOG(LogTemp, Warning, TEXT("Nigga, we got it"));
+		GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel2, true, Hit);
 		if (Hit.bBlockingHit)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Nigga, it hit something: %s"), *Hit.Actor->GetName());
 			SelectedActor = Cast<ATower>(Hit.GetActor());
+			if (PlayerHUD)
+			{
+				PlayerHUD->ShowTowerInformation(SelectedActor);
+			}
+
+			if (SelectedActor)
+			{
+				SelectedActor->ToggleRangeIndicator(true);
+			}
 		}
 	}
 }
@@ -181,7 +192,16 @@ void ASunsetPlayerController::RightMouseReleased()
 		//ReimburseTowerCost(SpawningTower);
 		ToggleBuilding();
 	}
-	SelectedActor = nullptr;
+	if (SelectedActor)
+	{
+		SelectedActor->ToggleRangeIndicator(false);
+		SelectedActor = nullptr;
+	}
+
+	if (PlayerHUD)
+	{
+		PlayerHUD->ShowTowerInformation(SelectedActor);
+	}
 }
 
 void ASunsetPlayerController::ToggleBuilding()
@@ -277,6 +297,7 @@ FVector ASunsetPlayerController::SnapCoordinates(FVector InitialCoords)
 bool ASunsetPlayerController::SpawnTowerFromClass(UClass* ClassToSpawn)
 {
 	//if (!bBuilding) return false;
+	ClearSelectedTowers();
 	if (!bBuilding)
 	{
 		ToggleBuilding();
@@ -354,9 +375,26 @@ void ASunsetPlayerController::ReimburseTowerCost(ATower* Tower)
 	SpawningTower = nullptr;
 }
 
+void ASunsetPlayerController::SellTower(ATower* Tower)
+{
+	ASunsetPlayerState* SPlayerState = Cast<ASunsetPlayerState>(PlayerState);
+	if (!SPlayerState || !Tower) return;
+
+	const float CostAfterPenalty = Tower->Cost * 0.9f;
+	SPlayerState->ModifyGold(CostAfterPenalty);
+	Tower->Destroy();
+}
+
 void ASunsetPlayerController::UpdateHUDResources()
 {
 	PlayerHUD->UpdatePlayerResources();
-
 }
 
+void ASunsetPlayerController::ClearSelectedTowers()
+{
+	if (SelectedActor)
+	{
+		SelectedActor->ToggleRangeIndicator(false);
+	}
+	SelectedActor = nullptr;
+}

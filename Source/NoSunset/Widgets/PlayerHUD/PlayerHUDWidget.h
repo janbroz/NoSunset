@@ -22,4 +22,6 @@ public:
 		void InitializeBuildableTowers();
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = UITalking)
 		void UpdatePlayerResources();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = UITalking)
+		void ShowTowerInformation(class ATower* Tower);
 };

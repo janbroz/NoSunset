@@ -227,9 +227,12 @@ void ATower::SetTowerMode(ETowerMode Mode)
 	case ETowerMode::Building:
 		BeginTowerBuilding();
 		ToggleRangeIndicator(false);
+		TowerBase->SetCollisionProfileName("TowerVisibility");
+		TowerHead->SetCollisionProfileName("TowerVisibility");
+		TowerCanon->SetCollisionProfileName("TowerVisibility");
 		break;
 	case ETowerMode::Working:
-		RangeSphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		RangeSphere->SetCollisionProfileName("TowerCollision");
 		break;
 	case ETowerMode::Upgrading:
 		break;

@@ -56,6 +56,13 @@ public:
 		bool DoesPlayerHasTheMoney(TSubclassOf<class ATower> ClassToBuild);
 	UFUNCTION(BlueprintCallable)
 		void ReimburseTowerCost(class ATower* Tower);
+	UFUNCTION(BlueprintCallable)
+		void SellTower(class ATower* Tower);
+
+private:
+	void ClearSelectedTowers();
+
+
 public:
 	class ASunsetPawn* ThePlayerPawn;
 
