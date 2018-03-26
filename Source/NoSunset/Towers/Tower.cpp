@@ -219,13 +219,9 @@ void ATower::SetTowerMode(ETowerMode Mode)
 	{
 	case ETowerMode::Placing:
 		RangeSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		/*RangeSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);*/
 		TowerBase->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		TowerHead->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		TowerCanon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		//RangeSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		//RangeSphere->SetCollisionProfileName("TowerBuilding");
-		
 		ToggleRangeIndicator(true);
 		break;
 	case ETowerMode::Building:
@@ -236,7 +232,6 @@ void ATower::SetTowerMode(ETowerMode Mode)
 		TowerCanon->SetCollisionProfileName("TowerVisibility");
 		break;
 	case ETowerMode::Working:
-		//RangeSphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 		RangeSphere->SetCollisionProfileName("TowerCollision");
 		break;
 	case ETowerMode::Upgrading:
