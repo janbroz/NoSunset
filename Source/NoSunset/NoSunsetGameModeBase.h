@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "DataStructures.h"
 #include "NoSunsetGameModeBase.generated.h"
 
 /**
@@ -17,5 +18,13 @@ class NOSUNSET_API ANoSunsetGameModeBase : public AGameModeBase
 public:
 	ANoSunsetGameModeBase();
 	
-	
+	virtual void BeginPlay() override;
+
+
+private:
+	void SetupWaveInformation();
+
+public:
+	void SetDifficultyMode(EDifficultyMode DifficultyMode);
+
 };

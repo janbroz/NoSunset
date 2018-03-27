@@ -10,6 +10,8 @@
 #include "Player/SunsetPlayerController.h"
 #include "Enemies/Minion.h"
 #include "Towers/ProjectilePoolComponent.h"
+#include "Engine/World.h"
+#include "SunsetGameInstance.h"
 
 ASunsetGameState::ASunsetGameState()
 {
@@ -30,8 +32,37 @@ void ASunsetGameState::BeginPlay()
 	EventHandler->OnClearedWave.AddDynamic(this, &ASunsetGameState::HandleWaveCleared);
 }
 
+void ASunsetGameState::InitializeGame()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Wave just ot started"));
+	USunsetGameInstance* SGameInstance = Cast<USunsetGameInstance>(GetGameInstance());
+	if (!SGameInstance) return;
+
+	UE_LOG(LogTemp, Warning, TEXT("So far so good"));
+
+	FWaveInformation WaveInformation;
+	SGameInstance->GetCurrentWaveInformation(CurrentWave, WaveInformation);
+	EnemiesSpawned = 0;
+	switch (SGameInstance->GameDifficulty)
+	{
+	case EDifficultyMode::Easy :
+		EnemiesToSpawn = WaveInformation.Easy;
+		break;
+	case EDifficultyMode::Medium:
+		EnemiesToSpawn = WaveInformation.Medium;
+		break;
+	case EDifficultyMode::Hard:
+		EnemiesToSpawn = WaveInformation.Hard;
+		break;
+	default:
+		EnemiesToSpawn = 0;
+		break;
+	}
+}
+
 void ASunsetGameState::InitializeSpawners()
 {
+	UE_LOG(LogTemp, Warning, TEXT("CALLED WJERE"));
 	TArray<AActor*> Spawners;
 	TArray<AActor*> Goals;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AWaveSpawner::StaticClass(), Spawners);

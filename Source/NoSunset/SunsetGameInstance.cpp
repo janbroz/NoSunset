@@ -18,6 +18,12 @@ USunsetGameInstance::USunsetGameInstance()
 	{
 		BuildingsTable = BuildingsLookupTable_BP.Object;
 	}
+	static ConstructorHelpers::FObjectFinder<UDataTable> WaveInformationLookupTable_BP(TEXT("DataTable'/Game/GameplayData/WaveInfo.WaveInfo'"));
+	if (WaveInformationLookupTable_BP.Object)
+	{
+		WaveInfoTable = WaveInformationLookupTable_BP.Object;
+	}
+	//GameDifficulty = EDifficultyMode::Easy;
 }
 
 void USunsetGameInstance::Init()
@@ -145,4 +151,20 @@ int32 USunsetGameInstance::GetTowerNumber()
 	TArray<FHeroTowers*> ArrayOfTowers;
 	BuildingsTable->GetAllRows("", ArrayOfTowers);
 	return ArrayOfTowers.Num();
+}
+
+void USunsetGameInstance::SetGameDifficulty(EDifficultyMode Difficulty)
+{
+	GameDifficulty = Difficulty;
+}
+
+void USunsetGameInstance::GetCurrentWaveInformation(int32 WaveIndex, struct FWaveInformation& WaveInformation)
+{
+	FName Index = FName(*FString::FromInt(WaveIndex));
+	FWaveInformation* RowLookup = WaveInfoTable->FindRow<FWaveInformation>(Index, "", true);
+	if (RowLookup)
+	{
+		WaveInformation = *RowLookup;
+	}
+
 }

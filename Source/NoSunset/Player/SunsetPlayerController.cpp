@@ -378,9 +378,27 @@ void ASunsetPlayerController::ReimburseTowerCost(ATower* Tower)
 void ASunsetPlayerController::SellTower(ATower* Tower)
 {
 	ASunsetPlayerState* SPlayerState = Cast<ASunsetPlayerState>(PlayerState);
-	if (!SPlayerState || !Tower) return;
+	USunsetGameInstance* SGameInstance = Cast<USunsetGameInstance>(GetGameInstance());
 
-	const float CostAfterPenalty = Tower->Cost * 0.9f;
+	if (!SPlayerState || !Tower || !SGameInstance) return;
+
+	float Penalty = 1.f;
+	switch (SGameInstance->GameDifficulty)
+	{
+	case EDifficultyMode::Easy :
+		Penalty = 1.f;
+		break;
+	case EDifficultyMode::Medium :
+		Penalty = 0.8f;
+		break;
+	case EDifficultyMode::Hard:
+		Penalty = 0.5f;
+		break;
+	default:
+		break;
+	}
+
+	const float CostAfterPenalty = Tower->Cost * Penalty;
 	SPlayerState->ModifyGold(CostAfterPenalty);
 	Tower->Destroy();
 }

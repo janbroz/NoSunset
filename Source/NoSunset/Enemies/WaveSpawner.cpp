@@ -3,6 +3,7 @@
 #include "WaveSpawner.h"
 #include "Runtime/Engine/Classes/Engine/World.h"
 #include "SunsetGameState.h"
+#include "SunsetGameInstance.h"
 #include "Enemies/Minion.h"
 #include "Runtime/Engine/Public/TimerManager.h"
 #include "GlobalEventHandler.h"
@@ -46,6 +47,16 @@ void AWaveSpawner::InitializeSpawner()
 void AWaveSpawner::SpawnCurrentWave()
 {
 	WorldState = Cast<ASunsetGameState>(GetWorld()->GetGameState());
+	USunsetGameInstance* GameInstance = Cast<USunsetGameInstance>(GetGameInstance());
+
+	// New and better logic!
+
+
+
+
+
+
+
 	if (WorldState && EnemiesSpawned < EnemiesToSpawn)
 	{
 		auto CurrentWave = WorldState->CurrentWave;

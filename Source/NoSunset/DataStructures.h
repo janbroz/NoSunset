@@ -49,10 +49,19 @@ enum class ETowerMode : uint8
 	Upgrading	UMETA(DisplayName = "Upgrading")
 };
 
+UENUM(BlueprintType)
+enum class EDifficultyMode : uint8
+{
+	Easy		UMETA(DisplayName = "Easy"),
+	Medium		UMETA(DisplayName = "Medium"),
+	Hard		UMETA(DisplayName = "Hard")
+};
+
 inline uint8 GetTypeHash(const EElementType A) { return (uint8)A; }
 inline uint8 GetTypeHash(const EArmorType A) { return (uint8)A; }
 inline uint8 GetTypeHash(const EHeroClass A) { return (uint8)A; }
 inline uint8 GetTypeHash(const ETowerMode A) { return (uint8)A; }
+inline uint8 GetTypeHash(const EDifficultyMode A) { return (uint8)A; }
 
 USTRUCT()
 struct NOSUNSET_API FSunsetDamageEvent : public FDamageEvent
@@ -121,6 +130,31 @@ public:
 		FString Techmaster;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = BuildingTowers)
 		FString Fighter;
+};
+
+USTRUCT(Blueprintable)
+struct FWaveInformation : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	FWaveInformation()
+	: Easy(1)
+	, Medium(1)
+	, Hard(1)
+	, MinionClass("")
+	, bIsBossWave(false)
+	{}
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = BuildingTowers)
+		int32 Easy;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = BuildingTowers)
+		int32 Medium;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = BuildingTowers)
+		int32 Hard;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = BuildingTowers)
+		FString MinionClass;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = BuildingTowers)
+		bool bIsBossWave;
 };
 
 

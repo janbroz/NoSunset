@@ -32,11 +32,19 @@ public:
 		UClass* GetTowerClass(int32 Index, EHeroClass HeroClass);
 	UFUNCTION(BlueprintCallable, Category = TowersInformation)
 		int32 GetTowerNumber();
+	UFUNCTION(BlueprintCallable, Category = GameInformation)
+		void SetGameDifficulty(EDifficultyMode Difficulty);
+	UFUNCTION(BlueprintCallable, Category = GameInformation)
+		void GetCurrentWaveInformation(int32 WaveIndex, struct FWaveInformation& WaveInformation);
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Minion information")
 		UDataTable* TowersTable;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Minion information")
 		UDataTable* BuildingsTable;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=WaveInformation)
+		UDataTable* WaveInfoTable;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=GameInformation)
+		EDifficultyMode GameDifficulty;
 
 };

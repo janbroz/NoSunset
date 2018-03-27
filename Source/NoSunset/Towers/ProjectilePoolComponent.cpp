@@ -63,7 +63,7 @@ void UProjectilePoolComponent::SpawnProjectile(TSubclassOf<AProjectile> Class, i
 		{
 			UGameplayStatics::FinishSpawningActor(PooledProjectile, PooledProjectile->GetTransform());
 			PoolStructure.InstantiatedProjectiles.Add(PooledProjectile);
-			PooledProjectile->SetFolderPath("/PoolingObjects/Projectiles");
+			//PooledProjectile->SetFolderPath("/PoolingObjects/Projectiles");
 			PooledProjectile->SetProjectileEnabled(false);
 		}
 	}
