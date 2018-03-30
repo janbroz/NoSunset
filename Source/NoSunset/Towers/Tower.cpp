@@ -179,11 +179,14 @@ void ATower::Attack()
 	{		
 		if (bUsesProjectiles)
 		{
+			UE_LOG(LogTemp, Warning, TEXT("We can attack and use projectiles"));
 			if (GameState && ProjectileClass && GameState->ProjectilePoolManager)
 			{
+				UE_LOG(LogTemp, Warning, TEXT("Stuff is good"));
 				AProjectile* Projectile = GameState->ProjectilePoolManager->GetUsableProjectile(ProjectileClass);
 				if (Projectile)
 				{
+					UE_LOG(LogTemp, Warning, TEXT("We found a projetile from the pool manager"));
 					Projectile->SetActorTransform(ProjectileSpawnLocation->GetComponentTransform());
 					Projectile->SetOwner(GetOwner());
 					Projectile->SpawnedBy = this;
@@ -196,6 +199,7 @@ void ATower::Attack()
 				}
 				else
 				{
+					UE_LOG(LogTemp, Warning, TEXT("The pool has no boombs"));
 					// This means the pool is out of projectiles. Should spawn a 20% - 30% more and do another call to the get projectile.
 				}
 			}
