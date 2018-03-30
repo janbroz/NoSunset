@@ -29,19 +29,36 @@ public:
 		class AProjectile* GetUsableProjectile(TSubclassOf<class AProjectile> ProjectileClass);
 	UFUNCTION()
 		bool AddProjectileToPool(AProjectile* ProjectileToAdd);
-
-
+	UFUNCTION()
+		void InitializeGame();
+	UFUNCTION()
+		void LevelCompleted(bool bSuccessfully, APlayerController* Controller);
 
 private:
 	void SpawnNextWave();
 
 public:
+	// New wave logic
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Wave information")
 		uint32 bWaveStarted : 1;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Wave information")
-		int32 NumberOfWaves;
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Wave information")
 		int32 CurrentWave;
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Wave information")
+		int32 EnemiesToSpawn;
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Wave information")
+		int32 EnemiesSpawned;
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Wave information")
+		int32 EnemiesAlive;
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Wave information")
+		uint32 bWaveFullySpawned : 1;
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Wave information")
+		TSubclassOf<class AMinion> CurrentMinionClass;
+	
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Wave information")
+		uint32 bRoundIsOver : 1;
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Wave information")
+		int32 NumberOfWaves;	
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Wave information")
 		float TimeBetweenWaves;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Wave information")

@@ -15,3 +15,26 @@ ANoSunsetGameModeBase::ANoSunsetGameModeBase()
 	PlayerStateClass = ASunsetPlayerState::StaticClass();
 	
 }
+
+void ANoSunsetGameModeBase::BeginPlay()
+{
+	Super::BeginPlay();
+
+
+	SetupWaveInformation();
+}
+
+void ANoSunsetGameModeBase::SetupWaveInformation()
+{
+	ASunsetGameState* SGameState = Cast<ASunsetGameState>(GameState);
+	if (!SGameState) return;
+
+	SGameState->CurrentWave = 1;
+	SGameState->InitializeGame();
+}
+
+
+void ANoSunsetGameModeBase::SetDifficultyMode(EDifficultyMode DifficultyMode)
+{
+
+}
