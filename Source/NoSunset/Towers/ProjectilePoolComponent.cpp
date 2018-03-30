@@ -72,6 +72,7 @@ void UProjectilePoolComponent::SpawnProjectile(TSubclassOf<AProjectile> Class, i
 
 AProjectile* UProjectilePoolComponent::GetUsableProjectile(TSubclassOf<AProjectile> ProjectileClass)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Pool is trying to find something of: %s"), *ProjectileClass->GetDefaultObjectName().ToString());
 	FClassPoolArray* UsableProjectileStruct();
 	AProjectile* ChosenProjectile = nullptr;
 
@@ -87,6 +88,16 @@ AProjectile* UProjectilePoolComponent::GetUsableProjectile(TSubclassOf<AProjecti
 			break;
 		}
 	}
+
+	if (ChosenProjectile)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("We found"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("We didnt found"));
+	}
+
 	return ChosenProjectile;
 }
 
