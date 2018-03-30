@@ -36,6 +36,10 @@ public:
 public:
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Placement information", Meta = (MakeEditWidget = true))
 		FVector SpawingPoint;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Level spawning information")
+		TSubclassOf<class AMinion> MinionSpawning;
+
+
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Level spawning information")
 		TArray<TSubclassOf<class AMinion>> MinionClasses;

@@ -31,7 +31,8 @@ public:
 		bool AddProjectileToPool(AProjectile* ProjectileToAdd);
 	UFUNCTION()
 		void InitializeGame();
-
+	UFUNCTION()
+		void LevelCompleted(bool bSuccessfully, APlayerController* Controller);
 
 private:
 	void SpawnNextWave();
@@ -47,8 +48,15 @@ public:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Wave information")
 		int32 EnemiesSpawned;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Wave information")
+		int32 EnemiesAlive;
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Wave information")
 		uint32 bWaveFullySpawned : 1;
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Wave information")
+		TSubclassOf<class AMinion> CurrentMinionClass;
 	
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Wave information")
+		uint32 bRoundIsOver : 1;
+
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Wave information")
 		int32 NumberOfWaves;	
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Wave information")

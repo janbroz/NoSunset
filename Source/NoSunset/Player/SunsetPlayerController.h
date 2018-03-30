@@ -59,6 +59,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void SellTower(class ATower* Tower);
 
+	UFUNCTION(BlueprintCallable)
+		void ShowLevelCompletedMenu();
+
 private:
 	void ClearSelectedTowers();
 
@@ -91,4 +94,10 @@ public:
 		class UOptionsWidget* OptionsWidget;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player information")
 		TSubclassOf<UOptionsWidget> OptionsWidgetClass;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player information")
+		class ULevelCompletedWidget* LevelCompletedWidget;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player information")
+		TSubclassOf<ULevelCompletedWidget> LevelCompletedWidgetClass;
+
+
 };

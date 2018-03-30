@@ -58,11 +58,12 @@ void ASunsetGameState::InitializeGame()
 		EnemiesToSpawn = 0;
 		break;
 	}
+
+	CurrentMinionClass = LoadClass<AMinion>(NULL, *WaveInformation.MinionClass, NULL, LOAD_None, NULL);
 }
 
 void ASunsetGameState::InitializeSpawners()
 {
-	UE_LOG(LogTemp, Warning, TEXT("CALLED WJERE"));
 	TArray<AActor*> Spawners;
 	TArray<AActor*> Goals;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AWaveSpawner::StaticClass(), Spawners);
@@ -102,6 +103,7 @@ void ASunsetGameState::InitializeSpawners()
 void ASunsetGameState::RespondToMinionKilled(AActor* MinionKilled, class AController* EventInstigator, AActor* DamageCauser)
 {
 	//UE_LOG(LogTemp, Warning, TEXT("Shit, someone got killed"));
+	EnemiesAlive = FMath::Clamp(EnemiesAlive - 1, 0, EnemiesToSpawn);
 	ASunsetPlayerController* SPC = Cast<ASunsetPlayerController>(EventInstigator);
 	if (!SPC) return;
 	for(auto PlayerState : PlayerArray)
@@ -115,27 +117,70 @@ void ASunsetGameState::RespondToMinionKilled(AActor* MinionKilled, class AContro
 			break;
 		}
 	}
+
+	if (EnemiesAlive == 0 && bWaveFullySpawned)
+	{
+		HandleWaveCleared();
+	}
 }
 
 void ASunsetGameState::HandleWaveCleared()
 {
 	CurrentWave++;
-	// Not so unused now, eh?
+	bWaveFullySpawned = false;
 	FTimerHandle UnusedHandle;
-	// Do level stuff for the event of a wave finished
-	if (LevelWaveSpawner)
-	{
-		LevelWaveSpawner->SetNextWave();
-	}
 	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ASunsetGameState::SpawnNextWave, TimeBetweenWaves, false);
 }
 
 void ASunsetGameState::SpawnNextWave()
 {
-	if (LevelWaveSpawner)
+	USunsetGameInstance* SGameInstance = Cast<USunsetGameInstance>(GetGameInstance());
+	if (!SGameInstance) return;
+
+	FWaveInformation WaveInformation;
+	SGameInstance->GetCurrentWaveInformation(CurrentWave, WaveInformation);
+	EnemiesSpawned = 0;
+	switch (SGameInstance->GameDifficulty)
+	{
+	case EDifficultyMode::Easy:
+		EnemiesToSpawn = WaveInformation.Easy;
+		break;
+	case EDifficultyMode::Medium:
+		EnemiesToSpawn = WaveInformation.Medium;
+		break;
+	case EDifficultyMode::Hard:
+		EnemiesToSpawn = WaveInformation.Hard;
+		break;
+	default:
+		EnemiesToSpawn = 0;
+		break;
+	}
+	CurrentMinionClass = LoadClass<AMinion>(NULL, *WaveInformation.MinionClass, NULL, LOAD_None, NULL);
+
+	if (LevelWaveSpawner )
 	{
 		LevelWaveSpawner->SpawnCurrentWave();
 	}
+
+	if (!CurrentMinionClass)
+	{
+		LevelCompleted(true, GetWorld()->GetFirstPlayerController());
+	}
+}
+
+void ASunsetGameState::LevelCompleted(bool bSuccessfuly, APlayerController* Controller)
+{
+	if (bSuccessfuly)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Yay, level is completed"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("You lost"));
+	}
+	ASunsetPlayerController* PC = Cast<ASunsetPlayerController>(Controller);
+	if (!PC) return;
+	PC->ShowLevelCompletedMenu();
 }
 
 

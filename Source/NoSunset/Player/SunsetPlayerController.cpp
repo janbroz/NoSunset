@@ -5,9 +5,11 @@
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "Widgets/PlayerHUD/PlayerHUDWidget.h"
 #include "Widgets/PlayerHUD/OptionsWidget.h"
+#include "Widgets/PlayerHUD/LevelCompletedWidget.h"
 #include "Runtime/Engine/Public/DrawDebugHelpers.h"
 #include "Towers/Tower.h"
 #include "Player/SunsetPlayerState.h"
+#include "SunsetGameState.h"
 #include "SunsetGameInstance.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 
@@ -25,6 +27,12 @@ ASunsetPlayerController::ASunsetPlayerController()
 	if (Options_BP.Object)
 	{
 		OptionsWidgetClass = Options_BP.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UClass> Completed_BP(TEXT("/Game/UI/HUD/CompletedLevel_BP.CompletedLevel_BP_C"));
+	if (Completed_BP.Object)
+	{
+		LevelCompletedWidgetClass = Completed_BP.Object;
 	}
 }
 
@@ -106,6 +114,10 @@ void ASunsetPlayerController::EscapePressed()
 {
 	bShowingOptionsMenu = !bShowingOptionsMenu;
 
+	ASunsetGameState* GState = Cast<ASunsetGameState>(GetWorld()->GetGameState());
+	if (!GState) return;
+
+
 	if (bShowingOptionsMenu)
 	{
 		SetPause(bShowingOptionsMenu);
@@ -124,7 +136,10 @@ void ASunsetPlayerController::EscapePressed()
 		{
 			OptionsWidget->RemoveFromParent();
 		}
-		SetPause(bShowingOptionsMenu);
+		if (!GState->bRoundIsOver)
+		{
+			SetPause(bShowingOptionsMenu);
+		}	
 	}
 }
 
@@ -415,4 +430,18 @@ void ASunsetPlayerController::ClearSelectedTowers()
 		SelectedActor->ToggleRangeIndicator(false);
 	}
 	SelectedActor = nullptr;
+}
+
+void ASunsetPlayerController::ShowLevelCompletedMenu()
+{
+	if (LevelCompletedWidgetClass)
+	{
+		LevelCompletedWidget = CreateWidget<ULevelCompletedWidget>(this, LevelCompletedWidgetClass);
+		if (LevelCompletedWidget)
+		{
+			LevelCompletedWidget->AddToViewport();
+		}
+
+	}
+
 }

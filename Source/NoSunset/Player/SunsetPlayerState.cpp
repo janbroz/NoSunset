@@ -4,13 +4,14 @@
 #include "Net/UnrealNetwork.h"
 #include "Runtime/Engine/Classes/Engine/World.h"
 #include "Player/SunsetPlayerController.h"
+#include "SunsetGameState.h"
 
 ASunsetPlayerState::ASunsetPlayerState()
 {
 	//SetPlayerName(TEXT("Default Player"));
-	Gold = 200;
+	Gold = 50;
 	SpecialResource = 0;
-	CurrentLives = 30;
+	CurrentLives = 10;
 	MaxLives = CurrentLives;
 }
 
@@ -40,11 +41,20 @@ void ASunsetPlayerState::DamagePlayer(int32 Damage)
 	if (CurrentLives <= 0)
 	{
 		auto Controller = Cast<APlayerController>(GetOwner());
-		if (Controller)
+		auto GameState = Cast<ASunsetGameState>(GetWorld()->GetGameState());
+		if (GameState && Controller)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Its a valid actor"));
-			//Controller->SetPause(true);
+			GameState->bRoundIsOver = true;
+			GameState->LevelCompleted(false, Controller);
+			Controller->SetPause(true);
 		}
+		//auto Controller = Cast<APlayerController>(GetOwner());
+		//if (Controller)
+		//{
+		//	
+		//	UE_LOG(LogTemp, Warning, TEXT("Its a valid actor"));
+		//	//Controller->SetPause(true);
+		//}
 	}
 }
 

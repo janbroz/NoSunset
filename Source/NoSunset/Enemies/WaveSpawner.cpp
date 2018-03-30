@@ -46,61 +46,48 @@ void AWaveSpawner::InitializeSpawner()
 
 void AWaveSpawner::SpawnCurrentWave()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Got called to spawn stuff"));
+
 	WorldState = Cast<ASunsetGameState>(GetWorld()->GetGameState());
 	USunsetGameInstance* GameInstance = Cast<USunsetGameInstance>(GetGameInstance());
 
 	// New and better logic!
-
-
-
-
-
-
-
-	if (WorldState && EnemiesSpawned < EnemiesToSpawn)
+	if (!WorldState || !GameInstance) return;
+	
+	if (WorldState->bWaveFullySpawned)
 	{
-		auto CurrentWave = WorldState->CurrentWave;
-		//TSubclassOf<AMinion> WaveMinionClass = MinionClasses[WorldState->CurrentWave];
-		if (MinionClasses.IsValidIndex(CurrentWave))
+		// Tell the game state to setup the next wave
+
+	}
+
+	if (WorldState->EnemiesSpawned < WorldState->EnemiesToSpawn && WorldState->CurrentMinionClass)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Actually spawning stuff"));
+		// Spawn the stuff.
+		const FVector SpawnerLocation = GetActorLocation();
+		const FRotator SpawnerRotation = GetActorRotation();
+
+		FActorSpawnParameters FASP;
+		FASP.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+		auto CurrentMinion = GetWorld()->SpawnActor<AMinion>(WorldState->CurrentMinionClass, SpawnerLocation, SpawnerRotation, FASP);
+		if (CurrentMinion)
 		{
-			const FVector SpawnerLocation = GetActorLocation();
-			const FRotator SpawnerRotation = GetActorRotation();
+			WorldState->EnemiesSpawned++;
+			WorldState->EnemiesAlive++;
 
-			FActorSpawnParameters FASP;
-			FASP.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-			auto CurrentMinion = GetWorld()->SpawnActor<AMinion>(MinionClasses[CurrentWave], SpawnerLocation, SpawnerRotation, FASP);
-			if (CurrentMinion)
+			if (WorldState->EnemiesSpawned == WorldState->EnemiesToSpawn)
 			{
-				EnemiesSpawned++;
-				EnemiesAlive++;
-
-				if (CurrentMinion->bIsBoss)
-				{
-					EnemiesToSpawn = 1;
-				}
-
-				if (EnemiesSpawned == EnemiesToSpawn)
-				{
-					bWaveFullySpawned = true;
-				}
-				else
-				{
-					bWaveFullySpawned = false;
-				}
-			}
-
-			if (EnemiesSpawned < EnemiesToSpawn)
-			{
-				FTimerHandle UnusedHandle;
-				GetWorldTimerManager().SetTimer(UnusedHandle, this, &AWaveSpawner::SpawnCurrentWave, 0.5f, false);
+				WorldState->bWaveFullySpawned = true;
 			}
 		}
+		FTimerHandle UnusedHandle;
+		GetWorldTimerManager().SetTimer(UnusedHandle, this, &AWaveSpawner::SpawnCurrentWave, 0.7f, false);
 	}
 }
 
 void AWaveSpawner::HandleMinionKilled(AActor* MinionKilled, class AController* EventInstigator, AActor* DamageCauser)
 {
-	EnemiesAlive = FMath::Clamp(EnemiesAlive-1, 0, EnemiesToSpawn);
+	/*EnemiesAlive = FMath::Clamp(EnemiesAlive-1, 0, EnemiesToSpawn);
 	auto Minion = Cast<AMinion>(MinionKilled);
 	if (Minion && Minion->bIsBoss)
 	{
@@ -110,14 +97,14 @@ void AWaveSpawner::HandleMinionKilled(AActor* MinionKilled, class AController* E
 	if (EnemiesAlive == 0 && bWaveFullySpawned)
 	{
 		EventHandler->OnClearedWave.Broadcast();
-	}
+	}*/
 }
 
 void AWaveSpawner::SetNextWave()
 {
 	//UE_LOG(LogTemp, Warning, TEXT("Set the next wave stuff man"));
-	EnemiesSpawned = 0;
-	EnemiesAlive = 0;
+	/*EnemiesSpawned = 0;
+	EnemiesAlive = 0;*/
 }
 
 TSubclassOf<class AMinion> AWaveSpawner::GetCurrentWaveClass(int32 CurrentWave)
@@ -130,5 +117,4 @@ TSubclassOf<class AMinion> AWaveSpawner::GetCurrentWaveClass(int32 CurrentWave)
 	{
 		return nullptr;
 	}
-
 }
