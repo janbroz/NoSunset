@@ -161,7 +161,7 @@ public:
 USTRUCT(Blueprintable)
 struct FClassPoolArray
 {
-	GENERATED_USTRUCT_BODY()
+	GENERATED_BODY()
 public:
 	FClassPoolArray(){}
 
@@ -171,6 +171,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ProjectileInformation)
 		TArray<class AProjectile*> InstantiatedProjectiles;
 };
+
+
+
 
 class NOSUNSET_API DataStructures
 {

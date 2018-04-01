@@ -11,12 +11,16 @@
 #include "Engine/World.h"
 #include "Components/WidgetComponent.h"
 #include "Widgets/Enemies/EnemyHealthBarWidget.h"
+#include "GameplayStats/SunsetAbilityComponent.h"
 
 // Sets default values
 AMinion::AMinion()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	AbilitySystem = CreateDefaultSubobject<USunsetAbilityComponent>(TEXT("Ability system"));
+	
 
 	AIControllerClass = AMinionController::StaticClass();
 	GetCharacterMovement()->MaxWalkSpeed = 300.f;
