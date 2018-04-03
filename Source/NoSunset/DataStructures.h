@@ -158,7 +158,7 @@ public:
 };
 
 
-USTRUCT(Blueprintable)
+USTRUCT(BlueprintType)
 struct FClassPoolArray
 {
 	GENERATED_BODY()

@@ -12,21 +12,58 @@
 
 
 
-USTRUCT(Blueprintable)
+USTRUCT(BlueprintType)
 struct FAttributeData
 {
 	GENERATED_BODY()
 
 	FAttributeData()
-	: BaseValue(0.f)
-	, CurrentValue(0.f){}
+		: BaseValue(0.f)
+		, CurrentValue(0.f)
+	{}
+
+	FAttributeData(float DefaultValue)
+		: BaseValue(DefaultValue)
+		, CurrentValue(DefaultValue)
+	{}
+
+	virtual ~FAttributeData()
+	{}
+
+	float GetCurrentValue() const;
+	virtual void SetCurrentValue(float NewValue);
+
+	float GetBaseValue() const;
+	virtual void SetBaseValue(float NewValue);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Attribute information")
 		float BaseValue;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Attribute information")
 		float CurrentValue;
-
 };
+
+USTRUCT(BlueprintType)
+struct FAttribute
+{
+	GENERATED_BODY()
+
+public:
+	FAttribute()
+		: Attribute(nullptr)
+		, AttributeOwner(nullptr)
+	{}
+
+	FAttribute(UProperty* NewProperty);
+
+	static bool IsAttributeDataProperty(const UProperty* Property);
+
+private:
+	UPROPERTY(EditAnywhere, Category = SunsetAttribute)
+		UProperty* Attribute;
+	UPROPERTY(VisibleAnywhere, Category = SunsetAttribute)
+		UStruct* AttributeOwner;
+};
+
 
 
 UCLASS()
@@ -36,9 +73,16 @@ class NOSUNSET_API USunsetAttribute : public UObject
 public:
 	USunsetAttribute();
 
+
+public:
+	FAttribute HealthAttribute();
+
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Actor attributes")
 		FAttributeData Health;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Actor attributes")
+		FAttributeData MaxHealth;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Actor attributes")
 		FAttributeData Armor;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Actor attributes")

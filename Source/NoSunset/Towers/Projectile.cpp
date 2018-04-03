@@ -51,6 +51,23 @@ void AProjectile::Tick(float DeltaTime)
 void AProjectile::OnProjectileBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	//UE_LOG(LogTemp, Warning, TEXT("El actor es: %s"), *OtherActor->GetName());
+	auto MinionInterface = Cast<ISunsetAbilityInterface>(OtherActor);
+	if (MinionInterface)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("The interface is Valid"));
+		USunsetAbilityComponent* StatsComponent = MinionInterface->GetAbilityComponent();
+		if (StatsComponent && StatsComponent->AttributeSet)
+		{
+			float CurrentHealth = StatsComponent->AttributeSet->Health.CurrentValue;
+			float NewHealth = FMath::Clamp(CurrentHealth - Damage, 0.0f, 100.0f);
+
+			StatsComponent->AttributeSet->Health.SetCurrentValue(NewHealth);
+
+			UE_LOG(LogTemp, Warning, TEXT("And we can access the stats component"));
+		}
+
+	}
+
 
 	auto MinionOverlapped = Cast<AMinion>(OtherActor);
 	if (MinionOverlapped)
