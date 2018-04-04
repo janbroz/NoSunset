@@ -2,6 +2,7 @@
 
 #include "SunsetAbilityComponent.h"
 #include "GameplayStats/SunsetAttribute.h"
+#include "GameplayStats/SunsetEffect.h"
 
 // Sets default values for this component's properties
 USunsetAbilityComponent::USunsetAbilityComponent()
@@ -33,3 +34,23 @@ void USunsetAbilityComponent::TickComponent(float DeltaTime, ELevelTick TickType
 	// ...
 }
 
+void USunsetAbilityComponent::AddEffect(const TSubclassOf<USunsetEffect> NewEffectClass)
+{
+	if (NewEffectClass)
+	{
+		USunsetEffect* NewEffect = NewObject<USunsetEffect>(this, NewEffectClass);
+
+		if (NewEffect)
+		{
+			FEffectSpec EffectDefinition(NewEffect);
+			EffectsManager.AddEffect(NewEffect);
+
+
+			UE_LOG(LogTemp, Warning, TEXT("The effect was created just nice, with: %f"), NewEffect->EffectValue);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("The effect was not created just nice"));
+		}
+	}
+}

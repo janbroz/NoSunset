@@ -64,14 +64,15 @@ void AProjectile::OnProjectileBeginOverlap(UPrimitiveComponent* OverlappedComp, 
 			StatsComponent->AttributeSet->Health.SetCurrentValue(NewHealth);
 
 			UE_LOG(LogTemp, Warning, TEXT("And we can access the stats component"));
+			ApplyFX();
 		}
-
 	}
 
 
 	auto MinionOverlapped = Cast<AMinion>(OtherActor);
 	if (MinionOverlapped)
 	{
+		TestingEffects(MinionOverlapped);
 		//UE_LOG(LogTemp, Warning, TEXT("Valid stuff"));
 		FSunsetDamageEvent MyDamageEvent = FSunsetDamageEvent();
 		MyDamageEvent.TypeOfAttack = DamageType;

@@ -5,7 +5,10 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "GameplayStats/SunsetAttribute.h"
+#include "GameplayStats/SunsetEffect.h"
 #include "SunsetAbilityComponent.generated.h"
+
+class USunsetEffect;
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -25,7 +28,14 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	UFUNCTION(BlueprintCallable)
+		void AddEffect(const TSubclassOf<USunsetEffect> NewEffectClass);
+
+
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		USunsetAttribute* AttributeSet;
+	UPROPERTY(VisibleAnywhere)
+		FActiveEffectsContainer EffectsManager;
+
 };
