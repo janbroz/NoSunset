@@ -3,6 +3,8 @@
 #include "SunsetAbilityComponent.h"
 #include "GameplayStats/SunsetAttribute.h"
 #include "GameplayStats/SunsetEffect.h"
+#include "Runtime/Engine/Public/TimerManager.h"
+#include "Engine/World.h"
 
 // Sets default values for this component's properties
 USunsetAbilityComponent::USunsetAbilityComponent()
@@ -13,6 +15,7 @@ USunsetAbilityComponent::USunsetAbilityComponent()
 
 	// ...
 	AttributeSet = CreateDefaultSubobject<USunsetAttribute>(TEXT("Attribute Set"));
+	EffectsManager.OwnerAbilityComponent = this;
 }
 
 
@@ -44,7 +47,8 @@ void USunsetAbilityComponent::AddEffect(const TSubclassOf<USunsetEffect> NewEffe
 		{
 			FEffectSpec EffectDefinition(NewEffect);
 			EffectsManager.AddEffect(NewEffect);
-
+			//EffectsManager.ApplyEffectSpec(EffectDefinition);
+			//AttributeSet->ApplyModifierEffect(EffectDefinition);
 
 			UE_LOG(LogTemp, Warning, TEXT("The effect was created just nice, with: %f"), NewEffect->EffectValue);
 		}
@@ -53,4 +57,9 @@ void USunsetAbilityComponent::AddEffect(const TSubclassOf<USunsetEffect> NewEffe
 			UE_LOG(LogTemp, Warning, TEXT("The effect was not created just nice"));
 		}
 	}
+}
+
+void USunsetAbilityComponent::SayHey()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Delegate got called"));
 }

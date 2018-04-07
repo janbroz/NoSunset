@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "SunsetAttribute.h"
-
+#include "GameplayStats/SunsetEffect.h"
 
 float FAttributeData::GetCurrentValue() const
 {
@@ -42,7 +42,12 @@ bool FAttribute::IsAttributeDataProperty(const UProperty* Property)
 		const UStruct* Struct = StructProp->Struct;
 		if (Struct && Struct->IsChildOf(FAttributeData::StaticStruct()))
 		{
+			UE_LOG(LogTemp, Warning, TEXT("It is a valid property"));
 			return true;
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Awkward, It is not a valid property"));
 		}
 	}
 	return false;
@@ -58,4 +63,24 @@ FAttribute USunsetAttribute::HealthAttribute()
 {
 	static UProperty* Property = FindFieldChecked<UProperty>(USunsetAttribute::StaticClass(), GET_MEMBER_NAME_CHECKED(USunsetAttribute, Health));
 	return FAttribute(Property);
+}
+
+void USunsetAttribute::ApplyModifierEffect(const FEffectSpec& Modifier)
+{
+	Modifier.EffectDefinition->Attribute;
+
+	UStructProperty* StructProperty = Cast<UStructProperty>(Modifier.EffectDefinition->Attribute.Attribute);
+	check(StructProperty);
+	FAttributeData* DataPtr = StructProperty->ContainerPtrToValuePtr<FAttributeData>(this);
+	if (ensure(DataPtr))
+	{
+		DataPtr->SetCurrentValue(Modifier.EffectDefinition->EffectValue);
+		
+		UE_LOG(LogTemp, Warning, TEXT("Stuff went fine and we should be modifiying some shit"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Shiiiiet"));
+	}
+
 }

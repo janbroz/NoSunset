@@ -72,7 +72,7 @@ void UProjectilePoolComponent::SpawnProjectile(TSubclassOf<AProjectile> Class, i
 
 AProjectile* UProjectilePoolComponent::GetUsableProjectile(TSubclassOf<AProjectile> ProjectileClass)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Pool is trying to find something of: %s"), *ProjectileClass->GetDefaultObjectName().ToString());
+	//UE_LOG(LogTemp, Warning, TEXT("Pool is trying to find something of: %s"), *ProjectileClass->GetDefaultObjectName().ToString());
 	FClassPoolArray* UsableProjectileStruct();
 	AProjectile* ChosenProjectile = nullptr;
 
@@ -89,7 +89,7 @@ AProjectile* UProjectilePoolComponent::GetUsableProjectile(TSubclassOf<AProjecti
 		}
 	}
 
-	if (ChosenProjectile)
+	/*if (ChosenProjectile)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("We found"));
 	}
@@ -97,7 +97,7 @@ AProjectile* UProjectilePoolComponent::GetUsableProjectile(TSubclassOf<AProjecti
 	{
 		UE_LOG(LogTemp, Warning, TEXT("We didnt found"));
 	}
-
+*/
 	return ChosenProjectile;
 }
 
@@ -124,7 +124,7 @@ TArray<FString> UProjectilePoolComponent::GetAllProjectileNames()
 	TArray<FAssetData> AssetData;
 	ObjectLibrary->GetAssetDataList(AssetData);
 
-	UE_LOG(LogTemp, Warning, TEXT("Found those assets: %d"), AssetData.Num());
+	//UE_LOG(LogTemp, Warning, TEXT("Found those assets: %d"), AssetData.Num());
 	TArray<FString> Names = TArray<FString>();
 
 	for (auto AData : AssetData)
@@ -133,7 +133,7 @@ TArray<FString> UProjectilePoolComponent::GetAllProjectileNames()
 
 		auto Name = AData.ToStringReference().ToString().Append("_C");
 		Names.Add(Name);
-		UE_LOG(LogTemp, Warning, TEXT("The stuff is: %s"), *Name);
+		//UE_LOG(LogTemp, Warning, TEXT("The stuff is: %s"), *Name);
 	}
 
 	return Names;

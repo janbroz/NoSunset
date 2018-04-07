@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "GameplayStats/SunsetAttribute.h"
+#include "Runtime/Engine/Classes/Engine/EngineTypes.h"
 #include "SunsetEffect.generated.h"
 
 /**
@@ -16,16 +17,36 @@ struct FActiveEffect;
 struct FEffectSpec;
 struct FActiveEffectsContainer;
 
+
 USTRUCT()
-struct FActiveEffect
+struct FActiveEffectHandle
 {
 	GENERATED_BODY()
 public:
-	FActiveEffect() {}
+	FActiveEffectHandle()
+	: Handle(0)
+	{}
 
+	FActiveEffectHandle(int32 InHandle)
+		: Handle(InHandle)
+	{}
+
+	bool IsValid() const { return Handle != 0; }
+
+	static FActiveEffectHandle GenerateNewHandle(USunsetAbilityComponent* OwningComp);
+
+	USunsetAbilityComponent* GetOwningAbilitySystem();
+
+	bool operator==(const FActiveEffectHandle& Other) const { return Handle == Other.Handle; }
+	bool operator!=(const FActiveEffectHandle& Other) const { return Handle != Other.Handle; }
+
+private:
+	UPROPERTY()
+		int32 Handle;
 
 
 };
+
 
 USTRUCT(BlueprintType)
 struct FEffectSpec
@@ -35,16 +56,48 @@ public:
 	FEffectSpec();
 	FEffectSpec(const USunsetEffect* InDef);
 
+	void ApplyEffect();
+
+
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		const USunsetEffect* EffectDefinition;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		float Duration;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		float Period;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		const USunsetAbilityComponent* OwnerAbilityComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		FTimerHandle THandle;
 
 };
+
+USTRUCT()
+struct FActiveEffect
+{
+	GENERATED_BODY()
+public:
+	FActiveEffect() {}
+
+	FActiveEffect(const FActiveEffect& Other);
+
+	FActiveEffect(FActiveEffect&& Other);
+	FActiveEffect& operator=(FActiveEffect&& Other);
+	FActiveEffect& operator=(const FActiveEffect& Other);
+
+
+	UPROPERTY()
+		FEffectSpec Spec;
+	UPROPERTY()
+		FActiveEffectHandle Handle;
+
+	FTimerHandle PeriodHandle;
+	FTimerHandle DurationHandle;
+
+};
+
+
 
 USTRUCT(BlueprintType)
 struct FActiveEffectsContainer
@@ -65,7 +118,8 @@ public:
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		float NumberOfEffects;
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		USunsetAbilityComponent* OwnerAbilityComponent;
 	UPROPERTY(VisibleAnywhere)
 		TArray<FActiveEffect> ActiveEffects;
 	UPROPERTY(VisibleAnywhere)
@@ -97,11 +151,17 @@ public:
 	
 	
 public:
-	//UPROPERTY()
-	//	FAttribute Attribute;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FAttribute Attribute;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float EffectValue;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TArray<FModifierInfo> Modifiers;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float Period;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float Duration;
 
 
 };

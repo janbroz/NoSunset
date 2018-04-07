@@ -31,7 +31,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void AddEffect(const TSubclassOf<USunsetEffect> NewEffectClass);
 
-
+	UFUNCTION()
+		void SayHey();
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		USunsetAttribute* AttributeSet;

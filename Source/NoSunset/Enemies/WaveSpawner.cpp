@@ -46,7 +46,7 @@ void AWaveSpawner::InitializeSpawner()
 
 void AWaveSpawner::SpawnCurrentWave()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Got called to spawn stuff"));
+	//UE_LOG(LogTemp, Warning, TEXT("Got called to spawn stuff"));
 
 	WorldState = Cast<ASunsetGameState>(GetWorld()->GetGameState());
 	USunsetGameInstance* GameInstance = Cast<USunsetGameInstance>(GetGameInstance());
@@ -62,7 +62,7 @@ void AWaveSpawner::SpawnCurrentWave()
 
 	if (WorldState->EnemiesSpawned < WorldState->EnemiesToSpawn && WorldState->CurrentMinionClass)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Actually spawning stuff"));
+		//UE_LOG(LogTemp, Warning, TEXT("Actually spawning stuff"));
 		// Spawn the stuff.
 		const FVector SpawnerLocation = GetActorLocation();
 		const FRotator SpawnerRotation = GetActorRotation();

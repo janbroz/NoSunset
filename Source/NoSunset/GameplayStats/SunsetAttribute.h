@@ -10,7 +10,7 @@
  * 
  */
 
-
+struct FEffectSpec;
 
 USTRUCT(BlueprintType)
 struct FAttributeData
@@ -57,7 +57,7 @@ public:
 
 	static bool IsAttributeDataProperty(const UProperty* Property);
 
-private:
+public:
 	UPROPERTY(EditAnywhere, Category = SunsetAttribute)
 		UProperty* Attribute;
 	UPROPERTY(VisibleAnywhere, Category = SunsetAttribute)
@@ -77,6 +77,8 @@ public:
 public:
 	FAttribute HealthAttribute();
 
+
+	void ApplyModifierEffect(const FEffectSpec& Modifier);
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Actor attributes")
