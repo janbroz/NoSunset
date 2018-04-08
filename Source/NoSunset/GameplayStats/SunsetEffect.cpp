@@ -17,99 +17,48 @@ FActiveEffectsContainer::~FActiveEffectsContainer()
 
 }
 
-void FActiveEffectsContainer::AddEffect(const FEffectSpec& NewEffect)
+void FActiveEffectsContainer::AddEffect(USunsetEffect* NewEffect)
 {
-	ActiveEffects_Def.Add(NewEffect);
-	NumberOfEffects = ActiveEffects_Def.Num();
-
-	
-	//NumberOfEffects++;
-
+	AppliedEffects.Add(NewEffect);
+	NewEffect->SetOwner(OwnerAbilityComponent);
+	NumberOfEffects = AppliedEffects.Num();
 }
 
-FActiveEffectHandle FActiveEffectHandle::GenerateNewHandle(USunsetAbilityComponent* OwningComp)
+void USunsetEffect::SetOwner(USunsetAbilityComponent* NewOwner)
 {
-	static int32 GHandle = 0;
-	FActiveEffectHandle NewHandle(GHandle++);
-
-	// Handlers should be stored globally
-	// TODO, read about the global active handlers
-
-
-	return NewHandle;
-}
-
-USunsetAbilityComponent* FActiveEffectHandle::GetOwningAbilitySystem()
-{
-	//TODO - Write some code here
-	return nullptr;
-}
-
-
-FActiveEffect* FActiveEffectsContainer::ApplyEffectSpec(const FEffectSpec& Spec)
-{
-	//Spec.EffectDefinition->Attribute;
-
-	FActiveEffect* AppliedActiveEffect = nullptr;
-	FActiveEffectHandle NewHandle = FActiveEffectHandle::GenerateNewHandle(OwnerAbilityComponent);
-
-	if (OwnerAbilityComponent)
-	{
-		FTimerManager& TimerManager = OwnerAbilityComponent->GetWorld()->GetTimerManager();
-		FTimerDelegate Delegate = FTimerDelegate::CreateUObject(OwnerAbilityComponent, &USunsetAbilityComponent::SayHey);
-	}
-
-	return nullptr;
+	Owner = NewOwner;
 }
 
 USunsetEffect::USunsetEffect()
+	: Owner(nullptr)
 {
 
 }
 
-FEffectSpec::FEffectSpec()
+void USunsetEffect::ApplyEffect()
 {
-
-}
-
-FEffectSpec::FEffectSpec(const USunsetEffect* InDef)
-{
-	EffectDefinition = InDef;
-}
-
-void FEffectSpec::ApplyEffect()
-{
-	
-	if (OwnerAbilityComponent)
+	if (Owner && Owner->GetOwner())
 	{
-		/*OwnerAbilityComponent->AttributeSet->ApplyModifierEffect(*this);
-		FTimerHandle Handy = FTimerHandle();
-		OwnerAbilityComponent->GetWorld()->GetTimerManager().SetTimer(Handy, this, &FEffectSpec::ApplyEffect, 2.f, false);*/
-		//OwnerAbilityComponent->GetWorld()->GetTimerManager().SetTimer(THandle, this, &FEffectSpec::ApplyEffect, 1.0f, false, 1.0f);
+		UE_LOG(LogTemp, Warning, TEXT("Hey there, i am: %s"), *GetName());
+
+		
+
 	}
 }
 
-FActiveEffect::FActiveEffect(const FActiveEffect& Other)
+void USunsetEffect::ClearEffect()
 {
-	*this = Other;
+	UE_LOG(LogTemp, Warning, TEXT("Effect is over, nothing to see here"));
+	GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
+/*
+	PeriodHandle.Invalidate();
+	DurationHandle.Invalidate();*/
 }
 
-FActiveEffect::FActiveEffect(FActiveEffect&& Other)
-	: Handle(Other.Handle)
+void USunsetEffect::SayHey()
 {
-	
-}
-
-FActiveEffect& FActiveEffect::operator=(FActiveEffect&& Other)
-{
-	Handle = Other.Handle;
-
-	return *this;
-}
-
-FActiveEffect& FActiveEffect::operator=(const FActiveEffect& Other)
-{
-	Handle = Other.Handle;
-
-	return *this;
+	if (Owner && Owner->GetOwner())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Hey there, i am: %s"), *GetName());
+	}
 }

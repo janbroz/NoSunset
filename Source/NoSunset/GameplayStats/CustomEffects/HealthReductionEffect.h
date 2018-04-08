@@ -17,6 +17,6 @@ class NOSUNSET_API UHealthReductionEffect : public USunsetEffect
 public:
 	UHealthReductionEffect();
 
-	
+	virtual void ApplyEffect() override;
 	
 };

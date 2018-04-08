@@ -65,22 +65,21 @@ FAttribute USunsetAttribute::HealthAttribute()
 	return FAttribute(Property);
 }
 
-void USunsetAttribute::ApplyModifierEffect(const FEffectSpec& Modifier)
-{
-	Modifier.EffectDefinition->Attribute;
-
-	UStructProperty* StructProperty = Cast<UStructProperty>(Modifier.EffectDefinition->Attribute.Attribute);
-	check(StructProperty);
-	FAttributeData* DataPtr = StructProperty->ContainerPtrToValuePtr<FAttributeData>(this);
-	if (ensure(DataPtr))
-	{
-		DataPtr->SetCurrentValue(Modifier.EffectDefinition->EffectValue);
-		
-		UE_LOG(LogTemp, Warning, TEXT("Stuff went fine and we should be modifiying some shit"));
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Shiiiiet"));
-	}
-
-}
+//void USunsetAttribute::ApplyModifierEffect(USunsetEffect* EffectToApply)
+//{
+//	
+//	UStructProperty* StructProperty = Cast<UStructProperty>(EffectToApply->Attribute.Attribute);
+//	check(StructProperty);
+//	FAttributeData* DataPtr = StructProperty->ContainerPtrToValuePtr<FAttributeData>(this);
+//	if (ensure(DataPtr))
+//	{
+//		DataPtr->SetCurrentValue(EffectToApply->EffectValue);
+//		
+//		UE_LOG(LogTemp, Warning, TEXT("Stuff went fine and we should be modifiying some shit"));
+//	}
+//	else
+//	{
+//		UE_LOG(LogTemp, Warning, TEXT("Shiiiiet"));
+//	}
+//
+//}

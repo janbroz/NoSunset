@@ -13,90 +13,7 @@
  */
 class USunsetAbilityComponent;
 class USunsetEffect;
-struct FActiveEffect;
-struct FEffectSpec;
 struct FActiveEffectsContainer;
-
-
-USTRUCT()
-struct FActiveEffectHandle
-{
-	GENERATED_BODY()
-public:
-	FActiveEffectHandle()
-	: Handle(0)
-	{}
-
-	FActiveEffectHandle(int32 InHandle)
-		: Handle(InHandle)
-	{}
-
-	bool IsValid() const { return Handle != 0; }
-
-	static FActiveEffectHandle GenerateNewHandle(USunsetAbilityComponent* OwningComp);
-
-	USunsetAbilityComponent* GetOwningAbilitySystem();
-
-	bool operator==(const FActiveEffectHandle& Other) const { return Handle == Other.Handle; }
-	bool operator!=(const FActiveEffectHandle& Other) const { return Handle != Other.Handle; }
-
-private:
-	UPROPERTY()
-		int32 Handle;
-
-
-};
-
-
-USTRUCT(BlueprintType)
-struct FEffectSpec
-{
-	GENERATED_BODY()
-public:
-	FEffectSpec();
-	FEffectSpec(const USunsetEffect* InDef);
-
-	void ApplyEffect();
-
-
-public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		const USunsetEffect* EffectDefinition;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		float Duration;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		float Period;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		const USunsetAbilityComponent* OwnerAbilityComponent;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		FTimerHandle THandle;
-
-};
-
-USTRUCT()
-struct FActiveEffect
-{
-	GENERATED_BODY()
-public:
-	FActiveEffect() {}
-
-	FActiveEffect(const FActiveEffect& Other);
-
-	FActiveEffect(FActiveEffect&& Other);
-	FActiveEffect& operator=(FActiveEffect&& Other);
-	FActiveEffect& operator=(const FActiveEffect& Other);
-
-
-	UPROPERTY()
-		FEffectSpec Spec;
-	UPROPERTY()
-		FActiveEffectHandle Handle;
-
-	FTimerHandle PeriodHandle;
-	FTimerHandle DurationHandle;
-
-};
-
 
 
 USTRUCT(BlueprintType)
@@ -107,38 +24,16 @@ public:
 	FActiveEffectsContainer();
 	virtual ~FActiveEffectsContainer();
 
-
-	// Apply the effect
-	FActiveEffect* ApplyEffectSpec(const FEffectSpec& Spec);
-
-
-	void AddEffect(const FEffectSpec& NewEffect);
+	void AddEffect(USunsetEffect* NewEffect);
 
 
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		float NumberOfEffects;
+		int32 NumberOfEffects;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		USunsetAbilityComponent* OwnerAbilityComponent;
 	UPROPERTY(VisibleAnywhere)
-		TArray<FActiveEffect> ActiveEffects;
-	UPROPERTY(VisibleAnywhere)
-		TArray<FEffectSpec> ActiveEffects_Def;
-
-
-};
-
-USTRUCT(BlueprintType)
-struct FModifierInfo
-{
-	GENERATED_BODY();
-public:
-	FModifierInfo() {}
-
-	UPROPERTY(EditDefaultsOnly, Category = Modifier)
-		FAttribute Attribute;
-	UPROPERTY(EditDefaultsOnly, Category = Modifier)
-		float Magnitude;
+		TArray<USunsetEffect*> AppliedEffects;
 };
 
 
@@ -147,9 +42,14 @@ class NOSUNSET_API USunsetEffect : public UObject
 {
 	GENERATED_BODY()
 public:
-	USunsetEffect();
+	USunsetEffect();	
 	
-	
+
+	void SetOwner(USunsetAbilityComponent* NewOwner);
+	virtual void ApplyEffect();
+	void ClearEffect();
+
+	void SayHey();
 public:
 
 	// What attribute is the Effect touching
@@ -161,13 +61,20 @@ public:
 	// Is this effect repeating?
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		uint32 bIsPeriodic : 1;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TArray<FModifierInfo> Modifiers;
+	// Each x seconds repeat this effect
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float Period;
+	// How long should i apply the effect
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float Duration;
+	// The timer manager to destroy this bleeding effect.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FTimerHandle DurationHandle;
+	// The timer manager to apply the effect
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FTimerHandle PeriodHandle;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		USunsetAbilityComponent* Owner;
 
 
 };

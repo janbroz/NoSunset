@@ -31,6 +31,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void AddEffect(const TSubclassOf<USunsetEffect> NewEffectClass);
 
+	UFUNCTION(BlueprintCallable)
+		void ApplyEffect(USunsetEffect* EffectToApply);
+
+
 	UFUNCTION()
 		void SayHey();
 public:

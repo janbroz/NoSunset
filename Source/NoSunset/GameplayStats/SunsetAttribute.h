@@ -57,6 +57,8 @@ public:
 
 	static bool IsAttributeDataProperty(const UProperty* Property);
 
+	UProperty* GetUProperty() const { return Attribute; }
+
 public:
 	UPROPERTY(EditAnywhere, Category = SunsetAttribute)
 		UProperty* Attribute;
@@ -77,8 +79,7 @@ public:
 public:
 	FAttribute HealthAttribute();
 
-
-	void ApplyModifierEffect(const FEffectSpec& Modifier);
+	//void ApplyModifierEffect(USunsetEffect* EffectToApply);
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Actor attributes")

@@ -45,25 +45,20 @@ void USunsetAbilityComponent::AddEffect(const TSubclassOf<USunsetEffect> NewEffe
 
 		if (NewEffect)
 		{
-			FEffectSpec EffectDefinition(NewEffect);
 			EffectsManager.AddEffect(NewEffect);
-
-			/*FTimerManager& TimerManager = GetWorld()->GetTimerManager();
-			FTimerDelegate Delegate = FTimerDelegate::CreateUObject(this, &USunsetAbilityComponent::SayHey);
-
-			TimerManager.SetTimer(EffectDefinition.THandle, this, &USunsetAbilityComponent::SayHey, 1.f, false, 0.f);*/
-
-			//EffectsManager.ApplyEffectSpec(EffectDefinition);
-			//AttributeSet->ApplyModifierEffect(EffectDefinition);
-
-			UE_LOG(LogTemp, Warning, TEXT("The effect was created just nice, with: %f"), NewEffect->EffectValue);
-		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("The effect was not created just nice"));
+			ApplyEffect(NewEffect);
 		}
 	}
 }
+
+void USunsetAbilityComponent::ApplyEffect(USunsetEffect* EffectToApply)
+{
+	FTimerManager& TimerManager = GetWorld()->GetTimerManager();
+	//TimerManager.SetTimer(EffectToApply->DurationHandle, EffectToApply, &USunsetEffect::ClearEffect, EffectToApply->Duration, false, EffectToApply->Duration);
+	TimerManager.SetTimer(EffectToApply->PeriodHandle, EffectToApply, &USunsetEffect::ApplyEffect, 0.5f, true, 0.f);
+	TimerManager.SetTimer(EffectToApply->DurationHandle, EffectToApply, &USunsetEffect::ClearEffect, EffectToApply->Duration, false, -1.f);
+}
+
 
 void USunsetAbilityComponent::SayHey()
 {
