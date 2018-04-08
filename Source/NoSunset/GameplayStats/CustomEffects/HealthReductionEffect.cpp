@@ -26,7 +26,14 @@ void UHealthReductionEffect::ApplyEffect()
 		if (ModifiedProperty == HealthProperty)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Its gonna hurt babe!"));
-
+			UStructProperty* StructProperty = Cast<UStructProperty>(Attribute.Attribute);
+			check(StructProperty);
+			FAttributeData* DataPtr = StructProperty->ContainerPtrToValuePtr<FAttributeData>(Owner->AttributeSet);
+			if (ensure(DataPtr))
+			{
+				const float Val = DataPtr->CurrentValue;
+				DataPtr->SetCurrentValue(Val + EffectValue);
+			}
 		}
 	}
 }
