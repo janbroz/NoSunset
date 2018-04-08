@@ -57,9 +57,6 @@ FActiveEffect* FActiveEffectsContainer::ApplyEffectSpec(const FEffectSpec& Spec)
 	{
 		FTimerManager& TimerManager = OwnerAbilityComponent->GetWorld()->GetTimerManager();
 		FTimerDelegate Delegate = FTimerDelegate::CreateUObject(OwnerAbilityComponent, &USunsetAbilityComponent::SayHey);
-
-		
-
 	}
 
 	return nullptr;
@@ -106,9 +103,13 @@ FActiveEffect::FActiveEffect(FActiveEffect&& Other)
 FActiveEffect& FActiveEffect::operator=(FActiveEffect&& Other)
 {
 	Handle = Other.Handle;
+
+	return *this;
 }
 
 FActiveEffect& FActiveEffect::operator=(const FActiveEffect& Other)
 {
 	Handle = Other.Handle;
+
+	return *this;
 }

@@ -47,6 +47,12 @@ void USunsetAbilityComponent::AddEffect(const TSubclassOf<USunsetEffect> NewEffe
 		{
 			FEffectSpec EffectDefinition(NewEffect);
 			EffectsManager.AddEffect(NewEffect);
+
+			/*FTimerManager& TimerManager = GetWorld()->GetTimerManager();
+			FTimerDelegate Delegate = FTimerDelegate::CreateUObject(this, &USunsetAbilityComponent::SayHey);
+
+			TimerManager.SetTimer(EffectDefinition.THandle, this, &USunsetAbilityComponent::SayHey, 1.f, false, 0.f);*/
+
 			//EffectsManager.ApplyEffectSpec(EffectDefinition);
 			//AttributeSet->ApplyModifierEffect(EffectDefinition);
 

@@ -151,11 +151,17 @@ public:
 	
 	
 public:
+
+	// What attribute is the Effect touching
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		FAttribute Attribute;
-
+	// How much is it going to change (- or + float)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float EffectValue;
+	// Is this effect repeating?
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		uint32 bIsPeriodic : 1;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TArray<FModifierInfo> Modifiers;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
