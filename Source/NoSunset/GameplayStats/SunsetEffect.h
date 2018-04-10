@@ -16,6 +16,13 @@ class USunsetEffect;
 struct FActiveEffectsContainer;
 
 
+UENUM(BlueprintType)
+enum class EEffectApplyMode : uint8
+{
+	Additive			UMETA(DisplayName="Additive"),
+	Multiplicative		UMETA(DisplayName="Multiplicative")
+};
+
 USTRUCT(BlueprintType)
 struct FActiveEffectsContainer
 {
@@ -24,7 +31,7 @@ public:
 	FActiveEffectsContainer();
 	virtual ~FActiveEffectsContainer();
 
-	void AddEffect(USunsetEffect* NewEffect);
+	bool AddEffect(USunsetEffect* NewEffect);
 
 
 public:
@@ -44,12 +51,18 @@ class NOSUNSET_API USunsetEffect : public UObject
 public:
 	USunsetEffect();	
 	
-
-	void SetOwner(USunsetAbilityComponent* NewOwner);
-	virtual void ApplyEffect();
-	void ClearEffect();
+	UFUNCTION()
+		void SetOwner(USunsetAbilityComponent* NewOwner);
+	UFUNCTION()
+		virtual void ApplyEffect();
+	UFUNCTION()
+		void ClearEffect();
+	UFUNCTION()
+		void ClearStack();
 
 	void SayHey();
+	float CalculateEffect();
+
 public:
 
 	// What attribute is the Effect touching
@@ -61,6 +74,16 @@ public:
 	// Is this effect repeating?
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		uint32 bIsPeriodic : 1;
+	// Its an stackable effect?
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		uint32 bCanStack : 1;
+	// Stack count for the effect
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int32 StackCount;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int32 MaxStackAmount;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float StackDuration;
 	// Each x seconds repeat this effect
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float Period;
@@ -73,8 +96,12 @@ public:
 	// The timer manager to apply the effect
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		FTimerHandle PeriodHandle;
+	// A Handle to remove a stack from our effect
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FTimerHandle StackHandle;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		USunsetAbilityComponent* Owner;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		EEffectApplyMode ApplyMode;
 
 };

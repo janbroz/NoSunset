@@ -36,6 +36,9 @@ struct FAttributeData
 	float GetBaseValue() const;
 	virtual void SetBaseValue(float NewValue);
 
+	void ModifyCurrentValue(float NewValue);
+	void ModifyBaseValue(float NewValue);
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Attribute information")
 		float BaseValue;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Attribute information")

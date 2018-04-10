@@ -17,11 +17,61 @@ FActiveEffectsContainer::~FActiveEffectsContainer()
 
 }
 
-void FActiveEffectsContainer::AddEffect(USunsetEffect* NewEffect)
+bool FActiveEffectsContainer::AddEffect(USunsetEffect* NewEffect)
 {
-	AppliedEffects.Add(NewEffect);
-	NewEffect->SetOwner(OwnerAbilityComponent);
-	NumberOfEffects = AppliedEffects.Num();
+	// How to add a effect to the active effects queue
+	bool bEffectExists = AppliedEffects.ContainsByPredicate(
+		[&](const UObject* Object)
+		{
+		return Object->GetClass() == NewEffect->GetClass();
+		});
+
+	// We know there is an item of similar class. Is there a way to
+	// get the item without using an array iterator? Stay with us and
+	// watch it on the next episode!
+
+	if (bEffectExists && OwnerAbilityComponent)
+	{
+		USunsetEffect* StackingEffect = nullptr;
+		for (auto Eff : AppliedEffects)
+		{
+			if (Eff->GetClass() == NewEffect->GetClass())
+			{
+				StackingEffect = Eff;
+				break;
+			}
+		}
+
+		if (StackingEffect)
+		{
+			FTimerManager& TimerManager = OwnerAbilityComponent->GetWorld()->GetTimerManager();
+			if (StackingEffect->StackCount < StackingEffect->MaxStackAmount)
+			{
+				StackingEffect->StackCount++;
+				
+			}
+			TimerManager.SetTimer(StackingEffect->DurationHandle, StackingEffect, &USunsetEffect::ClearEffect, StackingEffect->Duration, false, -1.0f);	
+			TimerManager.SetTimer(StackingEffect->PeriodHandle, StackingEffect, &USunsetEffect::ApplyEffect, StackingEffect->Period, true, -1.0f);
+			TimerManager.SetTimer(StackingEffect->StackHandle, StackingEffect, &USunsetEffect::ClearStack, StackingEffect->StackDuration, false, -1.0f);
+		}
+
+		UE_LOG(LogTemp, Warning, TEXT("There is a similar effect"));
+
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("There is not a similar effect, buu!"));
+		AppliedEffects.Add(NewEffect);
+		NewEffect->SetOwner(OwnerAbilityComponent);
+		NumberOfEffects = AppliedEffects.Num();
+	}
+
+	return !bEffectExists;
+}
+
+void USunsetEffect::ClearStack()
+{
+	StackCount--;
 }
 
 void USunsetEffect::SetOwner(USunsetAbilityComponent* NewOwner)
@@ -61,4 +111,10 @@ void USunsetEffect::SayHey()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Hey there, i am: %s"), *GetName());
 	}
+}
+
+float USunsetEffect::CalculateEffect()
+{
+	// Calculate the real effect after modifications like stacks and stuff.
+	return EffectValue;
 }

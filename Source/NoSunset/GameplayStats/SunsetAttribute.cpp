@@ -23,6 +23,17 @@ void FAttributeData::SetBaseValue(float NewValue)
 	BaseValue = NewValue;
 }
 
+void FAttributeData::ModifyBaseValue(float NewValue)
+{
+	// Do stuff like check if it goes below 0.
+	BaseValue += NewValue;
+}
+
+void FAttributeData::ModifyCurrentValue(float NewValue)
+{
+	CurrentValue += NewValue;
+}
+
 FAttribute::FAttribute(UProperty* NewProperty)
 {
 	Attribute = nullptr;

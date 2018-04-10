@@ -45,16 +45,23 @@ void USunsetAbilityComponent::AddEffect(const TSubclassOf<USunsetEffect> NewEffe
 
 		if (NewEffect)
 		{
-			EffectsManager.AddEffect(NewEffect);
-			ApplyEffect(NewEffect);
+			bool bSuccesfullyAdded = EffectsManager.AddEffect(NewEffect);
+			if (bSuccesfullyAdded)
+			{
+				ApplyEffect(NewEffect);
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Effect already got applied"));
+			}
 		}
 	}
 }
 
 void USunsetAbilityComponent::ApplyEffect(USunsetEffect* EffectToApply)
 {
+	//UE_LOG(LogTemp, Warning, TEXT("Effect got applied"));
 	FTimerManager& TimerManager = GetWorld()->GetTimerManager();
-	//TimerManager.SetTimer(EffectToApply->DurationHandle, EffectToApply, &USunsetEffect::ClearEffect, EffectToApply->Duration, false, EffectToApply->Duration);
 	TimerManager.SetTimer(EffectToApply->PeriodHandle, EffectToApply, &USunsetEffect::ApplyEffect, 0.5f, true, 0.f);
 	TimerManager.SetTimer(EffectToApply->DurationHandle, EffectToApply, &USunsetEffect::ClearEffect, EffectToApply->Duration, false, -1.f);
 }

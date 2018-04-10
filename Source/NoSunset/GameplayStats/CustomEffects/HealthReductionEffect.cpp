@@ -31,8 +31,8 @@ void UHealthReductionEffect::ApplyEffect()
 			FAttributeData* DataPtr = StructProperty->ContainerPtrToValuePtr<FAttributeData>(Owner->AttributeSet);
 			if (ensure(DataPtr))
 			{
-				const float Val = DataPtr->CurrentValue;
-				DataPtr->SetCurrentValue(Val + EffectValue);
+				const float TotalChange = CalculateEffect();
+				DataPtr->ModifyCurrentValue(TotalChange);
 			}
 		}
 	}
