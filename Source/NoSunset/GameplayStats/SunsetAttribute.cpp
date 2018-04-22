@@ -29,9 +29,21 @@ void FAttributeData::ModifyBaseValue(float NewValue)
 	BaseValue += NewValue;
 }
 
-void FAttributeData::ModifyCurrentValue(float NewValue)
+void FAttributeData::ModifyCurrentValue(float NewValue, bool bHasMaxValue, float MaxValue)
 {
-	CurrentValue += NewValue;
+	UE_LOG(LogTemp, Warning, TEXT("Value is: %f"), NewValue);
+	UE_LOG(LogTemp, Warning, TEXT("Current value is: %f"), CurrentValue);
+
+	const float ModifiedValue = CurrentValue + NewValue;
+	if (bHasMaxValue)
+	{
+		CurrentValue = FMath::Clamp(ModifiedValue, 0.f, MaxValue);
+	}
+	else
+	{
+		CurrentValue = FMath::Clamp(ModifiedValue, 0.f, ModifiedValue);
+	}
+	UE_LOG(LogTemp, Warning, TEXT("new Value is: %f"), CurrentValue);
 }
 
 FAttribute::FAttribute(UProperty* NewProperty)
