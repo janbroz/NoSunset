@@ -5,12 +5,14 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "DataStructures.h"
+#include "GameplayStats/SunsetAbilityInterface.h"
+#include "GameplayStats/SunsetAbilityComponent.h"
 #include "Minion.generated.h"
 
 //DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FMinionIsKilledSignature, class AActor*, KilledMinion, class AActor*, Instigator);
 
 UCLASS()
-class NOSUNSET_API AMinion : public ACharacter
+class NOSUNSET_API AMinion : public ACharacter, public ISunsetAbilityInterface
 {
 	GENERATED_BODY()
 
@@ -26,6 +28,9 @@ private:
 	void UpdateDamageReduction();
 
 public:	
+
+	virtual USunsetAbilityComponent* GetAbilityComponent() const override { return AbilitySystem; }
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -47,6 +52,8 @@ public:
 		void SetupUIHealth();
 
 public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Abilities, meta = (AllowPrivateAccess = "true"))
+		class USunsetAbilityComponent* AbilitySystem;
 	UPROPERTY(EditAnywhere, Category = "Event Manager")
 		class UGlobalEventHandler* EventHandler;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = MinionInformation)

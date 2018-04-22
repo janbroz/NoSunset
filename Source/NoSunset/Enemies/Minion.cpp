@@ -11,12 +11,16 @@
 #include "Engine/World.h"
 #include "Components/WidgetComponent.h"
 #include "Widgets/Enemies/EnemyHealthBarWidget.h"
+#include "GameplayStats/SunsetAbilityComponent.h"
 
 // Sets default values
 AMinion::AMinion()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	AbilitySystem = CreateDefaultSubobject<USunsetAbilityComponent>(TEXT("Ability system"));
+	
 
 	AIControllerClass = AMinionController::StaticClass();
 	GetCharacterMovement()->MaxWalkSpeed = 300.f;
@@ -36,6 +40,11 @@ void AMinion::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	if (AbilitySystem)
+	{
+		AbilitySystem->InitAttributeSet();
+	}
+
 	SpawnDefaultController();
 
 	ASunsetGameState* SunsetGameState = Cast<ASunsetGameState>(UGameplayStatics::GetGameState(GetWorld()));
@@ -130,7 +139,7 @@ void AMinion::UpdateHealthBarLocation()
 
 void AMinion::ModifyHealth(float Amount)
 {
-	float UpdatedHealth = Health + Amount;
+	/*float UpdatedHealth = Health + Amount;
 	Health = FMath::Clamp(UpdatedHealth, 0.f, MaxHealth);
 
 	if (bShowingHealthBar)
@@ -139,6 +148,25 @@ void AMinion::ModifyHealth(float Amount)
 		if (HealthWidget)
 		{
 			HealthWidget->UpdateHealth(Health);
+		}
+	}*/
+
+	// New health, now with stats!
+	if (!AbilitySystem || !AbilitySystem->AttributeSet) return;
+	FAttributeData& HealthData = AbilitySystem->AttributeSet->Health;
+	//HealthData->ModifyCurrentValue(Amount);
+
+	UE_LOG(LogTemp, Warning, TEXT("Current health is: %f"), HealthData.GetCurrentValue());
+	
+	UE_LOG(LogTemp, Warning, TEXT("Owner name is: %s"), *AbilitySystem->GetFullName());
+	UE_LOG(LogTemp, Warning, TEXT("Owner name is: %s"), *AbilitySystem->AttributeSet->GetFullName());
+
+	if (bShowingHealthBar)
+	{
+		UEnemyHealthBarWidget* HealthWidget = Cast<UEnemyHealthBarWidget>(HealthBarComponent->GetUserWidgetObject());
+		if (HealthWidget)
+		{
+			HealthWidget->UpdateHealth(HealthData.GetCurrentValue());
 		}
 	}
 }

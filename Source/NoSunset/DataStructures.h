@@ -157,11 +157,43 @@ public:
 		bool bIsBossWave;
 };
 
-
 USTRUCT(Blueprintable)
+struct FMinionStats : public FTableRowBase
+{
+	GENERATED_BODY()
+public:
+	FMinionStats()
+	: HealthDefault(0.f)
+	, MaxHealthDefault(0.f)
+	, ArmorDefault(0.f)
+	, MovementSpeedDefault(0.f)
+	, AttackRangeDefault(0.f)
+	, AttackSpeedDefault(0.f)
+	, AttackDamageDefault(0.f)
+	{}
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MinionStats)
+		float HealthDefault;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MinionStats)
+		float MaxHealthDefault;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MinionStats)
+		float ArmorDefault;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MinionStats)
+		float MovementSpeedDefault;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MinionStats)
+		float AttackRangeDefault;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MinionStats)
+		float AttackSpeedDefault;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MinionStats)
+		float AttackDamageDefault;
+};
+
+
+USTRUCT(BlueprintType)
 struct FClassPoolArray
 {
-	GENERATED_USTRUCT_BODY()
+	GENERATED_BODY()
 public:
 	FClassPoolArray(){}
 
@@ -171,6 +203,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ProjectileInformation)
 		TArray<class AProjectile*> InstantiatedProjectiles;
 };
+
+
+
 
 class NOSUNSET_API DataStructures
 {

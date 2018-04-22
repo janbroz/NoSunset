@@ -13,6 +13,11 @@
 #include "SunsetGameInstance.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 
+// Temporal
+#include "Gameplaystats/SunsetEffect.h"
+#include "Enemies/Minion.h"
+#include "Runtime/CoreUObject/Public/UObject/UObjectIterator.h"
+
 ASunsetPlayerController::ASunsetPlayerController()
 {
 	bShowMouseCursor = true;
@@ -53,6 +58,7 @@ void ASunsetPlayerController::SetupInputComponent()
 	InputComponent->BindAction("Escape", EInputEvent::IE_Pressed, this, &ASunsetPlayerController::EscapePressed).bExecuteWhenPaused = true;
 	InputComponent->BindAction("MultiBuild", EInputEvent::IE_Pressed, this, &ASunsetPlayerController::ShiftBuildPressed);
 	InputComponent->BindAction("MultiBuild", EInputEvent::IE_Released, this, &ASunsetPlayerController::ShiftBuildReleased);
+	InputComponent->BindAction("Spacebar", EInputEvent::IE_Released, this, &ASunsetPlayerController::DebuggingFunction);
 }
 
 void ASunsetPlayerController::BeginPlay()
@@ -441,7 +447,19 @@ void ASunsetPlayerController::ShowLevelCompletedMenu()
 		{
 			LevelCompletedWidget->AddToViewport();
 		}
-
 	}
+}
 
+void ASunsetPlayerController::DebuggingFunction() 
+{
+	TArray<AActor*> FoundObjects;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMinion::StaticClass(), FoundObjects);
+	
+
+	int32 Numba = 0;
+	for (TObjectIterator<USunsetEffect> Itr; Itr; ++Itr)
+	{
+		Numba++;
+	}
+	UE_LOG(LogTemp, Warning, TEXT("Holi, tenemos cositos aca: %d"), Numba);
 }

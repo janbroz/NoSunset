@@ -44,6 +44,11 @@ public:
 		void ApplyFX();
 
 
+	// CARE - This function is only for testing the effects stuff. Remove after testing
+	UFUNCTION(BlueprintImplementableEvent)
+		void TestingEffects(class AMinion* Minion);
+
+
 public:
 	UPROPERTY(EditAnywhere, Category = "Damage information")
 		int32 Rarity;
