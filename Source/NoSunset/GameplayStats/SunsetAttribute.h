@@ -77,7 +77,7 @@ class NOSUNSET_API USunsetAttribute : public UObject
 	GENERATED_BODY()
 public:
 	USunsetAttribute();
-
+	~USunsetAttribute();
 
 public:
 	FAttribute HealthAttribute();

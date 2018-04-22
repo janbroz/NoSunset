@@ -70,6 +70,11 @@ USunsetAttribute::USunsetAttribute()
 
 }
 
+USunsetAttribute::~USunsetAttribute()
+{
+
+}
+
 FAttribute USunsetAttribute::HealthAttribute()
 {
 	static UProperty* Property = FindFieldChecked<UProperty>(USunsetAttribute::StaticClass(), GET_MEMBER_NAME_CHECKED(USunsetAttribute, Health));

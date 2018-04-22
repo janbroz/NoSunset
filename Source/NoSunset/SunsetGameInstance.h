@@ -44,6 +44,8 @@ public:
 		UDataTable* BuildingsTable;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=WaveInformation)
 		UDataTable* WaveInfoTable;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaveInformation)
+		UDataTable* MinionStatsTable;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=GameInformation)
 		EDifficultyMode GameDifficulty;
 

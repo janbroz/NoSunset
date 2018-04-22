@@ -5,6 +5,7 @@
 #include "GameplayStats/SunsetEffect.h"
 #include "Runtime/Engine/Public/TimerManager.h"
 #include "Engine/World.h"
+#include "SunsetGameInstance.h"
 
 // Sets default values for this component's properties
 USunsetAbilityComponent::USunsetAbilityComponent()
@@ -14,8 +15,12 @@ USunsetAbilityComponent::USunsetAbilityComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
-	AttributeSet = CreateDefaultSubobject<USunsetAttribute>(TEXT("Attribute Set"));
+	//AttributeSet = NewObject<USunsetAttribute>(GetOwner(), USunsetAttribute::StaticClass());
+	//AttributeSet = CreateDefaultSubobject<USunsetAttribute>(TEXT("Attribute Set information"));
+	//UE_LOG(LogTemp, Warning, TEXT("Id of this guy is: %d"), AttributeSet->GetUniqueID());
+	//AttributeSet = CreateDefaultSubobject<USunsetAttribute>(*RndStr);
 	EffectsManager.OwnerAbilityComponent = this;
+	ClassName = "Default";
 }
 
 
@@ -25,7 +30,27 @@ void USunsetAbilityComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
+}
+
+void USunsetAbilityComponent::InitAttributeSet()
+{
+	AttributeSet = NewObject<USunsetAttribute>(GetOwner(), USunsetAttribute::StaticClass());
+	// Now fill the attributes according to the table
+	USunsetGameInstance* GameInstance = Cast<USunsetGameInstance>(GetWorld()->GetGameInstance());
+	if (GameInstance)
+	{
+		FMinionStats* RowLookup = GameInstance->MinionStatsTable->FindRow<FMinionStats>(ClassName, "", true);
+		if (RowLookup)
+		{
+			AttributeSet->Health = FAttributeData(RowLookup->HealthDefault);
+			AttributeSet->MaxHealth = FAttributeData(RowLookup->MaxHealthDefault);
+			AttributeSet->Armor = FAttributeData(RowLookup->ArmorDefault);
+			AttributeSet->MovementSpeed = FAttributeData(RowLookup->MovementSpeedDefault);
+			AttributeSet->AttackRange = FAttributeData(RowLookup->AttackRangeDefault);
+			AttributeSet->AttackSpeed = FAttributeData(RowLookup->AttackSpeedDefault);
+			AttributeSet->AttackDamage = FAttributeData(RowLookup->AttackDamageDefault);
+		}
+	}
 }
 
 

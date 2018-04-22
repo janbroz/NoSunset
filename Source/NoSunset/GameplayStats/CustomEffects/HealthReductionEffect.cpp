@@ -18,20 +18,21 @@ UHealthReductionEffect::UHealthReductionEffect()
 
 void UHealthReductionEffect::ApplyEffect()
 {
-	if (Owner && Owner->GetOwner())
+	if (bEnabled && Owner && Owner->GetOwner())
 	{
 		UProperty* ModifiedProperty = Attribute.GetUProperty();
 		static UProperty* HealthProperty = FindFieldChecked<UProperty>(USunsetAttribute::StaticClass(), GET_MEMBER_NAME_CHECKED(USunsetAttribute, Health));
 
 		if (ModifiedProperty == HealthProperty)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Its gonna hurt babe!"));
+			//UE_LOG(LogTemp, Warning, TEXT("Its gonna hurt babe!"));
 			UStructProperty* StructProperty = Cast<UStructProperty>(Attribute.Attribute);
 			check(StructProperty);
 			FAttributeData* DataPtr = StructProperty->ContainerPtrToValuePtr<FAttributeData>(Owner->AttributeSet);
 			if (ensure(DataPtr))
 			{
 				const float TotalChange = CalculateEffect();
+				UE_LOG(LogTemp, Warning, TEXT("Current health is: %f"), DataPtr->CurrentValue);
 				DataPtr->ModifyCurrentValue(TotalChange);
 			}
 		}

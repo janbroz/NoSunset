@@ -71,6 +71,9 @@ public:
 	// How much is it going to change (- or + float)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float EffectValue;
+	// Is the effect enabled and usable?
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		uint32 bEnabled : 1;
 	// Is this effect repeating?
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		uint32 bIsPeriodic : 1;

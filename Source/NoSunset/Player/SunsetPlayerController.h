@@ -29,6 +29,9 @@ public:
 	void ShiftBuildPressed();
 	void ShiftBuildReleased();
 
+	// We use this bad guy to debug 
+	void DebuggingFunction();
+
 	UFUNCTION(BlueprintCallable)
 		void EscapePressed();
 	void UpdateHUDResources();

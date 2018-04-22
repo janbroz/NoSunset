@@ -23,6 +23,13 @@ USunsetGameInstance::USunsetGameInstance()
 	{
 		WaveInfoTable = WaveInformationLookupTable_BP.Object;
 	}
+	static ConstructorHelpers::FObjectFinder<UDataTable> MinionStatsLookupTable_BP(TEXT("DataTable'/Game/GameplayData/Minion-stats.Minion-stats'"));
+	if (MinionStatsLookupTable_BP.Object)
+	{
+		MinionStatsTable = MinionStatsLookupTable_BP.Object;
+	}
+
+
 	//GameDifficulty = EDifficultyMode::Easy;
 }
 

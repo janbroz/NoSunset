@@ -63,6 +63,7 @@ bool FActiveEffectsContainer::AddEffect(USunsetEffect* NewEffect)
 		UE_LOG(LogTemp, Warning, TEXT("There is not a similar effect, buu!"));
 		AppliedEffects.Add(NewEffect);
 		NewEffect->SetOwner(OwnerAbilityComponent);
+		NewEffect->bEnabled = true;
 		NumberOfEffects = AppliedEffects.Num();
 	}
 
@@ -98,10 +99,15 @@ void USunsetEffect::ApplyEffect()
 
 void USunsetEffect::ClearEffect()
 {
+	bEnabled = false;
 	UE_LOG(LogTemp, Warning, TEXT("Effect is over, nothing to see here"));
 	GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
-/*
-	PeriodHandle.Invalidate();
+
+	if (Owner)
+	{
+		Owner->EffectsManager.AppliedEffects.Remove(this);
+	}
+    /*PeriodHandle.Invalidate();
 	DurationHandle.Invalidate();*/
 }
 

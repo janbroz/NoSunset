@@ -33,14 +33,16 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void ApplyEffect(USunsetEffect* EffectToApply);
-
+	UFUNCTION(BlueprintCallable)
+		void InitAttributeSet();
 
 	UFUNCTION()
 		void SayHey();
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FName ClassName;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		USunsetAttribute* AttributeSet;
 	UPROPERTY(VisibleAnywhere)
 		FActiveEffectsContainer EffectsManager;
-
 };
