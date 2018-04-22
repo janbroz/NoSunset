@@ -50,8 +50,9 @@ void AProjectile::Tick(float DeltaTime)
 
 void AProjectile::OnProjectileBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	// currently applying the damage twice >.>
 	//UE_LOG(LogTemp, Warning, TEXT("El actor es: %s"), *OtherActor->GetName());
-	auto MinionInterface = Cast<ISunsetAbilityInterface>(OtherActor);
+	/*auto MinionInterface = Cast<ISunsetAbilityInterface>(OtherActor);
 	if (MinionInterface)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("The interface is Valid"));
@@ -66,7 +67,7 @@ void AProjectile::OnProjectileBeginOverlap(UPrimitiveComponent* OverlappedComp, 
 			UE_LOG(LogTemp, Warning, TEXT("And we can access the stats component"));
 			ApplyFX();
 		}
-	}
+	}*/
 
 
 	auto MinionOverlapped = Cast<AMinion>(OtherActor);
@@ -81,17 +82,6 @@ void AProjectile::OnProjectileBeginOverlap(UPrimitiveComponent* OverlappedComp, 
 		MinionOverlapped->TakeDamage(Damage, MyDamageEvent, Instigator, SpawnedBy);
 		
 		DestroyProjectile();
-		//if (Target && Target == MinionOverlapped)
-		//{
-		//	// At this point we should apply the damage to the minion and do something if the attack is 
-		//	// supposed to do AOE or apply a DoT.
-		//	//Target->TakeDamage(Damage, FDamageEvent(DamageClass), nullptr, this);
-
-		//}
-		//else
-		//{
-		//	// Should we do something? Cause we just hit a minion that is not our target.
-		//}
 	}
 }
 

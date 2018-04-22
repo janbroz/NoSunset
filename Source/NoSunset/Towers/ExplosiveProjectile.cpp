@@ -24,6 +24,7 @@ void AExplosiveProjectile::OnProjectileBeginOverlap(UPrimitiveComponent* Overlap
 		for (auto &ActualActor : ActorsCaughtInExplosion)
 		{
 			auto* Minion = Cast<AMinion>(ActualActor);
+			TestingEffects(Minion);
 			
 			FSunsetDamageEvent MyDamageEvent = FSunsetDamageEvent();
 			MyDamageEvent.TypeOfAttack = DamageType;

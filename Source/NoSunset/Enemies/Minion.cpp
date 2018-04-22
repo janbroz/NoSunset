@@ -90,7 +90,7 @@ float AMinion::TakeDamage(float DamageAmount, struct FDamageEvent const & Damage
 	}
 	// The damage event is a valid damage event for the game
 
-	// Need to create a singletop which can get a multiplier of damage vs type of armor.
+	// Need to create a singleton which can get a multiplier of damage vs type of armor.
 	// so it wont be reading an FTable for each time a unit takes damage.
 	if (MyDamage)
 	{
@@ -104,13 +104,13 @@ float AMinion::TakeDamage(float DamageAmount, struct FDamageEvent const & Damage
 		ModifyHealth(-TotalDamage);
 	}
 
-	//Health = FMath::Clamp(Health, 0.f, MaxHealth);
-	if (Health <= 0.f)
+	if (!AbilitySystem || !AbilitySystem->AttributeSet) return 0;
+	FAttributeData* HealthData = &AbilitySystem->AttributeSet->Health;
+	if (HealthData->CurrentValue <= 0.f)
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("Got killed by: %s who shoot an %s"), *EventInstigator->GetName(), *DamageCauser->GetName());
-
 		KillMinion(EventInstigator, DamageCauser);
 	}
+
 	return DamageCaused;
 }
 
@@ -122,51 +122,21 @@ void AMinion::UpdateDamageReduction()
 void AMinion::UpdateHealthBarLocation()
 {
 	HealthBarComponent->SetWorldRotation(FRotator(90.f,0.f, 0.f));
-
-	//if (bShowingHealthBar)
-	//{
-	//	APlayerController* PC = GetWorld()->GetFirstPlayerController();
-	//	if (PC)
-	//	{
-	//		FVector PlayerCameraLocation = PC->PlayerCameraManager->GetCameraLocation();
-	//		FVector WidgetLocation = HealthBarComponent->GetComponentLocation();
-
-	//		FRotator LookAt = (PlayerCameraLocation - WidgetLocation).Rotation();
-	//		HealthBarComponent->SetWorldRotation(LookAt);
-	//	}
-	//}
 }
 
 void AMinion::ModifyHealth(float Amount)
 {
-	/*float UpdatedHealth = Health + Amount;
-	Health = FMath::Clamp(UpdatedHealth, 0.f, MaxHealth);
-
-	if (bShowingHealthBar)
-	{
-		UEnemyHealthBarWidget* HealthWidget = Cast<UEnemyHealthBarWidget>(HealthBarComponent->GetUserWidgetObject());
-		if (HealthWidget)
-		{
-			HealthWidget->UpdateHealth(Health);
-		}
-	}*/
-
 	// New health, now with stats!
 	if (!AbilitySystem || !AbilitySystem->AttributeSet) return;
-	FAttributeData& HealthData = AbilitySystem->AttributeSet->Health;
-	//HealthData->ModifyCurrentValue(Amount);
-
-	UE_LOG(LogTemp, Warning, TEXT("Current health is: %f"), HealthData.GetCurrentValue());
-	
-	UE_LOG(LogTemp, Warning, TEXT("Owner name is: %s"), *AbilitySystem->GetFullName());
-	UE_LOG(LogTemp, Warning, TEXT("Owner name is: %s"), *AbilitySystem->AttributeSet->GetFullName());
+	FAttributeData* HealthData = &AbilitySystem->AttributeSet->Health;
+	HealthData->ModifyCurrentValue(Amount);
 
 	if (bShowingHealthBar)
 	{
 		UEnemyHealthBarWidget* HealthWidget = Cast<UEnemyHealthBarWidget>(HealthBarComponent->GetUserWidgetObject());
 		if (HealthWidget)
 		{
-			HealthWidget->UpdateHealth(HealthData.GetCurrentValue());
+			HealthWidget->UpdateHealth(HealthData->GetCurrentValue());
 		}
 	}
 }
