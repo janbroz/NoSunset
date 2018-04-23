@@ -83,17 +83,28 @@ void USunsetEffect::SetOwner(USunsetAbilityComponent* NewOwner)
 USunsetEffect::USunsetEffect()
 	: Owner(nullptr)
 {
-
+	static UProperty* MyProperty = EffectOnStat(TargetStat);
+	if (MyProperty)
+	{
+		FAttribute Att(MyProperty);
+		Attribute = Att;
+	}
 }
 
 void USunsetEffect::ApplyEffect()
 {
-	if (Owner && Owner->GetOwner())
+	if (bEnabled && Owner && Owner->GetOwner())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Hey there, i am: %s"), *GetName());
+		UStructProperty* StructProperty = Cast<UStructProperty>(Attribute.Attribute);
+		check(StructProperty);
+		FAttributeData* DataPtr = StructProperty->ContainerPtrToValuePtr<FAttributeData>(Owner->AttributeSet);
+		if (ensure(DataPtr))
+		{
+			const float TotalChange = CalculateEffect();
+			DataPtr->ModifyCurrentValue(TotalChange);
+		}
 
-		
-
+		UE_LOG(LogTemp, Warning, TEXT("Hey there, i am: %s"), *GetName());		
 	}
 }
 
@@ -123,4 +134,22 @@ float USunsetEffect::CalculateEffect()
 {
 	// Calculate the real effect after modifications like stacks and stuff.
 	return EffectValue;
+}
+
+UProperty* USunsetEffect::EffectOnStat(ESunsetStat TargetStat)
+{
+	static UProperty* TargetProperty = nullptr;
+	switch (TargetStat)
+	{
+	case ESunsetStat::Health:
+		TargetProperty = FindFieldChecked<UProperty>(USunsetAttribute::StaticClass(), GET_MEMBER_NAME_CHECKED(USunsetAttribute, Health));
+		break;
+	case ESunsetStat::MaxHealth:
+		TargetProperty = FindFieldChecked<UProperty>(USunsetAttribute::StaticClass(), GET_MEMBER_NAME_CHECKED(USunsetAttribute, MaxHealth));
+		break;
+	default:
+		break;
+	}
+
+	return TargetProperty;
 }
