@@ -143,9 +143,14 @@ void AMinion::ModifyHealth(float Amount)
 
 void AMinion::SetupUIHealth()
 {
+	if (!AbilitySystem || !AbilitySystem->AttributeSet) return;
+	FAttributeData* HealthData = &AbilitySystem->AttributeSet->Health;
+	FAttributeData* MaxHealthData = &AbilitySystem->AttributeSet->MaxHealth;
+
+
 	UEnemyHealthBarWidget* HealthWidget = Cast<UEnemyHealthBarWidget>(HealthBarComponent->GetUserWidgetObject());
-	if (HealthWidget)
+	if (HealthWidget && HealthData && MaxHealthData)
 	{
-		HealthWidget->SetupHealth(Health, MaxHealth);
+		HealthWidget->SetupHealth(HealthData->GetCurrentValue(), MaxHealthData->GetCurrentValue());
 	}
 }

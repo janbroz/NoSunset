@@ -81,6 +81,8 @@ public:
 	// How much is it going to change (- or + float)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float EffectValue;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float StackEffectValue;
 	// Is the effect enabled and usable?
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		uint32 bEnabled : 1;

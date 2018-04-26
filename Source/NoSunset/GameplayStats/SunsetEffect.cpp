@@ -133,7 +133,7 @@ void USunsetEffect::SayHey()
 float USunsetEffect::CalculateEffect()
 {
 	// Calculate the real effect after modifications like stacks and stuff.
-	return EffectValue;
+	return EffectValue + (StackEffectValue* StackCount);
 }
 
 UProperty* USunsetEffect::EffectOnStat(ESunsetStat TargetStat)
