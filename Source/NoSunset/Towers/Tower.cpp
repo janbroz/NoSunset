@@ -16,6 +16,8 @@
 #include "Components/BoxComponent.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "Runtime/Engine/Classes/Materials/MaterialInstanceDynamic.h"
+#include "Components/WidgetComponent.h"
+#include "Widgets/Towers/TowerBuildingWidget.h"
 
 // Sets default values
 ATower::ATower()
@@ -54,6 +56,12 @@ ATower::ATower()
 	RangeDecalComponent->SetupAttachment(RootComponent);
 	RangeDecalComponent->DecalSize = FVector(200.f, AttackRange, AttackRange);
 	RangeDecalComponent->SetWorldRotation(FRotator(90.f, 0.f, 0.f));
+
+	TowerBuildingWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("Tower building widget"));
+	TowerBuildingWidget->SetupAttachment(RootComponent);
+	TowerBuildingWidget->SetWorldRotation(FRotator(90.f, 0.f, 0.f));
+	TowerBuildingWidget->SetDrawAtDesiredSize(true);
+	TowerBuildingWidget->SetVisibility(false);
 
 	bCanAttack = true;
 
@@ -138,7 +146,7 @@ void ATower::GetANewTarget()
 	}*/
 
 	// This way we search for the closest enemy.
-	// Use the comented code if you want to grab a random enemy
+	// Use the commented code if you want to grab a random enemy
 	AActor* ClosestMinion = nullptr;
 	for (auto TmpMinion : OverlapingMinions)
 	{
@@ -247,12 +255,17 @@ void ATower::SetTowerMode(ETowerMode Mode)
 
 void ATower::BeginTowerBuilding()
 {
+	TowerBuildingWidget->SetVisibility(true);
 	GetWorldTimerManager().SetTimer(BuildTimerHandle, this, &ATower::EndTowerBuilding, BuildingTime);
+	
+	GetWorldTimerManager().SetTimer(BuildingCooldownHandle, this, &ATower::UpdateBuildingWidget, GetWorld()->GetDeltaSeconds(), true, 0.0f);
 }
 
 void ATower::EndTowerBuilding()
 {
+	TowerBuildingWidget->SetVisibility(false);
 	SetTowerMode(ETowerMode::Working);
+	GetWorldTimerManager().ClearTimer(BuildingCooldownHandle);
 }
 
 void ATower::ToggleRangeIndicator(bool bShowRange)
@@ -268,5 +281,20 @@ void ATower::DrawRangeIndicator()
 	//DrawDebugLine(GetWorld(),ProjectileSpawnLocation->GetComponentLocation() , Target->GetActorLocation(), FColor::Red, false, 0.03f, 8, 2.f);
 	DrawDebugSphere(GetWorld(), GetActorLocation(), AttackRange, 32, FColor::Red, false, 0.033f, 8, 2.f);
 	//UE_LOG(LogTemp, Warning, TEXT("Drawing a line, shalala"));
+}
 
+void ATower::UpdateBuildingWidget()
+{
+	float RemainingTime = GetWorldTimerManager().GetTimerRemaining(BuildTimerHandle);
+	float RemainingPercent = 1- (RemainingTime / BuildingTime);
+	UTowerBuildingWidget* BuildingWiget =  Cast<UTowerBuildingWidget>(TowerBuildingWidget->GetUserWidgetObject());
+	
+	if (BuildingWiget)
+	{
+		BuildingWiget->UpdateMaskPercent(RemainingPercent);
+		UE_LOG(LogTemp, Warning, TEXT("Building a house, shalala: %s"), *FString::SanitizeFloat(RemainingTime));
+	}
+
+	//float RemainingTime = 0.6f;
+	
 }
