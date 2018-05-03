@@ -46,7 +46,6 @@ public:
 	UFUNCTION()
 		void Attack();
 
-
 	UFUNCTION()
 		void SetTowerMode(ETowerMode Mode);
 
@@ -55,6 +54,8 @@ public:
 	void Reload();
 	void DrawRangeIndicator();
 	void ToggleRangeIndicator(bool bShowRange);
+
+	void UpdateBuildingWidget();
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AttackInformation)
@@ -97,6 +98,8 @@ public:
 		USceneComponent* SceneComp;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = TowerInformation)
 		UDecalComponent* RangeDecalComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = TowerInformation)
+		class UWidgetComponent* TowerBuildingWidget;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = TowerInformation)
 		class AMinion* Target;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = TowerInformation)
@@ -111,6 +114,9 @@ public:
 		TSubclassOf<class AProjectile> ProjectileClass;
 	UPROPERTY(VisibleAnywhere, Category = TowerInformation)
 		FTimerHandle BuildTimerHandle;
-	FTimerHandle AttackHandler;
+	UPROPERTY(VisibleAnywhere, Category = TowerInformation)
+		FTimerHandle AttackHandler;
+	UPROPERTY(VisibleAnywhere, Category = TowerInformation)
+		FTimerHandle BuildingCooldownHandle;
 	
 };

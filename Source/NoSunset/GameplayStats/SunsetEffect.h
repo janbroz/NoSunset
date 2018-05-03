@@ -23,6 +23,13 @@ enum class EEffectApplyMode : uint8
 	Multiplicative		UMETA(DisplayName="Multiplicative")
 };
 
+UENUM(BlueprintType)
+enum class ESunsetStat : uint8
+{
+	Health				UMETA(DisplayName="Health"),
+	MaxHealth			UMETA(DisplayName="MaxHealth")
+};
+
 USTRUCT(BlueprintType)
 struct FActiveEffectsContainer
 {
@@ -62,15 +69,20 @@ public:
 
 	void SayHey();
 	float CalculateEffect();
+	UProperty* EffectOnStat(ESunsetStat TargetStat);
 
 public:
 
 	// What attribute is the Effect touching
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		FAttribute Attribute;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		ESunsetStat TargetStat;
 	// How much is it going to change (- or + float)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float EffectValue;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float StackEffectValue;
 	// Is the effect enabled and usable?
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		uint32 bEnabled : 1;
