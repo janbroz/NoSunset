@@ -292,7 +292,6 @@ void ATower::UpdateBuildingWidget()
 	if (BuildingWiget)
 	{
 		BuildingWiget->UpdateMaskPercent(RemainingPercent);
-		UE_LOG(LogTemp, Warning, TEXT("Building a house, shalala: %s"), *FString::SanitizeFloat(RemainingTime));
 	}
 
 	//float RemainingTime = 0.6f;
