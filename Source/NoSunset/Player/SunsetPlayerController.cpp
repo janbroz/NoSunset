@@ -17,6 +17,8 @@
 #include "Gameplaystats/SunsetEffect.h"
 #include "Enemies/Minion.h"
 #include "Runtime/CoreUObject/Public/UObject/UObjectIterator.h"
+#include "Runtime/Engine/Classes/Components/InstancedStaticMeshComponent.h"
+#include "Runtime/Engine/Classes/Components/HierarchicalInstancedStaticMeshComponent.h"
 
 ASunsetPlayerController::ASunsetPlayerController()
 {
@@ -153,6 +155,29 @@ void ASunsetPlayerController::LeftMousePressed()
 {
 	//UE_LOG(LogTemp, Warning, TEXT("Left mouse did something"));
 	bLeftMousePressed = true;
+
+	FHitResult Hit;
+	GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, true, Hit);
+
+	if (Hit.bBlockingHit)
+	{
+		//UE_LOG(LogTemp, Warning, TEXT("Clickity click: %s"), *FString::FromInt(Hit.Item));
+		UHierarchicalInstancedStaticMeshComponent* InstancedMesh = Hit.GetActor()->FindComponentByClass<UHierarchicalInstancedStaticMeshComponent>();
+		
+		if (InstancedMesh)
+		{
+			int32 InstanceIndex = Hit.Item;
+			FTransform InstanceTransform;
+			InstancedMesh->GetInstanceTransform(InstanceIndex, InstanceTransform, true);
+			UE_LOG(LogTemp, Warning, TEXT("Clickity click: %s"), *InstanceTransform.GetLocation().ToString());
+
+		}
+		
+
+	}
+
+
+
 }
 
 void ASunsetPlayerController::RightMousePressed()
