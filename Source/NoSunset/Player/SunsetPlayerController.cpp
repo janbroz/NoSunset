@@ -20,6 +20,7 @@
 #include "Runtime/Engine/Classes/Components/InstancedStaticMeshComponent.h"
 #include "Runtime/Engine/Classes/Components/HierarchicalInstancedStaticMeshComponent.h"
 
+
 ASunsetPlayerController::ASunsetPlayerController()
 {
 	bShowMouseCursor = true;
@@ -170,14 +171,8 @@ void ASunsetPlayerController::LeftMousePressed()
 			FTransform InstanceTransform;
 			InstancedMesh->GetInstanceTransform(InstanceIndex, InstanceTransform, true);
 			UE_LOG(LogTemp, Warning, TEXT("Clickity click: %s"), *InstanceTransform.GetLocation().ToString());
-
 		}
-		
-
 	}
-
-
-
 }
 
 void ASunsetPlayerController::RightMousePressed()
