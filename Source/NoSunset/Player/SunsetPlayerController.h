@@ -28,6 +28,7 @@ public:
 	void RightMouseReleased();
 	void ShiftBuildPressed();
 	void ShiftBuildReleased();
+	void InitializeBuildingGrid();
 
 	// We use this bad guy to debug 
 	void DebuggingFunction();
@@ -85,6 +86,8 @@ public:
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Controller information")
 		uint32 bShiftBuilding : 1;
 
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Controller information")
+		TArray<class AConstructionGrid*> BuildingGrids;
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Controller information")
 		class ATower* SpawningTower;
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Controller information")

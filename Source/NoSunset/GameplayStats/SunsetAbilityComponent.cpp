@@ -14,11 +14,6 @@ USunsetAbilityComponent::USunsetAbilityComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
-	//AttributeSet = NewObject<USunsetAttribute>(GetOwner(), USunsetAttribute::StaticClass());
-	//AttributeSet = CreateDefaultSubobject<USunsetAttribute>(TEXT("Attribute Set information"));
-	//UE_LOG(LogTemp, Warning, TEXT("Id of this guy is: %d"), AttributeSet->GetUniqueID());
-	//AttributeSet = CreateDefaultSubobject<USunsetAttribute>(*RndStr);
 	EffectsManager.OwnerAbilityComponent = this;
 	ClassName = "Default";
 }

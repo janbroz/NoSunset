@@ -17,6 +17,9 @@
 #include "Gameplaystats/SunsetEffect.h"
 #include "Enemies/Minion.h"
 #include "Runtime/CoreUObject/Public/UObject/UObjectIterator.h"
+#include "Runtime/Engine/Classes/Components/InstancedStaticMeshComponent.h"
+#include "Runtime/Engine/Classes/Components/HierarchicalInstancedStaticMeshComponent.h"
+#include "Player/ConstructionGrid.h"
 
 ASunsetPlayerController::ASunsetPlayerController()
 {
@@ -76,6 +79,8 @@ void ASunsetPlayerController::BeginPlay()
 			PlayerHUD->UpdatePlayerResources();
 		}
 	}
+
+	InitializeBuildingGrid();
 }
 
 void ASunsetPlayerController::Tick(float DeltaTime)
@@ -85,6 +90,25 @@ void ASunsetPlayerController::Tick(float DeltaTime)
 	if (!IsPaused())
 	{
 		CheckBuilding();
+	}
+}
+
+void ASunsetPlayerController::InitializeBuildingGrid()
+{
+	TArray<AActor*> Grids;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AConstructionGrid::StaticClass(), Grids);
+	for (auto BuildGrid : Grids)
+	{
+		AConstructionGrid* TmpGrid = Cast<AConstructionGrid>(BuildGrid);
+		if (TmpGrid)
+		{
+			BuildingGrids.Add(TmpGrid);
+		}
+	}
+
+	for (auto BuildGrid : BuildingGrids) 
+	{
+		BuildGrid->SetActorHiddenInGame(true);
 	}
 }
 
@@ -151,8 +175,21 @@ void ASunsetPlayerController::EscapePressed()
 
 void ASunsetPlayerController::LeftMousePressed()
 {
-	//UE_LOG(LogTemp, Warning, TEXT("Left mouse did something"));
 	bLeftMousePressed = true;
+	FHitResult Hit;
+	GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, true, Hit);
+
+	if (Hit.bBlockingHit)
+	{
+		UHierarchicalInstancedStaticMeshComponent* InstancedMesh = Hit.GetActor()->FindComponentByClass<UHierarchicalInstancedStaticMeshComponent>();	
+		if (InstancedMesh)
+		{
+			int32 InstanceIndex = Hit.Item;
+			FTransform InstanceTransform;
+			InstancedMesh->GetInstanceTransform(InstanceIndex, InstanceTransform, true);
+			//UE_LOG(LogTemp, Warning, TEXT("Clickity click: %s"), *InstanceTransform.GetLocation().ToString());
+		}
+	}
 }
 
 void ASunsetPlayerController::RightMousePressed()
@@ -169,7 +206,7 @@ void ASunsetPlayerController::LeftMouseReleased()
 	if (bBuilding && SpawningTower && bValidSurfaceForBuilding)
 	{
 		SpawningTower->SetTowerMode(ETowerMode::Building);
-		
+		SpawningTower->SetMaterialMode(EBuildLocation::Working);
 		if (bShiftBuilding)
 		{
 			auto TClass = SpawningTower->GetClass();
@@ -237,6 +274,10 @@ void ASunsetPlayerController::ToggleBuilding()
 	{
 		PlayerHUD->ToggleBuildOptions(bBuilding);
 	}
+	for (auto BuildGrid : BuildingGrids)
+	{
+		BuildGrid->SetActorHiddenInGame(!bBuilding);
+	}
 }
 
 void ASunsetPlayerController::ToggleMainMenu()
@@ -282,6 +323,7 @@ void ASunsetPlayerController::CheckBuilding()
 	{
 		FHitResult Hit;
 		GetHitResultUnderCursor(ECollisionChannel::ECC_PhysicsBody, true, Hit);
+		//GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, true, Hit);
 
 		FName BuildTag = FName(TEXT("BuildingZone"));
 
@@ -292,19 +334,33 @@ void ASunsetPlayerController::CheckBuilding()
 			SpawningTower->SetActorLocation(SnapLocation);
 		}
 
-		if (Hit.bBlockingHit && Hit.Actor->ActorHasTag(BuildTag))
+		if (Hit.bBlockingHit)
 		{
-			//UE_LOG(LogTemp, Warning, TEXT("The actor is: %s"), *Hit.Actor->GetName());
-			DrawDebugBox(GetWorld(), SnapLocation, FVector(50.f, 50.f, 50.f), FColor::Green, false, 0.03f, 2, 2.f);
-			bValidSurfaceForBuilding = true;
-		}
-		else
-		{
-			DrawDebugBox(GetWorld(), SnapLocation, FVector(50.f, 50.f, 50.f), FColor::Red, false, 0.03f, 2, 2.f);
-			bValidSurfaceForBuilding = false;
+			AConstructionGrid* BuildingGrid = Cast<AConstructionGrid>(Hit.GetActor());
+			if (BuildingGrid)
+			{
+				UHierarchicalInstancedStaticMeshComponent* InstancedMesh = Hit.GetActor()->FindComponentByClass<UHierarchicalInstancedStaticMeshComponent>();
+				if (InstancedMesh)
+				{
+					int32 InstanceIndex = Hit.Item;
+					FTransform InstanceTransform;
+					InstancedMesh->GetInstanceTransform(InstanceIndex, InstanceTransform, true);
+					SpawningTower->SetActorLocation(InstanceTransform.GetLocation());
+					SpawningTower->SetMaterialMode(EBuildLocation::Right);
+				}
+				bValidSurfaceForBuilding = true;
+			}
+			else
+			{
+				if (SpawningTower)
+				{
+					SpawningTower->SetMaterialMode(EBuildLocation::Wrong);
+				}
+				DrawDebugBox(GetWorld(), SnapLocation, FVector(50.f, 50.f, 50.f), FColor::Red, false, 0.03f, 2, 2.f);
+				bValidSurfaceForBuilding = false;
+			}
 		}
 	}
-
 }
 
 FVector ASunsetPlayerController::SnapCoordinates(FVector InitialCoords)
