@@ -86,6 +86,8 @@ void ATower::BeginPlay()
 
 	GameState = Cast<ASunsetGameState>(GetWorld()->GetGameState());
 	RangeDecalComponent->DecalSize = FVector(200.f, AttackRange, AttackRange);
+
+	BuildingMaterialInstance = UMaterialInstanceDynamic::Create(BuildingMaterial, this);
 }
 
 // Called every frame
@@ -171,9 +173,6 @@ void ATower::AimTurret()
 		// Rotate towards
 		FRotator NewRot = (Target->GetActorLocation() - TowerHead->GetComponentLocation()).Rotation();
 		TowerHead->SetWorldRotation(NewRot);
-
-		//DrawDebugLine(GetWorld(), ProjectileSpawnLocation->GetComponentLocation() , Target->GetActorLocation(), FColor::Red, false, 0.03f, 8, 2.f);
-
 		if (bCanAttack)
 		{
 			Attack();
@@ -293,7 +292,25 @@ void ATower::UpdateBuildingWidget()
 	{
 		BuildingWiget->UpdateMaskPercent(RemainingPercent);
 	}
+}
 
-	//float RemainingTime = 0.6f;
-	
+void ATower::SetMaterialMode(EBuildLocation Location)
+{
+	switch (Location)
+	{
+	case EBuildLocation::Right:
+		BuildingMaterialInstance->SetScalarParameterValue("ColorPercent", 1.f);
+		TowerBase->SetMaterial(0, BuildingMaterialInstance);
+		break;
+	case EBuildLocation::Wrong:
+		BuildingMaterialInstance->SetScalarParameterValue("ColorPercent", 0.f);
+		TowerBase->SetMaterial(0, BuildingMaterialInstance);
+		break;
+	case EBuildLocation::Working:
+		TowerBase->SetMaterial(0, StandardMaterial);
+		break;
+	default:
+		break;
+	}
+
 }

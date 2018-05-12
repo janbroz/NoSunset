@@ -57,6 +57,14 @@ enum class EDifficultyMode : uint8
 	Hard		UMETA(DisplayName = "Hard")
 };
 
+UENUM(BlueprintType)
+enum class EBuildLocation : uint8
+{
+	Wrong		UMETA(DisplayName = "Wrong"),
+	Right		UMETA(DisplayName = "Right"),
+	Working		UMETA(DisplayName = "Working")
+};
+
 inline uint8 GetTypeHash(const EElementType A) { return (uint8)A; }
 inline uint8 GetTypeHash(const EArmorType A) { return (uint8)A; }
 inline uint8 GetTypeHash(const EHeroClass A) { return (uint8)A; }

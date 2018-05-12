@@ -60,7 +60,7 @@ void AConstructionGrid::OnConstruction(const FTransform& Transform)
 				{
 					
 					float HeightToLandscape = LineStart.Z - Hit.Location.Z;
-					if (HeightToLandscape < 120.f)
+					if (HeightToLandscape < 30.f)
 					{
 						FTransform NewTrans(NewLoc);
 						InstancedMesh->AddInstance(NewTrans);

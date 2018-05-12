@@ -31,8 +31,8 @@ void FAttributeData::ModifyBaseValue(float NewValue)
 
 void FAttributeData::ModifyCurrentValue(float NewValue, bool bHasMaxValue, float MaxValue)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Value is: %f"), NewValue);
-	UE_LOG(LogTemp, Warning, TEXT("Current value is: %f"), CurrentValue);
+	/*UE_LOG(LogTemp, Warning, TEXT("Value is: %f"), NewValue);
+	UE_LOG(LogTemp, Warning, TEXT("Current value is: %f"), CurrentValue);*/
 
 	const float ModifiedValue = CurrentValue + NewValue;
 	if (bHasMaxValue)
@@ -43,7 +43,7 @@ void FAttributeData::ModifyCurrentValue(float NewValue, bool bHasMaxValue, float
 	{
 		CurrentValue = FMath::Clamp(ModifiedValue, 0.f, ModifiedValue);
 	}
-	UE_LOG(LogTemp, Warning, TEXT("new Value is: %f"), CurrentValue);
+	//UE_LOG(LogTemp, Warning, TEXT("new Value is: %f"), CurrentValue);
 }
 
 FAttribute::FAttribute(UProperty* NewProperty)
@@ -65,7 +65,7 @@ bool FAttribute::IsAttributeDataProperty(const UProperty* Property)
 		const UStruct* Struct = StructProp->Struct;
 		if (Struct && Struct->IsChildOf(FAttributeData::StaticStruct()))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("It is a valid property"));
+			//UE_LOG(LogTemp, Warning, TEXT("It is a valid property"));
 			return true;
 		}
 		else

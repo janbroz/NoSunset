@@ -48,6 +48,9 @@ public:
 
 	UFUNCTION()
 		void SetTowerMode(ETowerMode Mode);
+	UFUNCTION()
+		void SetMaterialMode(EBuildLocation Location);
+
 
 	void BeginTowerBuilding();
 	void EndTowerBuilding();
@@ -98,6 +101,12 @@ public:
 		USceneComponent* SceneComp;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = TowerInformation)
 		UDecalComponent* RangeDecalComponent;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TowerInformation)
+		UMaterial* StandardMaterial;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TowerInformation)
+		UMaterialInterface* BuildingMaterial;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TowerInformation)
+		UMaterialInstanceDynamic* BuildingMaterialInstance;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = TowerInformation)
 		class UWidgetComponent* TowerBuildingWidget;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = TowerInformation)
