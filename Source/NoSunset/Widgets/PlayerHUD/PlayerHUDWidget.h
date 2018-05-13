@@ -24,4 +24,11 @@ public:
 		void UpdatePlayerResources();
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = UITalking)
 		void ShowTowerInformation(class ATower* Tower);
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = UITalking)
+		void UpdateResourcesPanel();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = UITalking)
+		void UpdateCurrentWave(int32 Number);
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = UITalking)
+		void UpdateEnemiesAlive(int32 Alive, int32 Spawned);
+
 };

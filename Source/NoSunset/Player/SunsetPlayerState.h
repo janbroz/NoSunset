@@ -24,6 +24,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void ModifyGold(int32 Amount);
 
+	UFUNCTION()
+		void UpdateUICurrentWave(int32 NewWave);
+	UFUNCTION()
+		void UpdateUIEnemiesAlive(int32 Alive, int32 Spawned);
+
 public:
 	UPROPERTY()
 		class ASunsetPlayerController* PlayerController;

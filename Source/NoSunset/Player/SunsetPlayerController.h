@@ -35,7 +35,17 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void EscapePressed();
-	void UpdateHUDResources();
+	UFUNCTION(BlueprintCallable)
+		void InitializeHUDResources();
+
+	UFUNCTION(BlueprintCallable)
+		void UpdateHUDResources();
+	UFUNCTION(BlueprintCallable)
+		void UpdateHUDEnemiesAlive(int32 Alive, int32 Spawned);
+	UFUNCTION(BlueprintCallable)
+		void UpdateHUDRemainingLives();
+	UFUNCTION(BlueprintCallable)
+		void UpdateHUDCurrentWave(int32 Number);
 
 	UFUNCTION(BlueprintCallable)
 		void FirstPressed();

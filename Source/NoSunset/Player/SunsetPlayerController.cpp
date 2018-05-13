@@ -81,6 +81,7 @@ void ASunsetPlayerController::BeginPlay()
 	}
 
 	InitializeBuildingGrid();
+	InitializeHUDResources();
 }
 
 void ASunsetPlayerController::Tick(float DeltaTime)
@@ -90,6 +91,19 @@ void ASunsetPlayerController::Tick(float DeltaTime)
 	if (!IsPaused())
 	{
 		CheckBuilding();
+	}
+}
+
+void ASunsetPlayerController::InitializeHUDResources()
+{
+	if (PlayerHUD)
+	{
+		ASunsetGameState* GState = Cast<ASunsetGameState>(GetWorld()->GetGameState());
+		if (GState)
+		{
+			GState->UpdatePlayersUIEnemies();
+			GState->UpdatePlayersUIWave();
+		}
 	}
 }
 
@@ -482,7 +496,34 @@ void ASunsetPlayerController::SellTower(ATower* Tower)
 
 void ASunsetPlayerController::UpdateHUDResources()
 {
-	PlayerHUD->UpdatePlayerResources();
+	if (PlayerHUD)
+	{
+		PlayerHUD->UpdatePlayerResources();
+		PlayerHUD->UpdateResourcesPanel();
+	}
+}
+
+void ASunsetPlayerController::UpdateHUDRemainingLives()
+{
+	if (PlayerHUD)
+	{
+	}
+}
+
+void ASunsetPlayerController::UpdateHUDCurrentWave(int32 Number)
+{
+	if (PlayerHUD)
+	{
+		PlayerHUD->UpdateCurrentWave(Number);
+	}
+}
+
+void ASunsetPlayerController::UpdateHUDEnemiesAlive(int32 Alive, int32 Spawned)
+{
+	if (PlayerHUD)
+	{
+		PlayerHUD->UpdateEnemiesAlive(Alive, Spawned);
+	}
 }
 
 void ASunsetPlayerController::ClearSelectedTowers()
