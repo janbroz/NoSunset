@@ -28,7 +28,11 @@ USunsetGameInstance::USunsetGameInstance()
 	{
 		MinionStatsTable = MinionStatsLookupTable_BP.Object;
 	}
-
+	static ConstructorHelpers::FObjectFinder<UDataTable> WaveDetailsLookupTable_BP(TEXT("DataTable'/Game/GameplayData/Wave-detail.Wave-detail'"));
+	if (WaveDetailsLookupTable_BP.Object)
+	{
+		WaveDetailsTable = WaveDetailsLookupTable_BP.Object;
+	}
 
 	//GameDifficulty = EDifficultyMode::Easy;
 }
@@ -36,9 +40,6 @@ USunsetGameInstance::USunsetGameInstance()
 void USunsetGameInstance::Init()
 {
 	UGameInstance::Init();
-
-
-
 }
 
 float USunsetGameInstance::GetArmorContribution(EElementType AttackType, EArmorType ArmorType)
@@ -173,5 +174,11 @@ void USunsetGameInstance::GetCurrentWaveInformation(int32 WaveIndex, struct FWav
 	{
 		WaveInformation = *RowLookup;
 	}
+}
 
+FWaveDetail& USunsetGameInstance::GetCurrentWaveDetailsForUI(int32 WaveIndex)
+{
+	FString IndexAsString = FString::FromInt(WaveIndex);
+	FWaveDetail* RowDetail = WaveDetailsTable->FindRow<FWaveDetail>(*IndexAsString, "");
+	return *RowDetail;
 }

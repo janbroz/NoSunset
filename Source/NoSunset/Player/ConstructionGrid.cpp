@@ -52,7 +52,7 @@ void AConstructionGrid::OnConstruction(const FTransform& Transform)
 			FCollisionQueryParams FCQP;
 			
 			GetWorld()->LineTraceSingleByChannel(Hit, LineStart, LineEnd, ECollisionChannel::ECC_Visibility);
-			DrawDebugLine(GetWorld(), LineStart, LineEnd, FColor::Red, true, 0.09f, 0.f, 1.f);
+			//DrawDebugLine(GetWorld(), LineStart, LineEnd, FColor::Red, true, 0.09f, 0.f, 1.f);
 			if (Hit.bBlockingHit)
 			{
 				ALandscape* TargetActor = Cast<ALandscape>(Hit.GetActor());
