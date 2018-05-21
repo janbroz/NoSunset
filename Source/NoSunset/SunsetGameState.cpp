@@ -12,6 +12,7 @@
 #include "Towers/ProjectilePoolComponent.h"
 #include "Engine/World.h"
 #include "SunsetGameInstance.h"
+#include "Player/SunsetPlayerState.h"
 
 ASunsetGameState::ASunsetGameState()
 {
@@ -103,6 +104,7 @@ void ASunsetGameState::InitializeSpawners()
 void ASunsetGameState::RespondToMinionKilled(AActor* MinionKilled, class AController* EventInstigator, AActor* DamageCauser)
 {
 	//UE_LOG(LogTemp, Warning, TEXT("Shit, someone got killed"));
+	EnemiesKilled++;
 	EnemiesAlive = FMath::Clamp(EnemiesAlive - 1, 0, EnemiesToSpawn);
 	ASunsetPlayerController* SPC = Cast<ASunsetPlayerController>(EventInstigator);
 	if (!SPC) return;
@@ -122,6 +124,8 @@ void ASunsetGameState::RespondToMinionKilled(AActor* MinionKilled, class AContro
 	{
 		HandleWaveCleared();
 	}
+
+	UpdatePlayersUIEnemies();
 }
 
 void ASunsetGameState::HandleWaveCleared()
@@ -130,10 +134,13 @@ void ASunsetGameState::HandleWaveCleared()
 	bWaveFullySpawned = false;
 	FTimerHandle UnusedHandle;
 	GetWorldTimerManager().SetTimer(UnusedHandle, this, &ASunsetGameState::SpawnNextWave, TimeBetweenWaves, false);
+	
+	UpdatePlayersUIWave();
 }
 
 void ASunsetGameState::SpawnNextWave()
 {
+	EnemiesKilled = 0;
 	USunsetGameInstance* SGameInstance = Cast<USunsetGameInstance>(GetGameInstance());
 	if (!SGameInstance) return;
 
@@ -166,6 +173,8 @@ void ASunsetGameState::SpawnNextWave()
 	{
 		LevelCompleted(true, GetWorld()->GetFirstPlayerController());
 	}
+
+	UpdatePlayersUIEnemies();
 }
 
 void ASunsetGameState::LevelCompleted(bool bSuccessfuly, APlayerController* Controller)
@@ -192,4 +201,28 @@ AProjectile* ASunsetGameState::GetUsableProjectile(TSubclassOf<class AProjectile
 bool ASunsetGameState::AddProjectileToPool(AProjectile* ProjectileToAdd)
 {
 	return ProjectilePoolManager->AddProjectileToPool(ProjectileToAdd);
+}
+
+void ASunsetGameState::UpdatePlayersUIEnemies()
+{
+	for (auto Player : PlayerArray)
+	{
+		ASunsetPlayerState* TmpPlayer = Cast<ASunsetPlayerState>(Player);
+		if (TmpPlayer)
+		{
+			TmpPlayer->UpdateUIEnemiesAlive(EnemiesKilled, EnemiesToSpawn);
+		}
+	}
+}
+
+void ASunsetGameState::UpdatePlayersUIWave()
+{
+	for (auto Player : PlayerArray)
+	{
+		ASunsetPlayerState* TmpPlayer = Cast<ASunsetPlayerState>(Player);
+		if (TmpPlayer)
+		{
+			TmpPlayer->UpdateUICurrentWave(CurrentWave);
+		}
+	}
 }

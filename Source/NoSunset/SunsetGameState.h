@@ -33,6 +33,11 @@ public:
 		void InitializeGame();
 	UFUNCTION()
 		void LevelCompleted(bool bSuccessfully, APlayerController* Controller);
+	UFUNCTION()
+		void UpdatePlayersUIWave();
+	UFUNCTION()
+		void UpdatePlayersUIEnemies();
+
 
 private:
 	void SpawnNextWave();
@@ -49,6 +54,8 @@ public:
 		int32 EnemiesSpawned;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Wave information")
 		int32 EnemiesAlive;
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Wave information")
+		int32 EnemiesKilled;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Wave information")
 		uint32 bWaveFullySpawned : 1;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Wave information")

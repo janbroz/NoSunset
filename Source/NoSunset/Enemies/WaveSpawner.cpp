@@ -83,6 +83,7 @@ void AWaveSpawner::SpawnCurrentWave()
 		FTimerHandle UnusedHandle;
 		GetWorldTimerManager().SetTimer(UnusedHandle, this, &AWaveSpawner::SpawnCurrentWave, 0.7f, false);
 	}
+	WorldState->UpdatePlayersUIEnemies();
 }
 
 void AWaveSpawner::HandleMinionKilled(AActor* MinionKilled, class AController* EventInstigator, AActor* DamageCauser)

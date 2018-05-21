@@ -36,6 +36,8 @@ public:
 		void SetGameDifficulty(EDifficultyMode Difficulty);
 	UFUNCTION(BlueprintCallable, Category = GameInformation)
 		void GetCurrentWaveInformation(int32 WaveIndex, struct FWaveInformation& WaveInformation);
+	UFUNCTION(BlueprintCallable, Category = GameInformation)
+		FWaveDetail& GetCurrentWaveDetailsForUI(int32 WaveIndex);
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Minion information")
@@ -44,6 +46,8 @@ public:
 		UDataTable* BuildingsTable;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=WaveInformation)
 		UDataTable* WaveInfoTable;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaveInformation)
+		UDataTable* WaveDetailsTable;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaveInformation)
 		UDataTable* MinionStatsTable;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=GameInformation)

@@ -38,6 +38,11 @@ void ASunsetPlayerState::DamagePlayer(int32 Damage)
 	CurrentLives -= Damage;
 	CurrentLives = FMath::Clamp(CurrentLives, 0, MaxLives);
 
+	if (PlayerController)
+	{
+
+	}
+
 	if (CurrentLives <= 0)
 	{
 		auto Controller = Cast<APlayerController>(GetOwner());
@@ -48,13 +53,6 @@ void ASunsetPlayerState::DamagePlayer(int32 Damage)
 			GameState->LevelCompleted(false, Controller);
 			Controller->SetPause(true);
 		}
-		//auto Controller = Cast<APlayerController>(GetOwner());
-		//if (Controller)
-		//{
-		//	
-		//	UE_LOG(LogTemp, Warning, TEXT("Its a valid actor"));
-		//	//Controller->SetPause(true);
-		//}
 	}
 }
 
@@ -65,5 +63,21 @@ void ASunsetPlayerState::ModifyGold(int32 Amount)
 	if (PlayerController)
 	{
 		PlayerController->UpdateHUDResources();
+	}
+}
+
+void ASunsetPlayerState::UpdateUICurrentWave(int32 NewWave)
+{
+	if (PlayerController)
+	{
+		PlayerController->UpdateHUDCurrentWave(NewWave);
+	}
+}
+
+void ASunsetPlayerState::UpdateUIEnemiesAlive(int32 Alive, int32 Spawned)
+{
+	if (PlayerController)
+	{
+		PlayerController->UpdateHUDEnemiesAlive(Alive, Spawned);
 	}
 }

@@ -166,6 +166,35 @@ public:
 };
 
 USTRUCT(Blueprintable)
+struct FWaveDetail : public FTableRowBase
+{
+	GENERATED_BODY()
+public:
+	FWaveDetail() :
+	  MinionName("")
+	, Health(0)
+	, Armor(0)
+	, Speed(0)
+	, Detail("")
+	, MinionTexture(nullptr)
+	{}
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaveDetail)
+		FString MinionName;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaveDetail)
+		int32 Health;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaveDetail)
+		int32 Armor;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaveDetail)
+		int32 Speed;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaveDetail)
+		FString Detail;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WaveDetail)
+		UTexture2D* MinionTexture;
+};
+
+
+USTRUCT(Blueprintable)
 struct FMinionStats : public FTableRowBase
 {
 	GENERATED_BODY()
