@@ -70,6 +70,9 @@ public:
 		class UStaticMeshComponent* ProjectileMesh;
 	UPROPERTY(VisibleAnywhere, Category = "Projectile information")
 		class UProjectileMovementComponent* ProjectileMovement;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Projectile information")
+		class UParticleSystemComponent* ParticleComponent;
+
 	UPROPERTY(VisibleAnywhere, Category = "Projectile information")
 		AActor* SpawnedBy;
 	FTimerHandle TTLHandler;

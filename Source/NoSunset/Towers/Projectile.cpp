@@ -9,7 +9,7 @@
 #include "SunsetDamageType.h"
 #include "Engine/World.h"
 #include "SunsetGameState.h"
-
+#include "Runtime/Engine/Classes/Particles/ParticleSystemComponent.h"
 
 // Sets default values
 AProjectile::AProjectile()
@@ -29,6 +29,9 @@ AProjectile::AProjectile()
 	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileMesh"));
 	ProjectileMesh->SetupAttachment(RootComponent);
 	ProjectileMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	ParticleComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Particle component"));
+	ParticleComponent->SetupAttachment(RootComponent);
 
 	// This one is the default number of projectiles to spawn in the object pool.
 	Rarity = 15;
